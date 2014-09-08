@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ contact }}</h1>
+<p>Email: {{ contact.email }}</p>
+<p>Twitter: @{{ contact.twitter }}</p>
+<p>Tumblr: {{ contact.tumblr }}</p>
+<p>Website: {{ contact.website }}</p>
+<p>Portfolio: {{ contact.portfolio }}</p>
+<p>Cell Phone: {{ contact.cell_phone }}</p>
+<p>Home Phone: {{ contact.home_phone }}</p>
+<p>Notes: {{ contact.notes }}</p>
+<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>
+
+<h2>Logs:</h2>
+<form action="{{ action }}" method="POST">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="row">
+    {% for field in form %}
+        <div id="{{ field.auto_id }}_container" class="col-md-4">
+            {{ field.help_text }}
+            <div>
+                {{ field.label_tag }} {{ field }}
+            </div>
+            <div id="{{ field.auto_id }}_errors">
+                {{ field.errors }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    <input id="add_log" type="submit" value="Add log">
+</form>
+
+{% for log in contact.logentry_set.all %}
+<p>
+{% if log.time %}
+{{log.time }} (logged {{log.created}})
+{% else %}
+{{ log.created}}
+{% endif %} - 
+{{log.kind}} {{log.link}} - {{log.notes}}
+(<a href="{% url "log-edit" pk=log.id %}">edit</a>)
+</p>
+{% endfor %}
+{% endblock %}

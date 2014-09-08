@@ -16,6 +16,7 @@ eggs/
 lib/
 lib64/
 parts/
+include/
 sdist/
 var/
 *.egg-info/
