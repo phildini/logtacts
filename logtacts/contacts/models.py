@@ -45,10 +45,24 @@ class Book(models.Model):
 
 
 class LogEntry(models.Model):
+    KIND_CHOICES = (
+        ('twitter', 'Twitter'),
+        ('tumblr', 'Tumblr'),
+        ('facebook', 'Facebook'),
+        ('email', 'Email'),
+        ('in person', 'In Person'),
+        ('other', 'Other'),
+    )
+
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     contact = models.ForeignKey('Contact')
-    kind = models.CharField(max_length=100, blank=True, null=True)
+    kind = models.CharField(
+        max_length=100,
+        choices=KIND_CHOICES,
+        blank=True,
+        null=True,
+    )
     link = models.URLField(blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
