@@ -10,7 +10,7 @@ from contacts.views import LoggedInMixin
 
 class EditLogView(LoggedInMixin, UpdateView):
     model = LogEntry
-    template_name = 'edit_contact.html'
+    template_name = 'edit_log.html'
     form_class = contacts.forms.LogEntryForm
 
     def get_success_url(self):

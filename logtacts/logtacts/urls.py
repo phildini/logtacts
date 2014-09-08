@@ -49,4 +49,9 @@ urlpatterns = patterns('',
         log_views.DeleteLogView.as_view(),
         name='log-delete',
     ),
+    url(
+        r'^tags/new$',
+        contact_views.CreateTagView.as_view(),
+        name='tags-new',
+    ),
 )

@@ -7,7 +7,10 @@ from django.views.generic import (
     FormView,
 )
 
-from contacts.models import Contact
+from contacts.models import (
+    Contact,
+    Tag,
+)
 
 from contacts import forms
 from contacts.views import LoggedInMixin
@@ -68,7 +71,10 @@ class EditContactView(LoggedInMixin, UpdateView):
     form_class = forms.ContactForm
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse(
+            'contacts-view',
+            kwargs={'pk': self.get_object().id},
+        )
 
     def get_context_data(self, **kwargs):
         context = super(EditContactView, self).get_context_data(**kwargs)
@@ -87,4 +93,18 @@ class DeleteContactView(LoggedInMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('contacts-list')
+
+class CreateTagView(LoggedInMixin, CreateView):
+    model = Tag
+    template_name = 'edit_tag.html'
+    form_class = forms.TagForm
+
+    def get_success_url(self):
+        return reverse('contacts-list')
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateTagView, self).get_context_data(**kwargs)
+        context['action'] = reverse('tags-new')
+
+        return context
 

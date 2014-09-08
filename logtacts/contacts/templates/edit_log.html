@@ -2,17 +2,13 @@
 
 {% block content %}
 
-{% if contact.id %}
-<h1>Edit Contact</h1>
+{% if tag.id %}
+<h1>Edit Log</h1>
 {% else %}
-<h1>Add Contact</h1>
+<h1>Add Log</h1>
 {% endif %}
 
-{% if contact.id %}
-<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
-{% endif %}
-
-<a href="{% url "contacts-list" %}">back to list</a>
+<a href="{% url "contacts-list" %}">back to contacts</a>
 
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
@@ -36,15 +32,6 @@
         </li>
     {% endfor %}
     </ul>
-    <div><a href="{% url "tags-new" %}" class="btn btn-default">create tag</a></div>
     <input id="add_log" type="submit" value="Save">
 </form>
-
-<div class="row">
-{% if contact.id %}
-<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
-{% endif %}
-
-<a href="{% url "contacts-list" %}">back to list</a>
-</div>
 {% endblock %}

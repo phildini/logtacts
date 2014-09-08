@@ -26,5 +26,5 @@ class TagForm(BootstrapForm, forms.ModelForm):
 
     class Meta:
         model = Tag
-        fields = ['tag', 'color']
+        fields = ['tag']
 
