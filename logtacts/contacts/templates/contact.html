@@ -2,17 +2,19 @@
 
 {% block content %}
 <h1>{{ contact }}</h1>
-<p>Email: {{ contact.email }}</p>
-<p>Twitter: @{{ contact.twitter }}</p>
-<p>Tumblr: {{ contact.tumblr }}</p>
-<p>Website: {{ contact.website }}</p>
-<p>Portfolio: {{ contact.portfolio }}</p>
-<p>Cell Phone: {{ contact.cell_phone }}</p>
-<p>Home Phone: {{ contact.home_phone }}</p>
-<p>Notes: {{ contact.notes }}</p>
-<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>
+<div class="row">
+<div class="col-md-6">Email: {{ contact.email }}</div>
+<div class="col-md-6">Twitter: @{{ contact.twitter }}</div>
+<div class="col-md-6">Tumblr: {{ contact.tumblr }}</div>
+<div class="col-md-6">Website: {{ contact.website }}</div>
+<div class="col-md-6">Portfolio: {{ contact.portfolio }}</div>
+<div class="col-md-6">Cell Phone: {{ contact.cell_phone }}</div>
+<div class="col-md-6">Home Phone: {{ contact.home_phone }}</div>
+<div class="col-md-6">Notes: {{ contact.notes }}</div>
+</div>
+<a href="{% url "contacts-edit" pk=contact.id %}" class="btn btn-primary">Edit</a>
 
-<h2>Logs:</h2>
+<h3>Add Log:</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -24,7 +26,7 @@
     {% endif %}
     <div class="row">
     {% for field in form %}
-        <div id="{{ field.auto_id }}_container" class="col-md-4">
+        <div id="{{ field.auto_id }}_container" class="col-md-3">
             {{ field.help_text }}
             <div>
                 {{ field.label_tag }} {{ field }}
@@ -38,15 +40,20 @@
     <input id="add_log" type="submit" value="Add log">
 </form>
 
-{% for log in contact.logentry_set.all %}
-<p>
-{% if log.time %}
-{{log.time }} (logged {{log.created}})
-{% else %}
-{{ log.created}}
-{% endif %} - 
-{{log.kind}} {{log.link}} - {{log.notes}}
-(<a href="{% url "log-edit" pk=log.id %}">edit</a>)
-</p>
-{% endfor %}
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Logs</h3></div>
+    <ul class="list-group">
+    {% for log in contact.logentry_set.all %}
+        <li class="list-group-item">
+        {% if log.time %}
+        {{log.time }} (logged {{log.created}})
+        {% else %}
+        {{ log.created}}
+        {% endif %} - 
+        {{log.kind}} {{log.link}} - {{log.notes}}
+        (<a href="{% url "log-edit" pk=log.id %}">edit</a>)
+        </li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock %}

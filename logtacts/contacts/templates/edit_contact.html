@@ -8,16 +8,39 @@
 <h1>Add Contact</h1>
 {% endif %}
 
+{% if contact.id %}
+<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
+{% endif %}
+
+<a href="{% url "contacts-list" %}">back to list</a>
+
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
+    {% if form.non_field_errors %}
     <ul>
-        {{ form.as_ul }}
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
     </ul>
-    <input id="save_contact" type="submit" value="Save">
+    {% endif %}
+    <ul class="list-group">
+    {% for field in form %}
+        <li id="{{ field.auto_id }}_container" class="list-group-item">
+            {{ field.help_text }}
+            <div>
+                {{ field.label_tag }} {{ field }}
+            </div>
+            <div id="{{ field.auto_id }}_errors">
+                {{ field.errors }}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+    <input id="add_log" type="submit" value="Save">
 </form>
 
 {% if contact.id %}
-<a href="{% url "contacts-delete" pk=contact.id %}">Delete</a>
+<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
 {% endif %}
 
 <a href="{% url "contacts-list" %}">back to list</a>
