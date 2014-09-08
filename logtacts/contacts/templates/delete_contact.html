@@ -6,6 +6,6 @@
 <form action="{% url "contacts-delete" pk=contact.id %}" method="POST">
     {% csrf_token %}
     <input type="submit" value="Yes, delete." />
-    <a href="%{ url "contacts-list" %}">No, cancel.</a>
+    <a href="{% url "contacts-list" %}">No, cancel.</a>
 </form>
 {% endblock %}

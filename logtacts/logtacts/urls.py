@@ -44,4 +44,9 @@ urlpatterns = patterns('',
         log_views.EditLogView.as_view(),
         name='log-edit',
     ),
+    url(
+        r'^log/delete/(?P<pk>\d+)/$',
+        log_views.DeleteLogView.as_view(),
+        name='log-delete',
+    ),
 )

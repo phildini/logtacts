@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Delete Log</h1>
+<p>Are you sure you want to delete the following log?</p>
+{{ logentry }}
+<form action="{% url "log-delete" pk=logentry.id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete." />
+    <a href="{% url "contacts-view" pk=logentry.contact.id %}">No, cancel.</a>
+</form>
+{% endblock %}

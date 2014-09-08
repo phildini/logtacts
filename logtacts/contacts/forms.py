@@ -19,7 +19,7 @@ class LogEntryForm(BootstrapForm, forms.ModelForm):
 
     class Meta:
         model = LogEntry
-        fields = ['kind','link','time','notes']
+        fields = ['kind','link','notes']
  
 
 class TagForm(BootstrapForm, forms.ModelForm):

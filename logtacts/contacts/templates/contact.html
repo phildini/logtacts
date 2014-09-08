@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load tz %}
+
 {% block content %}
 <h1>{{ contact }}</h1>
 <div class="row">
@@ -48,10 +50,10 @@
         {% if log.time %}
         {{log.time }} (logged {{log.created}})
         {% else %}
-        {{ log.created}}
-        {% endif %} - 
+        {{ log.created | localtime }}
+        {% endif %}(UTC) - 
         {{log.kind}} {{log.link}} - {{log.notes}}
-        (<a href="{% url "log-edit" pk=log.id %}">edit</a>)
+        (<a href="{% url "log-edit" pk=log.id %}">edit</a> | <a href="{% url "log-delete" pk=log.id %}">delete</a>)
         </li>
     {% endfor %}
     </ul>
