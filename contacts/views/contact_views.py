@@ -61,7 +61,7 @@ class CreateContactView(LoggedInMixin, CreateView):
     form_class = forms.ContactForm
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-view', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
         context = super(CreateContactView, self).get_context_data(**kwargs)
