@@ -13,6 +13,7 @@ class Contact(models.Model):
     portfolio = models.URLField(max_length=255, blank=True, null=True)
     cell_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
+    company = models.CharField(max_length=100, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField('Tag',blank=True)
 

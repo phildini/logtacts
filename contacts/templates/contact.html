@@ -19,6 +19,7 @@
 <div class="col-md-6">Portfolio: <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a></div>
 <div class="col-md-6">Cell Phone: {{ contact.cell_phone }}</div>
 <div class="col-md-6">Home Phone: {{ contact.home_phone }}</div>
+<div class="col-md-6">Company: {{ contact.company }}</div>
 <div class="col-md-6">Notes: {{ contact.notes }}</div>
 </div>
 <a href="{% url "contacts-edit" pk=contact.id %}" class="btn btn-primary">Edit</a>
