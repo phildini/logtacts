@@ -52,6 +52,7 @@ class LogEntry(models.Model):
         ('facebook', 'Facebook'),
         ('email', 'Email'),
         ('in person', 'In Person'),
+        ('website', 'Website'),
         ('other', 'Other'),
     )
 

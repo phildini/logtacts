@@ -50,20 +50,36 @@
     <input id="add_log" type="submit" value="Add log">
 </form>
 
-<div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Logs</h3></div>
-    <ul class="list-group">
-    {% for log in contact.logentry_set.all %}
-        <li class="list-group-item">
-        {% if log.time %}
-        {{log.time }} (logged {{log.created}})
-        {% else %}
-        {{ log.created | localtime }}
-        {% endif %}(UTC) - logged by {{ log.logged_by }} - 
-        {{log.kind}} {{log.link}} - {{log.notes}}
-        (<a href="{% url "log-edit" pk=log.id %}">edit</a> | <a href="{% url "log-delete" pk=log.id %}">delete</a>)
-        </li>
-    {% endfor %}
-    </ul>
+<h3>Logs</h3>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Logged By</th>
+                <th>Kind</th>
+                <th>Link</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in contact.logentry_set.all %}
+            <tr>
+                <td>
+                    {% if log.time %}
+                    {{log.time | localtime}} (logged {{log.created | localtime }})
+                    {% else %}
+                    {{ log.created | localtime }}
+                    {% endif %}
+                </td>
+                <td>{{ log.logged_by }}</td>
+                <td>{{ log.kind }}</td>
+                <td><a href="{{log.link}}">{{log.link}}</a></td>
+                <td>{{log.notes}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
 {% endblock %}
