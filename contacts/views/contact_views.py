@@ -20,6 +20,10 @@ class ContactListView(LoggedInMixin, ListView):
     model = Contact
     template_name = 'contact_list.html'
 
+    def get_queryset(self):
+        qs = super(ContactListView, self).get_queryset()
+        return qs.order_by('name')
+
 class ContactView(LoggedInMixin, FormView):
 
     template_name = 'contact.html'
