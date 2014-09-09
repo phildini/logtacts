@@ -59,7 +59,7 @@
         {{log.time }} (logged {{log.created}})
         {% else %}
         {{ log.created | localtime }}
-        {% endif %}(UTC) - 
+        {% endif %}(UTC) - logged by {{ log.logged_by }} - 
         {{log.kind}} {{log.link}} - {{log.notes}}
         (<a href="{% url "log-edit" pk=log.id %}">edit</a> | <a href="{% url "log-delete" pk=log.id %}">delete</a>)
         </li>
