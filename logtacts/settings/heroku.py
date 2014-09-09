@@ -14,6 +14,8 @@ ALLOWED_HOSTS = [
     '.herokuapp.com',
 ]
 
+STATIC_URL = '//inkpebble.s3.amazonaws.com/assets/'
+
 INSTALLED_APPS += (
     'gunicorn',
 )
