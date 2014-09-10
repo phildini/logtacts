@@ -8,11 +8,13 @@
 <h1>Add Contact</h1>
 {% endif %}
 
+<div class="well well-sm">
 {% if contact.id %}
 <a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
+<a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
 {% endif %}
-
-<a href="{% url "contacts-list" %}">back to list</a>
+<a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
+</div>
 
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
@@ -23,9 +25,9 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <ul class="list-group">
+    <div class="row">
     {% for field in form %}
-        <li id="{{ field.auto_id }}_container" class="list-group-item">
+        <div id="{{ field.auto_id }}_container" class="col-md-6">
             {{ field.help_text }}
             <div>
                 {{ field.label_tag }} {{ field }}
@@ -33,18 +35,20 @@
             <div id="{{ field.auto_id }}_errors">
                 {{ field.errors }}
             </div>
-        </li>
+        </div>
     {% endfor %}
-    </ul>
-    <div><a href="{% url "tags-new" %}" class="btn btn-default">create tag</a></div>
-    <input id="add_log" type="submit" value="Save">
+    </div>
+    <div class="md-col-6"><a href="{% url "tags-new" %}" class="btn btn-default">create tag</a></div>
+    <div style="padding: 10px 0;">
+    <input class="btn btn-success btn-lg" type="submit" value="Save">
+    </div>
 </form>
 
-<div class="row">
+<div class="well well-sm">
 {% if contact.id %}
 <a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
+<a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
 {% endif %}
-
-<a href="{% url "contacts-list" %}">back to list</a>
+<a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
 </div>
 {% endblock %}
