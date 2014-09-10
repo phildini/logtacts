@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load gravatar %}
+
 {% block content %}
 {% if tag %}
 <h1>"{{ tag.tag }}" Contacts</h1>
@@ -9,6 +11,7 @@
 <ul>
     {% for contact in object_list %}
     <li>
+        {% gravatar contact.email 30 %}
         <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
         (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
     </li>
