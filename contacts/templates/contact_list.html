@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if tag %}
+<h1>"{{ tag.tag }}" Contacts</h1>
+{% else %}
 <h1>Contacts</h1>
+{% endif %}
 <ul>
     {% for contact in object_list %}
     <li>
@@ -11,5 +15,5 @@
     {% endfor %}
 </ul>
 
-<a href="{% url "contacts-new" %}">add contact</a>
+<a href="{% url "contacts-new" %}" class="btn btn-success">add contact</a>
 {% endblock %}

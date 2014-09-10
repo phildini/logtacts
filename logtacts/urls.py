@@ -55,4 +55,9 @@ urlpatterns = patterns('',
         contact_views.CreateTagView.as_view(),
         name='tags-new',
     ),
+    url(
+        r'^tagged/(?P<pk>\d+)/$',
+        contact_views.TaggedContactListView.as_view(),
+        name='contacts-tagged',
+    ),
 )

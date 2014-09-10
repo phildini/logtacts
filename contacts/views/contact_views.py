@@ -112,3 +112,19 @@ class CreateTagView(LoggedInMixin, CreateView):
 
         return context
 
+class TaggedContactListView(LoggedInMixin, ListView):
+
+    model = Contact
+    template_name = 'contact_list.html'
+
+    def get_queryset(self):
+        return Contact.objects.filter(
+            tags__id=self.kwargs.get('pk'),
+        ).order_by('name')
+
+    def get_context_data(self, **kwargs):
+        context = super(TaggedContactListView, self).get_context_data(**kwargs)
+        context['tag'] = Tag.objects.get(id=self.kwargs.get('pk'))
+
+        return context
+
