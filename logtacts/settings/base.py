@@ -97,3 +97,52 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'django.contrib.auth.views.login'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'loggly': {
+            '()': 'jsonlogger.JsonFormatter',
+            'format': '%(levelname)s %(message)s %(status_code)s %(module)s %(name)s %(pathname)s %(asctime)s',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+    },
+    'handlers': {
+        'loggly-handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.SysLogHandler',
+            'facility': 'local5',
+            'formatter': 'loggly',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'loggly',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console', 'loggly-handler'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'post_to_social': {
+            'handlers': ['console', 'loggly-handler'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'loggly_logs':{
+            'handlers': ['console', 'loggly-handler'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+    },
+}
