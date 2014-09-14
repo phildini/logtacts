@@ -38,7 +38,7 @@ class ContactView(LoggedInMixin, FormView):
     def get_success_url(self):
         return reverse(
             'contacts-view',
-            args=(self.kwargs.get('pk')),
+            kwargs={'pk': self.kwargs.get('pk')},
         )
 
     def get_context_data(self, **kwargs):
