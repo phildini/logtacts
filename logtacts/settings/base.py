@@ -98,6 +98,20 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'django.contrib.auth.views.login'
 
+ADMINS = (
+    ('Philip James', 'philip@inkpebble.com'),
+)
+
+MANAGERS = ADMINS
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mandrillapp.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'pjj@philipjohnjames.com'
+EMAIL_HOST_PASSWORD = get_env_variable('MANDRILL_KEY')
+DEFAULT_FROM_EMAIL = 'site@inkpebble.com'
+SERVER_EMAIL = 'site@inkpebble.com'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
