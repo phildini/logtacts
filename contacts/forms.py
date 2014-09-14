@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from contacts.models import Contact, LogEntry, Tag
 
@@ -26,5 +27,12 @@ class TagForm(BootstrapForm, forms.ModelForm):
 
     class Meta:
         model = Tag
-        fields = ['tag']
+        fields = ['tag', 'color']
+
+    def clean(self):
+
+        if self.cleaned_data.get('color') and len(self.cleaned_data.get('color')) > 6:
+            raise ValidationError("Hex colors must be six digits or less!")
+
+        return self.cleaned_data
 

@@ -24,6 +24,11 @@ class ContactListView(LoggedInMixin, ListView):
         qs = super(ContactListView, self).get_queryset()
         return qs.order_by('name')
 
+    def get_context_data(self, **kwargs):
+        context = super(ContactListView, self).get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
+        return context
+
 class ContactView(LoggedInMixin, FormView):
 
     template_name = 'contact.html'
@@ -43,7 +48,6 @@ class ContactView(LoggedInMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactView, self).get_context_data(**kwargs)
-        
         context['contact'] = self.contact
         return context
 
