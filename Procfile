@@ -1,1 +1,1 @@
-web: gunicorn logtacts.wsgi
+web: newrelic-admin run-program gunicorn logtacts.wsgi
