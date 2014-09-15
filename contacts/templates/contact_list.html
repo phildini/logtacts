@@ -9,7 +9,7 @@
         <h1>"{{ tag.tag }}" Contacts</h1>
         {% else %}
         <h1>Contacts</h1>
-        {% endif %}
+        {% endif %} <a href="{% url "contacts-new" %}" class="btn btn-success">add contact</a>
         <ul>
             {% for contact in object_list %}
             <li>
@@ -18,11 +18,9 @@
             </li>
             {% endfor %}
         </ul>
-        <a href="{% url "contacts-new" %}" class="btn btn-success">add contact</a>
     </div>
     <div class="col-md-6">
-        <h1>Tags</h1>
-        <a href="{% url "tags-new" %}" class="btn btn-success">add tag</a>
+        <h1>Tags</h1><a href="{% url "tags-new" %}" class="btn btn-success">add tag</a>
         <ul>
             {% for tag in tags %}
             <li>
