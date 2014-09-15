@@ -14,6 +14,9 @@
             {% for contact in object_list %}
             <li>
                 <a href="{{ contact.get_absolute_url }}">{% gravatar contact.email 30 %} {{ contact }}</a>
+                {% for tag in contact.tags.all %}
+                <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default">{{ tag }}</span></a>
+                {% endfor %}
                 (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
             </li>
             {% endfor %}
