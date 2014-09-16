@@ -129,6 +129,7 @@ class TaggedContactListView(LoggedInMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(TaggedContactListView, self).get_context_data(**kwargs)
         context['tag'] = Tag.objects.get(id=self.kwargs.get('pk'))
+        context['tags'] = Tag.objects.all()
 
         return context
 
