@@ -61,6 +61,7 @@
                 <th>Kind</th>
                 <th>Link</th>
                 <th>Notes</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -77,6 +78,10 @@
                 <td>{{ log.kind }}</td>
                 <td><a href="{{log.link}}">{{log.link}}</a></td>
                 <td>{{log.notes}}</td>
+                <td>
+                    <a href="{% url "log-edit" pk=log.id %}">Edit</a>
+                    <a href="{% url "log-delete" pk=log.id %}">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
