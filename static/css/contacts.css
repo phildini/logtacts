@@ -2,14 +2,14 @@
     list-style: none;
 }
 
-.contact-list-contact {
-    padding-bottom: 10px;
-}
-
 .tag-list {
     list-style: none;
 }
 
 .tag-list-tag {
     padding-bottom: 10px;
+}
+
+.text-faint {
+    color: lightgrey;
 }

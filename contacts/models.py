@@ -23,6 +23,10 @@ class Contact(models.Model):
     def get_absolute_url(self):
         return reverse('contacts-view', kwargs={'pk': self.id})
 
+    def last_contacted(self):
+        last_log = LogEntry.objects.filter(contact=self).latest('created')
+        return last_log.created
+
 
 class Tag(models.Model):
     created = models.DateTimeField(auto_now_add=True)
