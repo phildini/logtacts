@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from django.core.exceptions import ImproperlyConfigured
+from unipath import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -36,6 +37,15 @@ TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
+PROJECT_ROOT = Path(__file__).ancestor(3)
+
+MEDIA_ROOT = PROJECT_ROOT.child('media')
+STATIC_ROOT = ''
+STATICFILES_DIRS = (
+    PROJECT_ROOT.child('static'),
+)
+STATIC_URL = '/static/'
+
 
 # Application definition
 
@@ -47,6 +57,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_gravatar',
+    # 'haystack',
     'contacts',
 )
 
