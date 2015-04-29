@@ -12,6 +12,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.herokuapp.com',
+    '.pebble.ink',
 ]
 
 STATIC_URL = '//logtacts.s3.amazonaws.com/assets/'
