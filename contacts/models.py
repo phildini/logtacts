@@ -2,6 +2,18 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 
+
+class Tag(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    changed = models.DateTimeField(auto_now=True)
+    tag = models.CharField(max_length=100)
+    color = models.CharField(max_length=20, blank=True, null=True)
+    book = models.ForeignKey('Book', blank=True, null=True)
+
+    def __str__(self):
+        return self.tag
+
+
 class Contact(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
@@ -15,9 +27,9 @@ class Contact(models.Model):
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
-    tags = models.ManyToManyField('Tag',blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -28,24 +40,12 @@ class Contact(models.Model):
         return last_log.created
 
 
-class Tag(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    changed = models.DateTimeField(auto_now=True)
-    tag = models.CharField(max_length=100)
-    color = models.CharField(max_length=20, blank=True, null=True)
-    book = models.ForeignKey('Book', blank=True, null=True)
-
-    def __unicode__(self):
-        return self.tag
-
-
 class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
-    users = models.ManyToManyField(User)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -75,5 +75,5 @@ class LogEntry(models.Model):
     logged_by = models.ForeignKey(User, blank=True, null=True, related_name='logged_by')
     notes = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "Log on %s" % (self.contact,)
