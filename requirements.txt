@@ -7,3 +7,5 @@ psycopg2==2.5.4
 python-json-logger==0.0.6
 pytz==2014.7
 Unipath==1.1
+Whoosh==2.7.0
+jango-haystack==2.4.0

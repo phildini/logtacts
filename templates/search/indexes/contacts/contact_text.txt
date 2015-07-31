@@ -1,0 +1,5 @@
+{{ object.name }}
+{{ object.email }}
+{{ object.twitter }}
+{{ object.company }}
+{{ object.notes }}
