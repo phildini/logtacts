@@ -17,6 +17,7 @@ class Tag(models.Model):
 class Contact(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
+    book = models.ForeignKey('Book', blank=True, null=True)
     name = models.CharField(max_length=255)
     email = models.EmailField(blank=True, null=True)
     twitter = models.CharField(max_length=140, blank=True, null=True)
@@ -26,6 +27,7 @@ class Contact(models.Model):
     cell_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True, null=True)
     company = models.CharField(max_length=100, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
@@ -47,6 +49,15 @@ class Book(models.Model):
 
     def __str__(self):
         return self.name
+
+class BookOwner(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    changed = models.DateTimeField(auto_now=True)
+    book = models.ForeignKey('Book')
+    user = models.ForeignKey(User)
+
+    def __str__(self):
+        return "{} is an owner of {}".format(self.user, self.book)
 
 
 class LogEntry(models.Model):

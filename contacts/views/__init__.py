@@ -1,9 +1,40 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
+
+from contacts.models import BookOwner
 
 
 class LoggedInMixin(object):
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixin, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect(
+                '{}?next={}'.format(settings.LOGIN_URL, request.path)
+            )
+        return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super(LoggedInMixin, self).get_queryset()
+        queryset = queryset.filter(
+            book__bookowner__user=self.request.user,
+        )
+        return queryset
+
+    def get_object(self, queryset=None):
+        instance = super(LoggedInMixin, self).get_object(queryset)
+
+        if not instance.book.bookowner_set.filter(user=self.request.user):
+            raise PermissionDenied
+
+        return instance
+
+    def form_valid(self, form):
+        form.instance.book = BookOwner.objects.get(
+            user=self.request.user
+        ).book
+        response = super(LoggedInMixin, self).form_valid(form)
+
+        return response

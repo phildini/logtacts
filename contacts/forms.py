@@ -14,7 +14,7 @@ class ContactForm(BootstrapForm, forms.ModelForm):
 
     class Meta:
         model = Contact
-        exclude = ['created', 'changed']
+        exclude = ['created', 'changed', 'book']
 
 
 class LogEntryForm(BootstrapForm, forms.ModelForm):
