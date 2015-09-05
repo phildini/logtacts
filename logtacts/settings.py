@@ -39,7 +39,7 @@ TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
-PROJECT_ROOT = Path(__file__).ancestor(3)
+PROJECT_ROOT = Path(BASE_DIR)
 
 MEDIA_ROOT = PROJECT_ROOT.child('media')
 STATIC_ROOT = ''

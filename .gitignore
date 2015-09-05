@@ -50,6 +50,7 @@ coverage.xml
 *.log
 *.pot
 *.sqlite3
+.env
 whoosh_index/
 
 # Sphinx documentation
