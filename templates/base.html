@@ -22,6 +22,11 @@
         </form>
     </nav>
     <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }} alert alert-info"{% endif %}>{% if 'safe' in message.tags %}{{ message | safe }}{% else %}{{ message }}{% endif %}</div>
+        {% endfor %}
+    {% endif %}
     {% block content %}
     {% endblock %}
     <footer>

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.views.generic import (
     CreateView,
@@ -57,6 +58,10 @@ class ContactView(LoggedInMixin, FormView):
         new_log.contact = self.contact
         new_log.logged_by = self.request.user
         form.save()
+        messages.success(
+            self.request,
+            "Log added",
+        )
         return super(ContactView, self).form_valid(form)
 
 class CreateContactView(LoggedInMixin, CreateView):
@@ -71,8 +76,14 @@ class CreateContactView(LoggedInMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateContactView, self).get_context_data(**kwargs)
         context['action'] = reverse('contacts-new')
-
         return context
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Contact added",
+        )
+        return super(CreateContactView, self).form_valid(form)
 
 class EditContactView(LoggedInMixin, UpdateView):
     model = Contact
@@ -94,6 +105,13 @@ class EditContactView(LoggedInMixin, UpdateView):
 
         return context
 
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Contact updated",
+        )
+        return super(EditContactView, self).form_valid(form)
+
 
 class DeleteContactView(LoggedInMixin, DeleteView):
 
@@ -102,6 +120,13 @@ class DeleteContactView(LoggedInMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('contacts-list')
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Contact deleted",
+        )
+        return super(DeleteContactView, self).form_valid(form)
 
 class CreateTagView(LoggedInMixin, CreateView):
     model = Tag
@@ -116,6 +141,13 @@ class CreateTagView(LoggedInMixin, CreateView):
         context['action'] = reverse('tags-new')
 
         return context
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Tag created",
+        )
+        return super(CreateTagView, self).form_valid(form)
 
 class TaggedContactListView(LoggedInMixin, ListView):
 

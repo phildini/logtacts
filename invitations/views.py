@@ -26,6 +26,14 @@ class CreateInviteView(CreateView):
     form_class = InvitationForm
     template_name = 'invite_edit.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect(
+                '{}?next={}'.format(settings.LOGIN_URL, request.path)
+            )
+        return super(CreateInviteView, self).dispatch(request, *args, **kwargs)
+
+
     def get_success_url(self, **kwargs):
         return reverse('contacts-list')
 
@@ -34,6 +42,10 @@ class CreateInviteView(CreateView):
         form.instance.book = BookOwner.objects.get(
             user=self.request.user,
         ).book
+        messages.success(
+            self.request,
+            "Invited {}".format(form.cleaned_data.get('email')),
+        )
         return super(CreateInviteView, self).form_valid(form)
 
 
@@ -80,4 +92,8 @@ class ChangePasswordView(FormView):
         return self.form_class(self.request.user, **self.get_form_kwargs())
 
     def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Welcome to Logtacts!",
+        )
         return super(ChangePasswordView, self).form_valid(form)

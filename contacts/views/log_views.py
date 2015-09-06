@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.views.generic import (
     DeleteView,
@@ -19,6 +20,13 @@ class EditLogView(LoggedInMixin, UpdateView):
             kwargs={'pk': self.object.contact.id},
         )
 
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Log edited",
+        )
+        return super(EditLogView, self).form_valid(form)
+
 class DeleteLogView(LoggedInMixin, DeleteView):
 
     model = LogEntry
@@ -29,3 +37,10 @@ class DeleteLogView(LoggedInMixin, DeleteView):
             'contacts-view',
             kwargs={'pk': self.object.contact.id},
         )
+
+        def form_valid(self, form):
+            messages.success(
+                self.request,
+                "Log deleted",
+            )
+        return super(DeleteLogView, self).form_valid(form)

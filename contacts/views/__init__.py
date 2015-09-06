@@ -1,14 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
-from django.utils.decorators import method_decorator
 
 from contacts.models import BookOwner
 
 
 class LoggedInMixin(object):
 
-    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect(
