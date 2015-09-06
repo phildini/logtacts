@@ -9,7 +9,7 @@ class LoggedInMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect(
-                '{}?next={}'.format(settings.LOGIN_URL, request.path)
+                '/login?next={}'.format(request.path)
             )
         return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
 

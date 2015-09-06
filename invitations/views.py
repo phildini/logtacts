@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.hashers import make_password
@@ -29,7 +30,7 @@ class CreateInviteView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect(
-                '{}?next={}'.format(settings.LOGIN_URL, request.path)
+                '/login?next={}'.format(request.path)
             )
         return super(CreateInviteView, self).dispatch(request, *args, **kwargs)
 
