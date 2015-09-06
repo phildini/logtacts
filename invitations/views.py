@@ -74,7 +74,8 @@ class AcceptInviteView(View):
         )
         user.save()
         user = authenticate(username=invite.email, password=password_plain)
-        BookOwner.objects.create(user=user, book=invite.book)
+        if invite.book:
+            BookOwner.objects.create(user=user, book=invite.book)
         login(request, user)
         invite.status = invite.ACCEPTED
         invite.save()
