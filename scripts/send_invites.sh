@@ -3,5 +3,5 @@ source /home/deploy/.bashrc
 cd /home/deploy/Env/logtacts
 source bin/activate
 cd /home/deploy/logtacts
-python manage.py update_index --age=1 --remove --settings=logtacts.prod_settings
+python manage.py send_invites --settings=logtacts.prod_settings
 deactivate
