@@ -5,6 +5,7 @@ from contacts.models import Contact
 class ContactIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.CharField(document=True, use_template=True)
+    book = indexes.IntegerField(model_attr="book_id")
 
     def get_model(self):
         return Contact

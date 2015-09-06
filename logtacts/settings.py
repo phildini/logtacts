@@ -50,6 +50,9 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
+LIST_PAGINATE_BY = 25
+LIST_PAGINATE_ORPHANS = 5
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

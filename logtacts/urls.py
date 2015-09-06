@@ -4,6 +4,7 @@ from django.contrib import admin
 from contacts.views import (
     contact_views,
     log_views,
+    search_views,
 )
 
 from invitations.views import (
@@ -27,7 +28,11 @@ urlpatterns = patterns('',
     ),
     url(r'^account/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^search/', include('haystack.urls')),
+    url(
+        r'^search/',
+        search_views.ContactSearchView.as_view(),
+        name="search",
+    ),
     url(
         r'^$',
         contact_views.ContactListView.as_view(),
