@@ -6,6 +6,12 @@ from contacts.views import (
     log_views,
 )
 
+from invitations.views import (
+    CreateInviteView,
+    AcceptInviteView,
+    ChangePasswordView,
+)
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -14,6 +20,11 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout'),
+    url(
+        r'^set-password/$',
+        ChangePasswordView.as_view(),
+        name='set-password',
+    ),
     url(r'^account/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^search/', include('haystack.urls')),
@@ -61,5 +72,11 @@ urlpatterns = patterns('',
         r'^tagged/(?P<pk>\d+)/$',
         contact_views.TaggedContactListView.as_view(),
         name='contacts-tagged',
+    ),
+    url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
+    url(
+        r'^invites/accept/(?P<key>[\w-]+)/$',
+        AcceptInviteView.as_view(),
+        name='accept-invite',
     ),
 )

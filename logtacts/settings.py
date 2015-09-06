@@ -39,6 +39,8 @@ TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
+SITE_ID=1
+
 PROJECT_ROOT = Path(BASE_DIR)
 
 MEDIA_ROOT = PROJECT_ROOT.child('media')
@@ -70,13 +72,15 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',
+    'django.contrib.sites',
     'django_gravatar',
     'haystack',
     'contacts',
+    'invitations',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -147,6 +151,8 @@ EMAIL_HOST_USER = 'pjj@philipjohnjames.com'
 EMAIL_HOST_PASSWORD = get_env_variable('MANDRILL_KEY')
 DEFAULT_FROM_EMAIL = 'site@inkpebble.com'
 SERVER_EMAIL = 'site@inkpebble.com'
+
+SLACK_WEBHOOK_URL = get_env_variable('SLACK_WEBHOOK_URL')
 
 LOGGING = {
     'version': 1,
