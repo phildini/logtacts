@@ -13,6 +13,8 @@ from invitations.views import (
     ChangePasswordView,
 )
 
+from logtacts.views import HomeView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -33,8 +35,9 @@ urlpatterns = patterns('',
         search_views.ContactSearchView.as_view(),
         name="search",
     ),
+    url(r'^$', HomeView.as_view(), name='home'),
     url(
-        r'^$',
+        r'^list/$',
         contact_views.ContactListView.as_view(),
         name='contacts-list',
     ),
