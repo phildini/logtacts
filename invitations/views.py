@@ -16,7 +16,10 @@ from django.views.generic import (
     View,
 )
 
-from contacts.models import BookOwner
+from contacts.models import (
+    Book,
+    BookOwner,
+)
 from .models import Invitation
 from .forms import InvitationForm
 
@@ -76,6 +79,9 @@ class AcceptInviteView(View):
         user = authenticate(username=invite.email, password=password_plain)
         if invite.book:
             BookOwner.objects.create(user=user, book=invite.book)
+        else:
+            book = Book.objects.create(name="{}'s Book".format(user))
+            BookOwner.objects.create(book=book,user=user)
         login(request, user)
         invite.status = invite.ACCEPTED
         invite.save()

@@ -21,10 +21,9 @@ class Command(BaseCommand):
             logger.debug('Sending invite %s' % (invite.id))
             invite.status = Invitation.PROCESSING
             invite.save()
-            try:
-                message = EmailMessage(
-                    subject="[Logtacts] Invitation to share %s's contact book" % (invite.sender),
-                    body=(
+            if invite.book:
+                subject = "[Logtacts] Invitation to share %s's contact book" % (invite.sender)
+                body = (
                         "%s has invited you to share their contact book on Logtacts.\n"
                         "Go to https://%s/invites/accept/%s/ to join!"
                     ) % (
@@ -32,6 +31,16 @@ class Command(BaseCommand):
                         Site.objects.get_current().domain,
                         invite.key,
                     ),
+            else:
+                subject = "[Logtacts] Invitation to join Logtacts from %s" % (invite.sender)
+                body = "Go to https://%s/invites/accept/%s/ to join!" % (
+                        Site.objects.get_current().domain,
+                        invite.key,
+                    ),
+            try:
+                message = EmailMessage(
+                    subject=subject,
+                    body=body,
                     from_email="invites@logtacts.com",
                     to=[invite.email,],
                 )
