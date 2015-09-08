@@ -12,6 +12,12 @@ class BootstrapForm(object):
 
 class ContactForm(BootstrapForm, forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        book = kwargs.pop('book')
+        super(ContactForm, self).__init__(*args, **kwargs)
+        choices = Tag.objects.filter(book=book).values_list('id', 'tag')
+        self.fields['tags'].choices = choices
+
     class Meta:
         model = Contact
         exclude = ['created', 'changed', 'book']

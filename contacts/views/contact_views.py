@@ -1,5 +1,8 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.shortcuts import (
+    get_object_or_404,
+)
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -10,6 +13,7 @@ from django.views.generic import (
 
 from contacts.models import (
     Contact,
+    BookOwner,
     Tag,
 )
 
@@ -27,7 +31,7 @@ class ContactListView(LoggedInMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
-        context['tags'] = Tag.objects.all()
+        context['tags'] = Tag.objects.filter(book__bookowner__user=self.request.user)
         return context
 
 class ContactView(LoggedInMixin, FormView):
@@ -36,8 +40,10 @@ class ContactView(LoggedInMixin, FormView):
     form_class = forms.LogEntryForm
 
     def dispatch(self, request, **kwargs):
-        self.contact = Contact.objects.get(
+        self.contact = get_object_or_404(
+            Contact.objects,
             pk=self.kwargs.get('pk'),
+            book__bookowner__user=self.request.user,
         )
         return super(ContactView, self).dispatch(request, **kwargs)
 
@@ -73,6 +79,11 @@ class CreateContactView(LoggedInMixin, CreateView):
     def get_success_url(self):
         return reverse('contacts-view', kwargs={'pk': self.object.id})
 
+    def get_form_kwargs(self):
+        kwargs = super(CreateContactView, self).get_form_kwargs()
+        kwargs['book'] = BookOwner.objects.get(user=self.request.user).book
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super(CreateContactView, self).get_context_data(**kwargs)
         context['action'] = reverse('contacts-new')
@@ -95,6 +106,11 @@ class EditContactView(LoggedInMixin, UpdateView):
             'contacts-view',
             kwargs={'pk': self.get_object().id},
         )
+
+    def get_form_kwargs(self):
+        kwargs = super(EditContactView, self).get_form_kwargs()
+        kwargs['book'] = BookOwner.objects.get(user=self.request.user).book
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(EditContactView, self).get_context_data(**kwargs)

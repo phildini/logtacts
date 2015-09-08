@@ -25,3 +25,21 @@ class InvitationForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         self.instance.key = get_random_string(32).lower()
         return super(InvitationForm, self).save(*args, **kwargs)
+
+
+class InvitationAdminAddForm(forms.ModelForm):
+
+    class Meta:
+        model = Invitation
+        fields = ['email', 'book', 'sender', 'status']
+
+    def save(self, *args, **kwargs):
+        self.instance.key = get_random_string(32).lower()
+        return super(InvitationAdminAddForm, self).save(*args, **kwargs)
+
+
+class InvitationAdminUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Invitation
+        fields = '__all__'

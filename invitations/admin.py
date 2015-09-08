@@ -1,5 +1,18 @@
 from django.contrib import admin
-from invitations.models import Invitation
+from .models import Invitation
+from .forms import InvitationAdminAddForm, InvitationAdminUpdateForm
 
 
-admin.site.register(Invitation)
+class InvitationAdmin(admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+
+        if obj:
+            kwargs['form'] = InvitationAdminUpdateForm
+        else:
+            kwargs['form'] = InvitationAdminAddForm
+
+        return super(InvitationAdmin, self).get_form(request, obj, **kwargs)
+
+
+admin.site.register(Invitation, InvitationAdmin)
