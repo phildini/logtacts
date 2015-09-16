@@ -45,7 +45,7 @@
 </form>
 
 <div class="well well-sm">
-<input class="btn btn-success" type="submit" value="Save" id="contactForm">
+<input class="btn btn-success" type="submit" value="Save" form="contactForm">
 {% if contact.id %}
 <a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
 <a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
