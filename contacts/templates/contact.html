@@ -14,7 +14,7 @@
 </div>
 <div class="row">
 <div class="col-md-6">Email: <a href="mailto:{{ contact.email }}">{{contact.email}}</a></div>
-<div class="col-md-6">Twitter: <a href="http://twitter.com/{{ contact.twitter }}">@{{ contact.twitter }}</a></div>
+<div class="col-md-6">Twitter: <a href="http://twitter.com/{{ contact.twitter }}">{% if contact.twitter %}@{{ contact.twitter }}{% endif %}</a></div>
 <div class="col-md-6">Tumblr: {{ contact.tumblr }}</div>
 <div class="col-md-6">Website: <a href="{{ contact.website }}">{{ contact.website }}</a></div>
 <div class="col-md-6">Portfolio: <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a></div>
