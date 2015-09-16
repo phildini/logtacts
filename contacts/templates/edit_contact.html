@@ -9,14 +9,14 @@
 {% endif %}
 
 <div class="well well-sm">
+<input class="btn btn-success" type="submit" value="Save" form="contactForm">
 {% if contact.id %}
 <a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
 <a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
 {% endif %}
 <a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
 </div>
-
-<form action="{{ action }}" method="POST">
+<form action="{{ action }}" method="POST" id="contactForm">
     {% csrf_token %}
     {% if form.non_field_errors %}
     <ul>
@@ -35,16 +35,17 @@
             <div id="{{ field.auto_id }}_errors">
                 {{ field.errors }}
             </div>
+            {% if field.label == "Tags" %}
+                <a href="{% url "tags-new" %}" class="btn btn-default">create tag</a>
+            {% endif %}
         </div>
     {% endfor %}
     </div>
-    <div class="md-col-6"><a href="{% url "tags-new" %}" class="btn btn-default">create tag</a></div>
-    <div style="padding: 10px 0;">
-    <input class="btn btn-success btn-lg" type="submit" value="Save">
-    </div>
+    <div class="md-col-6"></div>
 </form>
 
 <div class="well well-sm">
+<input class="btn btn-success" type="submit" value="Save">
 {% if contact.id %}
 <a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
 <a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>

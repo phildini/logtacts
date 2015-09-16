@@ -10,17 +10,26 @@ class BootstrapForm(object):
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
 
-class ContactForm(BootstrapForm, forms.ModelForm):
+class ContactForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         book = kwargs.pop('book')
         super(ContactForm, self).__init__(*args, **kwargs)
         choices = Tag.objects.filter(book=book).values_list('id', 'tag')
+        for field in self.fields:
+            if field != 'tags':
+                self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['tags'].choices = choices
+        # import pdb; pdb.set_trace()
 
     class Meta:
         model = Contact
         exclude = ['created', 'changed', 'book']
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple(),
+            'notes': forms.Textarea(attrs={'rows':5}),
+            'address': forms.Textarea(attrs={'rows':5}),
+        }
 
 
 class LogEntryForm(BootstrapForm, forms.ModelForm):
@@ -28,6 +37,9 @@ class LogEntryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = LogEntry
         fields = ['kind','link','notes']
+        widgets = {
+            'notes': forms.Textarea(attrs={'rows':5}),
+        }
  
 
 class TagForm(BootstrapForm, forms.ModelForm):
