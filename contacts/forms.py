@@ -20,15 +20,14 @@ class ContactForm(forms.ModelForm):
             if field != 'tags':
                 self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['tags'].choices = choices
-        # import pdb; pdb.set_trace()
 
     class Meta:
         model = Contact
         exclude = ['created', 'changed', 'book']
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
-            'notes': forms.Textarea(attrs={'rows':5}),
-            'address': forms.Textarea(attrs={'rows':5}),
+            'notes': forms.Textarea(attrs={'rows':3}),
+            'address': forms.Textarea(attrs={'rows':3}),
         }
 
 
@@ -38,7 +37,7 @@ class LogEntryForm(BootstrapForm, forms.ModelForm):
         model = LogEntry
         fields = ['kind','link','notes']
         widgets = {
-            'notes': forms.Textarea(attrs={'rows':5}),
+            'notes': forms.Textarea(attrs={'rows':3}),
         }
  
 

@@ -14,13 +14,14 @@
 </div>
 <div class="row">
 <div class="col-md-6">Email: <a href="mailto:{{ contact.email }}">{{contact.email}}</a></div>
-<div class="col-md-6">Twitter: @<a href="http://twitter.com/{{ contact.twitter }}">{{ contact.twitter }}</a></div>
+<div class="col-md-6">Twitter: <a href="http://twitter.com/{{ contact.twitter }}">@{{ contact.twitter }}</a></div>
 <div class="col-md-6">Tumblr: {{ contact.tumblr }}</div>
 <div class="col-md-6">Website: <a href="{{ contact.website }}">{{ contact.website }}</a></div>
 <div class="col-md-6">Portfolio: <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a></div>
 <div class="col-md-6">Cell Phone: {{ contact.cell_phone }}</div>
 <div class="col-md-6">Home Phone: {{ contact.home_phone }}</div>
 <div class="col-md-6">Company: {{ contact.company }}</div>
+<div class="col-md-6">Address: {{ contact.address }}</div>
 <div class="col-md-6">Notes: {{ contact.notes }}</div>
 </div>
 <a href="{% url "contacts-edit" pk=contact.id %}" class="btn btn-primary">Edit</a>
