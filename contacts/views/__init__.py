@@ -13,6 +13,9 @@ class LoggedInMixin(object):
             )
         return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
 
+
+class BookOwnerMixin(LoggedInMixin):
+
     def get_queryset(self):
         queryset = super(LoggedInMixin, self).get_queryset()
         queryset = queryset.filter(

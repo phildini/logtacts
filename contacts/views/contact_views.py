@@ -10,6 +10,7 @@ from django.views.generic import (
     UpdateView,
     FormView,
 )
+from django.utils import timezone
 
 from contacts.models import (
     Contact,
@@ -18,9 +19,9 @@ from contacts.models import (
 )
 
 from contacts import forms
-from contacts.views import LoggedInMixin
+from contacts.views import BookOwnerMixin
 
-class ContactListView(LoggedInMixin, ListView):
+class ContactListView(BookOwnerMixin, ListView):
 
     model = Contact
     template_name = 'contact_list.html'
@@ -34,7 +35,7 @@ class ContactListView(LoggedInMixin, ListView):
         context['tags'] = Tag.objects.filter(book__bookowner__user=self.request.user)
         return context
 
-class ContactView(LoggedInMixin, FormView):
+class ContactView(BookOwnerMixin, FormView):
 
     template_name = 'contact.html'
     form_class = forms.LogEntryForm
@@ -63,6 +64,8 @@ class ContactView(LoggedInMixin, FormView):
         new_log = form.save(commit=False)
         new_log.contact = self.contact
         new_log.logged_by = self.request.user
+        if not form.cleaned_data.get('time'):
+            form.cleaned_data['time'] = timezone.now()
         form.save()
         messages.success(
             self.request,
@@ -70,7 +73,7 @@ class ContactView(LoggedInMixin, FormView):
         )
         return super(ContactView, self).form_valid(form)
 
-class CreateContactView(LoggedInMixin, CreateView):
+class CreateContactView(BookOwnerMixin, CreateView):
 
     model = Contact
     template_name = 'edit_contact.html'
@@ -96,7 +99,7 @@ class CreateContactView(LoggedInMixin, CreateView):
         )
         return super(CreateContactView, self).form_valid(form)
 
-class EditContactView(LoggedInMixin, UpdateView):
+class EditContactView(BookOwnerMixin, UpdateView):
     model = Contact
     template_name = 'edit_contact.html'
     form_class = forms.ContactForm
@@ -129,7 +132,7 @@ class EditContactView(LoggedInMixin, UpdateView):
         return super(EditContactView, self).form_valid(form)
 
 
-class DeleteContactView(LoggedInMixin, DeleteView):
+class DeleteContactView(BookOwnerMixin, DeleteView):
 
     model = Contact
     template_name = 'delete_contact.html'
@@ -144,7 +147,7 @@ class DeleteContactView(LoggedInMixin, DeleteView):
         )
         return super(DeleteContactView, self).form_valid(form)
 
-class CreateTagView(LoggedInMixin, CreateView):
+class CreateTagView(BookOwnerMixin, CreateView):
     model = Tag
     template_name = 'edit_tag.html'
     form_class = forms.TagForm
@@ -165,7 +168,7 @@ class CreateTagView(LoggedInMixin, CreateView):
         )
         return super(CreateTagView, self).form_valid(form)
 
-class TaggedContactListView(LoggedInMixin, ListView):
+class TaggedContactListView(BookOwnerMixin, ListView):
 
     model = Contact
     template_name = 'contact_list.html'
