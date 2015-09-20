@@ -4,7 +4,7 @@
 {% load gravatar %}
 
 {% block content %}
-<h1>{% gravatar contact.email 60 %}{{ contact }}</h1>
+<h1>{% gravatar contact.email 60 %} {{ contact }}</h1>
 <div class="row">
     <div class="col-md-12">
     {% for tag in contact.tags.all %}
