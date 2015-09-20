@@ -10,17 +10,19 @@
 
 
 <body>
-    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{% url "contacts-list" %}">LOGTACTS</a>
-        </div>
-        <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search">
-            <div class="form-group">
-                <input type="search" class="form-control" name="q" id="id_q">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url "contacts-list" %}">LOGTACTS</a>
             </div>
-            <button type="submit" class="btn btn-default">Search</button>
-        </form>
-        <a href="{% url "contacts-new" %}" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-plus"></span></a>
+            <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
+                <div class="form-group">
+                    <input type="search" class="form-control" name="q" id="id_q">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+                <a href="{% url "contacts-new" %}" class="btn btn-success navbar-btn"><span class="glyphicon glyphicon-plus"></span></a>
+            </form>
+        </div>
     </nav>
     <div class="container">
     {% if messages %}
