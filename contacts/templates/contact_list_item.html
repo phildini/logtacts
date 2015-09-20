@@ -1,0 +1,21 @@
+{% load gravatar %}
+{% load tz %}
+{% load humanize %}
+
+<li class="contact-list-contact media">
+    <a class="pull-left" href="{{ contact.get_absolute_url }}">
+        <img class="media-object" src="{% gravatar_url contact.email 50 %}">
+    </a>
+    <div class="media-body">
+        <div class="contact-list-contact-info">
+            <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
+            {% for tag in contact.tags.all %}
+            <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default">{{ tag }}</span></a>
+            {% endfor %}
+            (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
+        </div>
+        <div class="contact-list-interaction-info">
+            <span class="text-faint">Last contacted {{contact.last_contacted | localtime | naturaltime }}</span>
+        </div>
+    </div>
+</li>
