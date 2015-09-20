@@ -10,3 +10,4 @@ Unipath==1.1
 Whoosh==2.7.0
 django-haystack==2.4.0
 python-dotenv==0.1.2
+django-secure==1.0.1

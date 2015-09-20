@@ -81,12 +81,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_gravatar',
+    'djangosecure',
     'haystack',
     'contacts',
     'invitations',
 )
 
 MIDDLEWARE_CLASSES = (
+    'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
