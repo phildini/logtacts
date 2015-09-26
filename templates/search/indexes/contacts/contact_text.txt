@@ -3,3 +3,4 @@
 {{ object.twitter }}
 {{ object.company }}
 {{ object.notes }}
+{{ object.address }}
