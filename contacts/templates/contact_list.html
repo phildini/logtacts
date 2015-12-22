@@ -7,12 +7,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-6">
-        <h3>
-        {% if tag %}
-        "{{ tag.tag }}" Contacts
-        {% else %}
-        Contacts
-        {% endif %} 
+        <h3>{% if tag %}"{{ tag.tag }}" Contacts{% else %}Contacts{% endif %} 
         <a href="{% url "contacts-new" %}" class="label label-success"><span class="glyphicon glyphicon-plus"></span></a>
         </h3>
         <ul class="contact-list media-list">

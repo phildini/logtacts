@@ -37,7 +37,7 @@ class LogEntryForm(BootstrapForm, forms.ModelForm):
         model = LogEntry
         fields = ['kind','link','notes']
         widgets = {
-            'notes': forms.Textarea(attrs={'rows':3}),
+            'notes': forms.Textarea(attrs={'rows':1}),
         }
  
 

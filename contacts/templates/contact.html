@@ -4,7 +4,7 @@
 {% load gravatar %}
 
 {% block content %}
-<h1>{% gravatar contact.email 60 %} {{ contact }} <a href="{% url "contacts-edit" pk=contact.id %}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+<h1>{% gravatar contact.email 60 %} {{ contact.name }} <a href="{% url "contacts-edit" pk=contact.id %}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a></h1>
 <div class="row">
     <div class="col-md-12">
     {% for tag in contact.tags.all %}
