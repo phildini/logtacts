@@ -41,6 +41,12 @@ class Contact(models.Model):
         last_log = LogEntry.objects.filter(contact=self).latest('created')
         return last_log.created
 
+    def can_be_viewed_by(self, user):
+        return bool(self.book.bookowner_set.filter(user=user))
+
+    def can_be_edited_by(self, user):
+        return bool(self.book.bookowner_set.filter(user=user))
+
 
 class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)

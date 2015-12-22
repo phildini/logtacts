@@ -26,7 +26,7 @@ class BookOwnerMixin(LoggedInMixin):
     def get_object(self, queryset=None):
         instance = super(LoggedInMixin, self).get_object(queryset)
 
-        if not instance.book.bookowner_set.filter(user=self.request.user):
+        if not instance.can_be_viewed_by(self.request.user):
             raise PermissionDenied
 
         return instance

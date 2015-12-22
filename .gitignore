@@ -56,3 +56,5 @@ whoosh_index/
 # Sphinx documentation
 docs/_build/
 
+*.sublime-workspace
+
