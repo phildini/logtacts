@@ -1,11 +1,14 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 
 from contacts.views import (
     contact_views,
     log_views,
     search_views,
 )
+
+from contacts.api import views as contact_api_views
 
 from invitations.views import (
     CreateInviteView,
@@ -17,12 +20,13 @@ from logtacts.views import HomeView
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'logtacts.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^api/search/$', contact_api_views.ContactSearchAPIView.as_view()),
+    url(r'^login/$', login),
+    url(r'^logout/$', logout),
     url(
         r'^set-password/$',
         ChangePasswordView.as_view(),
@@ -87,4 +91,4 @@ urlpatterns = patterns('',
         AcceptInviteView.as_view(),
         name='accept-invite',
     ),
-)
+]

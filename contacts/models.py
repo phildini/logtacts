@@ -14,6 +14,14 @@ class Tag(models.Model):
         return self.tag
 
 
+class ContactManager(models.Manager):
+
+    def get_contacts_for_user(self, user):
+        return self.filter(
+            book__bookowner__user=user,
+        )
+
+
 class Contact(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
@@ -30,6 +38,8 @@ class Contact(models.Model):
     address = models.TextField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
+
+    objects = ContactManager()
 
     def __str__(self):
         return self.name

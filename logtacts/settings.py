@@ -83,8 +83,10 @@ INSTALLED_APPS = (
     'django_gravatar',
     'djangosecure',
     'haystack',
-    'contacts',
+    'contacts.apps.Contacts',
     'invitations',
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -158,6 +160,14 @@ DEFAULT_FROM_EMAIL = 'site@inkpebble.com'
 SERVER_EMAIL = 'site@inkpebble.com'
 
 SLACK_WEBHOOK_URL = get_env_variable('SLACK_WEBHOOK_URL')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
 
 LOGGING = {
     'version': 1,
