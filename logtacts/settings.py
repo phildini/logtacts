@@ -163,7 +163,6 @@ SLACK_WEBHOOK_URL = get_env_variable('SLACK_WEBHOOK_URL')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),

@@ -5,14 +5,19 @@ from utils.factories import UserFactory
 from . import models
 
 
+class BookFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Book
+
+
 class ContactFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Contact
 
-
-class BookFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.Book
+    name = "Philip James"
+    book = factory.SubFactory(BookFactory)
+    email = "philip+test@inkpebble.com"
+    twitter = "@phildini"
 
 
 class BookOwnerFactory(factory.django.DjangoModelFactory):

@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse 
 from utils.factories import UserFactory
-from . import factories
-from . import models
+from contacts import factories
+from contacts import models
 
 class ContactModelTests(TestCase):
 
