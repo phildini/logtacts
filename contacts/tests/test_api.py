@@ -23,3 +23,13 @@ class TestSerializers(TestCase):
             'address': None,
         }
         self.assertEqual(serialized_contact.data, expected)
+
+    def test_tag_serializer(self):
+        tag = factories.TagFactory.create(tag='Test')
+        serialized_tag = serializers.TagSerializer(tag)
+        expected = {
+            'id': 1,
+            'tag': 'Test',
+            'color': None,
+        }
+        self.assertEqual(serialized_tag.data, expected)
