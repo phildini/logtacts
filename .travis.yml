@@ -2,5 +2,7 @@ language: python
 python:
  - "2.7"
  - "3.5"
+env:
+- SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret"
 install: "pip install -r requirements.txt"
-script: "python manage.py test contacts"
+script: "coverage run manage.py test contacts"

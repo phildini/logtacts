@@ -37,6 +37,20 @@ class ContactModelTests(TestCase):
         user = bookowner.user
         self.assertTrue(self.contact.can_be_edited_by(user))
 
+    def test_get_contacts_for_user(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertEqual(
+            [self.contact],
+            list(models.Contact.objects.get_contacts_for_user(user)),
+        )
+
+    def test_get_contacts_for_user_bad_user(self):
+        user = UserFactory.create(username="nicholle")
+        self.assertFalse(
+            list(models.Contact.objects.get_contacts_for_user(user)),
+        )
+
 
 class TagModelTests(TestCase):
 
