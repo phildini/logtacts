@@ -12,3 +12,4 @@ Whoosh==2.7.0
 git+https://github.com/django-haystack/django-haystack.git#egg=django-haystack
 python-dotenv==0.1.2
 django-secure==1.0.1
+coverage==4.0.3
