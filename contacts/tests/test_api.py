@@ -1,6 +1,10 @@
 from django.test import TestCase
+from rest_framework.test import APIRequestFactory
+from rest_framework.test import force_authenticate
+from utils.factories import UserFactory
 from contacts import factories
 from contacts.api import serializers
+from contacts.api import views
 
 
 class TestSerializers(TestCase):
@@ -30,6 +34,34 @@ class TestSerializers(TestCase):
         expected = {
             'id': 1,
             'tag': 'Test',
+            'book': None,
             'color': None,
         }
         self.assertEqual(serialized_tag.data, expected)
+
+
+class TestAPIViews(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(book=self.book,user=self.user)
+
+    def test_tag_create_view(self):
+        request = self.factory.post('/api/tags/', {'tag': 'Test tag', 'book': str(self.book.id)}, format='json')
+        force_authenticate(request, user=self.user)
+        view = views.TagListCreateAPIView.as_view()
+        response = view(request)
+        response.render()
+        self.assertEqual(response.status_code, 201)
+
+    def test_tag_create_view_bad_book(self):
+        request = self.factory.post('/api/tags/', {'tag': 'Test tag', 'book': str(self.book.id)}, format='json')
+        user = UserFactory.create(username='nicholle')
+        force_authenticate(request, user=user)
+        view = views.TagListCreateAPIView.as_view()
+        response = view(request)
+        response.render()
+        self.assertEqual(response.status_code, 401)
+

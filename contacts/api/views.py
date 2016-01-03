@@ -34,3 +34,26 @@ class ContactSearchAPIView(APIView):
         results = [result.object for result in results]
         serializer = serializers.ContactSerializer(results, many=True)
         return Response(serializer.data)
+
+
+class TagListCreateAPIView(generics.ListCreateAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.TagSerializer
+    queryset = models.Tag.objects.all()
+
+    def list(self, request):
+        queryset = models.Tag.objects.get_tags_for_user(self.request.user)
+        serializer = serializers.TagSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            book = models.Book.objects.get(pk=request.data.get('book')[0])
+            bookowner = models.BookOwner.objects.get(book=book, user=request.user)
+        except:
+            return Response(
+                "Not an owner of that book",
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        return super(TagListCreateAPIView, self).create(request, *args, **kwargs)

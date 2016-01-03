@@ -55,13 +55,26 @@ class ContactModelTests(TestCase):
 class TagModelTests(TestCase):
 
     def setUp(self):
+        self.book = factories.BookFactory.create()
         self.contact = factories.ContactFactory.create(
             name="Philip James",
+            book=self.book,
+        )
+        self.tag = factories.TagFactory.create(
+            tag='Family',
+            book=self.book,
         )
 
     def test_tag_name(self):
-        tag = factories.TagFactory.create(tag='Family')
-        self.assertEqual(tag.tag, str(tag))
+        self.assertEqual(self.tag.tag, str(self.tag))
+
+    def test_get_tags_for_user(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertEqual(
+            [self.tag],
+            list(models.Tag.objects.get_tags_for_user(user)),
+        )
 
 
 class BookModelTests(TestCase):

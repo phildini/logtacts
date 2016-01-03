@@ -12,4 +12,4 @@ class ContactSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tag
-        fields = ('id', 'tag', 'color')
+        fields = ('id', 'tag', 'color', 'book')

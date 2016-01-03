@@ -3,12 +3,22 @@ from django.core.urlresolvers import reverse
 from django.db import models
 
 
+class TagManager(models.Manager):
+
+    def get_tags_for_user(self, user):
+        return self.filter(
+            book__bookowner__user=user,
+        )
+
+
 class Tag(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     tag = models.CharField(max_length=100)
     color = models.CharField(max_length=20, blank=True, null=True)
     book = models.ForeignKey('Book', blank=True, null=True)
+
+    objects = TagManager()
 
     def __str__(self):
         return self.tag

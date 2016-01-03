@@ -25,6 +25,11 @@ urlpatterns = [
     # url(r'^$', 'logtacts.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^api/search/$', contact_api_views.ContactSearchAPIView.as_view()),
+    url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
+    # url(
+    #     r'^api/tags/(?P<pk>[0-9]+)$',
+    #     contact_api_views.TagDetailAPIView.as_view(),
+    # ),
     url(r'^login/$', login),
     url(r'^logout/$', logout),
     url(
