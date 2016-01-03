@@ -3,6 +3,7 @@ from haystack.query import SearchQuerySet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import generics
+from rest_framework import renderers as api_renderers
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializers
@@ -12,6 +13,13 @@ from .. import models
 class ContactSearchAPIView(APIView):
 
     permission_classes = (IsAuthenticated,)
+
+    def get_renderers(self):
+        renderers = [api_renderers.JSONRenderer]
+        if self.request.user.is_staff:
+            renderers += [api_renderers.BrowsableAPIRenderer]
+        return [renderer() for renderer in renderers]
+
 
     def get(self, request):
         search_string = request.query_params.get('q')
@@ -41,6 +49,12 @@ class TagListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.TagSerializer
     queryset = models.Tag.objects.all()
+
+    def get_renderers(self):
+        renderers = [api_renderers.JSONRenderer]
+        if self.request.user.is_staff:
+            renderers += [api_renderers.BrowsableAPIRenderer]
+        return [renderer() for renderer in renderers]
 
     def list(self, request):
         queryset = models.Tag.objects.get_tags_for_user(self.request.user)
