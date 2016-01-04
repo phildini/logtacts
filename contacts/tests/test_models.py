@@ -37,6 +37,14 @@ class ContactModelTests(TestCase):
         user = bookowner.user
         self.assertTrue(self.contact.can_be_edited_by(user))
 
+    def test_contact_cant_be_viewed_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.contact.can_be_viewed_by(user))
+
+    def test_contact_cant_be_edited_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.contact.can_be_edited_by(user))
+
     def test_get_contacts_for_user(self):
         bookowner = factories.BookOwnerFactory.create(book=self.book)
         user = bookowner.user
@@ -76,12 +84,50 @@ class TagModelTests(TestCase):
             list(models.Tag.objects.get_tags_for_user(user)),
         )
 
+    def test_tag_can_be_viewed_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.tag.can_be_viewed_by(user))
+
+    def test_tag_can_be_edited_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.tag.can_be_edited_by(user))
+
+    def test_tag_cant_be_viewed_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.tag.can_be_viewed_by(user))
+
+    def test_tag_cant_be_edited_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.tag.can_be_edited_by(user))
+
 
 class BookModelTests(TestCase):
 
+    def setUp(self):
+        self.book = factories.BookFactory.create(name="James Family")
+
     def test_book_name(self):
-        book = factories.BookFactory.create(name="James Family")
-        self.assertEqual(book.name, str(book))
+        self.assertEqual(self.book.name, str(self.book))
+
+    def test_book_can_be_viewed_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.book.can_be_viewed_by(user))
+
+    def test_book_can_be_edited_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.book.can_be_edited_by(user))
+
+    def test_book_cant_be_viewed_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.book.can_be_viewed_by(user))
+
+    def test_book_cant_be_edited_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.book.can_be_edited_by(user))
 
 
 class BookOwnerModelTests(TestCase):
@@ -99,11 +145,33 @@ class BookOwnerModelTests(TestCase):
 class LogEntryModelTests(TestCase):
 
     def setUp(self):
+        self.book = factories.BookFactory.create(name="James Family")
+        self.user = UserFactory(username="phildini")
+        self.bookowner = factories.BookOwnerFactory(book=self.book, user=self.user)
         self.contact = factories.ContactFactory.create(
             name="Philip James",
+            book=self.book,
         )
+        self.log = factories.LogFactory.create(contact=self.contact)
 
     def test_tag_repr(self):
-        log = factories.LogFactory.create(contact=self.contact)
         expected = "Log on %s" % (self.contact)
-        self.assertEqual(str(log), expected)
+        self.assertEqual(str(self.log), expected)
+
+    def test_log_can_be_viewed_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.log.can_be_viewed_by(user))
+
+    def test_log_can_be_edited_by(self):
+        bookowner = factories.BookOwnerFactory.create(book=self.book)
+        user = bookowner.user
+        self.assertTrue(self.log.can_be_edited_by(user))
+
+    def test_log_cant_be_viewed_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.log.can_be_viewed_by(user))
+
+    def test_log_cant_be_edited_by_bad(self):
+        user = UserFactory.create(username='asheesh')
+        self.assertFalse(self.log.can_be_edited_by(user))

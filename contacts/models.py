@@ -23,6 +23,12 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag
 
+    def can_be_viewed_by(self, user):
+        return bool(self.book.bookowner_set.filter(user=user))
+
+    def can_be_edited_by(self, user):
+        return bool(self.book.bookowner_set.filter(user=user))
+
 
 class ContactManager(models.Manager):
 
@@ -76,6 +82,12 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
+    def can_be_viewed_by(self, user):
+        return bool(self.bookowner_set.filter(user=user))
+
+    def can_be_edited_by(self, user):
+        return bool(self.bookowner_set.filter(user=user))
+
 class BookOwner(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
@@ -114,3 +126,9 @@ class LogEntry(models.Model):
 
     def __str__(self):
         return "Log on %s" % (self.contact,)
+
+    def can_be_viewed_by(self, user):
+        return bool(self.contact.book.bookowner_set.filter(user=user))
+
+    def can_be_edited_by(self, user):
+        return bool(self.contact.book.bookowner_set.filter(user=user))
