@@ -20,23 +20,17 @@ from contacts.models import (
     Book,
     BookOwner,
 )
+
+from contacts.views import LoggedInMixin
 from .models import Invitation
 from .forms import InvitationForm
 
 
-class CreateInviteView(CreateView):
+class CreateInviteView(LoggedInMixin, CreateView):
 
     model = Invitation
     form_class = InvitationForm
     template_name = 'invite_edit.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect(
-                '/login?next={}'.format(request.path)
-            )
-        return super(CreateInviteView, self).dispatch(request, *args, **kwargs)
-
 
     def get_success_url(self, **kwargs):
         return reverse('contacts-list')
