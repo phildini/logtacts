@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.views.generic import (
     DeleteView,
@@ -13,6 +14,14 @@ class EditLogView(LoggedInMixin, UpdateView):
     model = LogEntry
     template_name = 'edit_log.html'
     form_class = contacts.forms.LogEntryForm
+
+    def get_object(self, queryset=None):
+        instance = super(LoggedInMixin, self).get_object(queryset)
+
+        if not instance.can_be_edited_by(self.request.user):
+            raise PermissionDenied
+
+        return instance
 
     def get_success_url(self):
         return reverse(
@@ -31,6 +40,14 @@ class DeleteLogView(LoggedInMixin, DeleteView):
 
     model = LogEntry
     template_name = 'delete_log.html'
+
+    def get_object(self, queryset=None):
+        instance = super(LoggedInMixin, self).get_object(queryset)
+
+        if not instance.can_be_edited_by(self.request.user):
+            raise PermissionDenied
+
+        return instance
 
     def get_success_url(self):
         return reverse(
