@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import warnings
 from django.core.exceptions import ImproperlyConfigured
 from unipath import Path
 from dotenv import load_dotenv
@@ -23,7 +24,10 @@ def get_env_variable(var_name):
         return os.environ[var_name]
     except KeyError:
         error_msg = "Set the %s env variable" % var_name
-        raise ImproperlyConfigured(error_msg)
+        if DEBUG:
+            warnings.warn(error_msg)
+        else:
+            raise ImproperlyConfigured(error_msg)
 
 
 # Quick-start development settings - unsuitable for production
