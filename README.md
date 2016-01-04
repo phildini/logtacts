@@ -12,5 +12,5 @@ To get started:
  - `python manage.py runserver`
 
 To run tests:
- - `python manage.py test contacts`
+ - `MANDRILL_KEY=blah SLACK_WEBHOOK_URL=foo python manage.py test contacts`
 
