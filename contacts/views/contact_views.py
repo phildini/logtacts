@@ -174,7 +174,7 @@ class TaggedContactListView(BookOwnerMixin, ListView):
     template_name = 'contact_list.html'
 
     def get_queryset(self):
-        return Contact.objects.filter(
+        return Contact.get_contacts_for_user(self.request.user).objects.filter(
             tags__id=self.kwargs.get('pk'),
         ).order_by('name')
 
