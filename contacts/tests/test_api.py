@@ -14,17 +14,39 @@ class TestSerializers(TestCase):
         serialized_contact = serializers.ContactSerializer(contact)
         expected = {
             'company': None,
-            'id': 1,
-            'cell_phone': None,
-            'notes': None,
-            'email': 'philip+test@inkpebble.com',
+            'address': None,
+            'website': None,
             'home_phone': None,
+            'notes': None,
             'name': 'Philip James',
             'tumblr': None,
+            'cell_phone': None,
+            'twitter': '@phildini',
+            'id': 1,
+            'book': 1,
+            'tags': [],
+            'email': 'philip+test@inkpebble.com',
+        }
+        self.assertEqual(serialized_contact.data, expected)
+
+    def test_contact_serializer_with_tags(self):
+        contact = factories.ContactFactory.create()
+        tag = factories.TagFactory.create(tag='test')
+        contact.tags.add(tag)
+        serialized_contact = serializers.ContactSerializer(contact)
+        expected = {
+            'id': 1, 'home_phone': None,
+            'book': 1,
+            'notes': None,
+            'tags': [1],
+            'tumblr': None,
             'website': None,
-            'twitter':
-            '@phildini',
+            'twitter': '@phildini',
+            'cell_phone': None,
+            'name': 'Philip James',
             'address': None,
+            'company': None,
+            'email': 'philip+test@inkpebble.com',
         }
         self.assertEqual(serialized_contact.data, expected)
 
@@ -38,6 +60,20 @@ class TestSerializers(TestCase):
             'color': None,
         }
         self.assertEqual(serialized_tag.data, expected)
+
+    def test_log_serializer(self):
+        log = factories.LogFactory.create()
+        serialized_log = serializers.LogSerializer(log)
+        expected = {
+            'notes': '',
+            'id': 1,
+            'contact': 1,
+            'location': None,
+            'link': None,
+            'time': None,
+            'kind': None,
+        }
+        self.assertEqual(serialized_log.data, expected)
 
 
 class TestAPIViews(TestCase):
