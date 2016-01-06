@@ -84,20 +84,86 @@ class TestAPIViews(TestCase):
         self.user = UserFactory.create(username='phildini')
         bookowner = factories.BookOwnerFactory.create(book=self.book,user=self.user)
 
-    def test_tag_create_view(self):
-        request = self.factory.post('/api/tags/', {'tag': 'Test tag', 'book': str(self.book.id)}, format='json')
+    def test_tag_list_view(self):
+        tag = factories.TagFactory.create(book=self.book)
+        request = self.factory.get('/api/tags/', format='json')
         force_authenticate(request, user=self.user)
-        view = views.TagListCreateAPIView.as_view()
-        response = view(request)
+        response = views.TagListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_tag_list_view_wrong_user_for_book(self):
+        tag = factories.TagFactory.create(book=self.book)
+        request = self.factory.get('/api/tags/', format='json')
+        user = UserFactory.create(username='asheesh')
+        force_authenticate(request, user=user)
+        response = views.TagListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)
+
+    def test_tag_create_view(self):
+        request = self.factory.post(
+            '/api/tags/',
+            {'tag': 'Test tag', 'book': str(self.book.id)},
+            format='json',
+        )
+        force_authenticate(request, user=self.user)
+        response = views.TagListCreateAPIView.as_view()(request)
         response.render()
         self.assertEqual(response.status_code, 201)
 
-    def test_tag_create_view_bad_book(self):
-        request = self.factory.post('/api/tags/', {'tag': 'Test tag', 'book': str(self.book.id)}, format='json')
+    def test_tag_create_view_wrong_book_for_user(self):
+        request = self.factory.post(
+            '/api/tags/',
+            {'tag': 'Test tag', 'book': str(self.book.id)},
+            format='json',
+        )
         user = UserFactory.create(username='nicholle')
         force_authenticate(request, user=user)
-        view = views.TagListCreateAPIView.as_view()
-        response = view(request)
+        response = views.TagListCreateAPIView.as_view()(request)
         response.render()
         self.assertEqual(response.status_code, 401)
 
+    def test_contact_list_view(self):
+        contact = factories.ContactFactory.create(book=self.book)
+        request = self.factory.get('/api/contacts/', format='json')
+        force_authenticate(request, user=self.user)
+        response = views.ContactListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_contact_list_view_wrong_user_for_book(self):
+        contact = factories.ContactFactory.create(book=self.book)
+        request = self.factory.get('/api/contacts/', format='json')
+        user = UserFactory.create(username='asheesh')
+        force_authenticate(request, user=user)
+        response = views.ContactListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)
+
+    def test_contact_create_view(self):
+        request = self.factory.post(
+            '/api/contacts/',
+            {'name': 'Philip', 'book': str(self.book.id)},
+            format='json',
+        )
+        force_authenticate(request, user=self.user)
+        response = views.ContactListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 201)
+
+    def test_contact_create_view_wrong_book_for_user(self):
+        request = self.factory.post(
+            '/api/contacts/',
+            {'name': 'Philip', 'book': str(self.book.id)},
+            format='json',
+        )
+        user = UserFactory.create(username='asheesh')
+        force_authenticate(request, user=user)
+        response = views.ContactListCreateAPIView.as_view()(request)
+        response.render()
+        self.assertEqual(response.status_code, 401)

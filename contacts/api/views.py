@@ -71,3 +71,38 @@ class TagListCreateAPIView(generics.ListCreateAPIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         return super(TagListCreateAPIView, self).create(request, *args, **kwargs)
+
+
+class ContactListCreateAPIView(generics.ListCreateAPIView):
+
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ContactSerializer
+    queryset = models.Contact.objects.all()
+
+    def get_renderers(self):
+        renderers = [api_renderers.JSONRenderer]
+        if self.request.user.is_staff:
+            renderers += [api_renderers.BrowsableAPIRenderer]
+        return [renderer() for renderer in renderers]
+
+    def list(self, request):
+        queryset = models.Contact.objects.get_contacts_for_user(
+            self.request.user,
+        )
+        serializer = serializers.ContactSerializer(queryset, many=True)
+        return Response (serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            book = models.Book.objects.get(pk=request.data.get('book')[0])
+            bookowner = models.BookOwner.objects.get(
+                book=book, user=request.user,
+            )
+        except:
+            return Response(
+                "Not a valid book",
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        return super(ContactListCreateAPIView, self).create(
+            request, *args, **kwargs
+        )
