@@ -180,7 +180,12 @@ class TaggedContactListView(BookOwnerMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(TaggedContactListView, self).get_context_data(**kwargs)
-        context['tag'] = Tag.objects.get(id=self.kwargs.get('pk'))
+        self.tag = get_object_or_404(
+            Tag.objects,
+            pk=self.kwargs.get('pk'),
+            book__bookowner__user=self.request.user,
+        )
+        context['tag'] = self.tag
         context['tags'] = Tag.objects.all()
 
         return context
