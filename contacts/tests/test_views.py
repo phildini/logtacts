@@ -24,6 +24,26 @@ class ContactListViewTests(TestCase):
     def test_contact_list_view_renders(self):
         self.response.render()
 
+    def test_contact_list_view_contains_only_what_it_should(self):
+        book = factories.BookFactory.create()
+        user = UserFactory.create(username='nicholle')
+        factories.BookOwnerFactory.create(book=book, user=user)
+        good_contact = factories.ContactFactory.create(book=book)
+        bad_contact = factories.ContactFactory.create()
+        good_tag = factories.TagFactory.create(book=book)
+        bad_tag = factories.TagFactory.create()
+        good_contact.tags.add(good_tag)
+        request_factory = RequestFactory()
+        request = request_factory.get(reverse('contacts-list'))
+        request.user = user
+        response = views.contact_views.ContactListView.as_view()(request)
+        self.assertEqual(len(response.context_data.get('tags')), 1)
+        self.assertEqual(len(response.context_data.get('contact_list')), 1)
+        self.assertEqual(response.context_data.get('tags')[0], good_tag)
+        self.assertEqual(
+            response.context_data.get('contact_list')[0], good_contact,
+        )
+
 
 class ContactViewTests(TestCase):
     def setUp(self):

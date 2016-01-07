@@ -42,9 +42,8 @@ class ContactView(BookOwnerMixin, FormView):
 
     def dispatch(self, request, **kwargs):
         self.contact = get_object_or_404(
-            Contact.objects,
+            Contact.objects.get_contacts_for_user(self.request.user),
             pk=self.kwargs.get('pk'),
-            book__bookowner__user=self.request.user,
         )
         return super(ContactView, self).dispatch(request, **kwargs)
 
@@ -181,9 +180,8 @@ class TaggedContactListView(BookOwnerMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(TaggedContactListView, self).get_context_data(**kwargs)
         self.tag = get_object_or_404(
-            Tag.objects,
+            Tag.objects.get_tags_for_user(self.request.user),
             pk=self.kwargs.get('pk'),
-            book__bookowner__user=self.request.user,
         )
         context['tag'] = self.tag
         context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
