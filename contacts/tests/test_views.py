@@ -179,3 +179,17 @@ class TagViewTests(TestCase):
             pk=self.tag.pk,
         )
         response.render()
+
+    def test_tagged_list_view_contains_only_what_it_should(self):
+        tag = factories.TagFactory.create(tag='Test Bad')
+        contact = factories.ContactFactory.create()
+        request = self.request_factory.get(
+            reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
+        )
+        request.user = self.user
+        response = views.contact_views.TaggedContactListView.as_view()(
+            request,
+            pk=self.tag.pk,
+        )
+        self.assertEqual(len(response.context_data.get('tags')), 1)
+        self.assertEqual(len(response.context_data.get('contact_list')), 1)
