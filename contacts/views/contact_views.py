@@ -186,7 +186,7 @@ class TaggedContactListView(BookOwnerMixin, ListView):
             book__bookowner__user=self.request.user,
         )
         context['tag'] = self.tag
-        context['tags'] = Tag.objects.all()
+        context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
 
         return context
 
