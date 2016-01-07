@@ -32,7 +32,7 @@ class ContactListView(BookOwnerMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
-        context['tags'] = Tag.objects.filter(book__bookowner__user=self.request.user)
+        context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
         return context
 
 class ContactView(BookOwnerMixin, FormView):
