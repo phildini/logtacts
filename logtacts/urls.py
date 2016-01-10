@@ -33,6 +33,10 @@ urlpatterns = [
         r'^api/contacts/(?P<pk>\d+)/$',
         contact_api_views.ContactDetailEditAPIView.as_view(),
     ),
+    url(
+        r'^api/contacts/(?P<pk>\d+)/logs/$',
+        contact_api_views.LogListCreateAPIView.as_view(),
+    ),
     url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
     # url(
     #     r'^api/tags/(?P<pk>[0-9]+)$',

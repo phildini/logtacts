@@ -13,9 +13,7 @@ from . import serializers
 from .. import models
 
 
-class ContactSearchAPIView(APIView):
-
-    permission_classes = (IsAuthenticated,)
+class RestrictedRendererMixin(object):
 
     def get_renderers(self):
         renderers = [api_renderers.JSONRenderer]
@@ -23,6 +21,10 @@ class ContactSearchAPIView(APIView):
             renderers += [api_renderers.BrowsableAPIRenderer]
         return [renderer() for renderer in renderers]
 
+
+class ContactSearchAPIView(RestrictedRendererMixin, APIView):
+
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         search_string = request.query_params.get('q')
@@ -48,17 +50,12 @@ class ContactSearchAPIView(APIView):
         return Response(serializer.data)
 
 
-class TagListCreateAPIView(generics.ListCreateAPIView):
+class TagListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.TagSerializer
     queryset = models.Tag.objects.all()
 
-    def get_renderers(self):
-        renderers = [api_renderers.JSONRenderer]
-        if self.request.user.is_staff:
-            renderers += [api_renderers.BrowsableAPIRenderer]
-        return [renderer() for renderer in renderers]
 
     def list(self, request):
         queryset = models.Tag.objects.get_tags_for_user(self.request.user)
@@ -77,24 +74,19 @@ class TagListCreateAPIView(generics.ListCreateAPIView):
         return super(TagListCreateAPIView, self).create(request, *args, **kwargs)
 
 
-class ContactListCreateAPIView(generics.ListCreateAPIView):
+class ContactListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ContactSerializer
     queryset = models.Contact.objects.all()
 
-    def get_renderers(self):
-        renderers = [api_renderers.JSONRenderer]
-        if self.request.user.is_staff:
-            renderers += [api_renderers.BrowsableAPIRenderer]
-        return [renderer() for renderer in renderers]
 
     def list(self, request):
         queryset = models.Contact.objects.get_contacts_for_user(
             self.request.user,
         )
         serializer = serializers.ContactSerializer(queryset, many=True)
-        return Response (serializer.data)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         try:
@@ -112,7 +104,7 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
         )
 
 
-class ContactDetailEditAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ContactDetailEditAPIView(RestrictedRendererMixin, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.ContactSerializer
     queryset = models.Contact.objects.all()
@@ -123,8 +115,26 @@ class ContactDetailEditAPIView(generics.RetrieveUpdateDestroyAPIView):
             pk=self.kwargs.get('pk'),
         )
 
-    def get_renderers(self):
-        renderers = [api_renderers.JSONRenderer]
-        if self.request.user.is_staff:
-            renderers += [api_renderers.BrowsableAPIRenderer]
-        return [renderer() for renderer in renderers]
+
+
+class LogListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.LogSerializer
+    queryset = models.LogEntry.objects.all()
+
+
+    def list(self, request, *args, **kwargs):
+        contact = get_object_or_404(
+            models.Contact.objects.get_contacts_for_user(self.request.user),
+            pk=self.kwargs.get('pk'),
+        )
+        queryset = models.LogEntry.objects.filter(contact=contact)
+        serializer = serializers.LogSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        contact = get_object_or_404(
+            models.Contact.objects.get_contacts_for_user(self.request.user),
+            pk=self.kwargs.get('pk'),
+        )
+        return super(LogListCreateAPIView, self).create(request, *args, **kwargs)
