@@ -1,3 +1,6 @@
+from django.shortcuts import (
+    get_object_or_404,
+)
 from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet
 from rest_framework.permissions import IsAuthenticated
@@ -31,6 +34,7 @@ class ContactSearchAPIView(APIView):
         try:
             book = models.Book.objects.get(bookowner__user=self.request.user)
         except models.Book.DoesNotExist:
+            # rethink the logic here - how could a user not have a book?
             return Response(
                 "No contacts for user",
                 status=status.HTTP_400_BAD_REQUEST,
@@ -106,3 +110,21 @@ class ContactListCreateAPIView(generics.ListCreateAPIView):
         return super(ContactListCreateAPIView, self).create(
             request, *args, **kwargs
         )
+
+
+class ContactDetailEditAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ContactSerializer
+    queryset = models.Contact.objects.all()
+
+    def get_object(self):
+        return get_object_or_404(
+            models.Contact.objects.get_contacts_for_user(self.request.user),
+            pk=self.kwargs.get('pk'),
+        )
+
+    def get_renderers(self):
+        renderers = [api_renderers.JSONRenderer]
+        if self.request.user.is_staff:
+            renderers += [api_renderers.BrowsableAPIRenderer]
+        return [renderer() for renderer in renderers]

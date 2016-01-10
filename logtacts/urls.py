@@ -25,7 +25,14 @@ urlpatterns = [
     # url(r'^$', 'logtacts.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^api/search/$', contact_api_views.ContactSearchAPIView.as_view()),
-    url(r'^api/contacts/$', contact_api_views.ContactListCreateAPIView.as_view()),
+    url(
+        r'^api/contacts/$',
+        contact_api_views.ContactListCreateAPIView.as_view(),
+    ),
+    url(
+        r'^api/contacts/(?P<pk>\d+)/$',
+        contact_api_views.ContactDetailEditAPIView.as_view(),
+    ),
     url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
     # url(
     #     r'^api/tags/(?P<pk>[0-9]+)$',
