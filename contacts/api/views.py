@@ -122,7 +122,6 @@ class LogListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
     serializer_class = serializers.LogSerializer
     queryset = models.LogEntry.objects.all()
 
-
     def list(self, request, *args, **kwargs):
         contact = get_object_or_404(
             models.Contact.objects.get_contacts_for_user(self.request.user),
