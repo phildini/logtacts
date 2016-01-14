@@ -3,9 +3,9 @@
 {% block content %}
 
 {% if contact.id %}
-<h1>Edit Contact</h1>
+<h2>Edit Contact</h2>
 {% else %}
-<h1>Add Contact</h1>
+<h2>Add Contact</h2>
 {% endif %}
 
 <div class="well well-sm">
@@ -26,20 +26,109 @@
     </ul>
     {% endif %}
     <div class="row">
-    {% for field in form %}
-        <div id="{{ field.auto_id }}_container" class="col-md-6">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
+        <div id="id_name_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_name">Name</label>
+                <input class="form-control" id="id_name" maxlength="255" name="name" type="text" placeholder="Name"{% if contact.name %}value="{{ contact.name }}"{% endif %}/>
             </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
+            <div id="id_name_errors">
+                {{ form.name.errors }}
             </div>
-            {% if field.label == "Tags" %}
-                <a href="{% url "tags-new" %}" class="btn btn-default">create tag</a>
-            {% endif %}
         </div>
-    {% endfor %}
+        <div id="id_email_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_email">Email</label>
+                <input class="form-control" id="id_email" maxlength="254" name="email" type="email" placeholder="Email" {% if contact.email %}value="{{ contact.email }}"{% endif %}/>
+            </div>
+            <div id="id_email_errors">
+                {{ form.email.errors }}
+            </div>
+        </div>
+        <div id="id_twitter_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_twitter">Twitter:</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">@</span>
+                    <input class="form-control" id="id_twitter" maxlength="140" name="twitter" type="text" placeholder="Twitter"{% if contact.twitter %}value="{{ contact.twitter }}"{% endif %}/>
+                </div>
+            </div>
+            <div id="id_twitter_errors">
+                {{ form.twitter.errors }}
+            </div>
+        </div>
+        <div id="id_website_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_website">Website</label>
+                <input class="form-control" id="id_website" maxlength="255" name="website" type="url" placeholder="Website"{% if contact.website %}value="{{ contact.website }}"{% endif %}/>
+            </div>
+            <div id="id_website_errors">
+                {{ form.website.errors }}
+            </div>
+        </div>
+        <div id="id_portfolio_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_portfolio">Portfolio</label>
+                <input class="form-control" id="id_portfolio" maxlength="255" name="portfolio" type="url" placeholder="Portfolio" {% if contact.portfolio %}value="{{ contact.portfolio }}"{% endif %}/>
+            </div>
+            <div id="id_portfolio_errors">
+                {{ form.portfolio.errors }}
+            </div>
+        </div>
+        <div id="id_cell_phone_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_cell_phone">Cell phone</label>
+                <input class="form-control" id="id_cell_phone" maxlength="20" name="cell_phone" type="text" placeholder="Mobile Phone" {% if contact.cell_phone %}value="{{ contact.cell_phone }}"{% endif %}/>
+            </div>
+            <div id="id_cell_phone_errors">
+                {{ form.cell_phone.errors }}
+            </div>
+        </div>
+        <div id="id_home_phone_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_home_phone">Home phone</label>
+                <input class="form-control" id="id_home_phone" maxlength="20" name="home_phone" type="text" placeholder="Home Phone"{% if contact.home_phone %}value="{{ contact.home_phone }}"{% endif %}/>
+            </div>
+            <div id="id_home_phone_errors">
+                {{ form.home_phone.errors }}
+            </div>
+        </div>
+        <div id="id_company_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_company">Company</label>
+                <input class="form-control" id="id_company" maxlength="100" name="company" type="text" placeholder="Company" {% if contact.company %}value="{{ contact.company }}"{% endif %}/>
+            </div>
+            <div id="id_company_errors">
+                {{ form.company.errors }}
+            </div>
+        </div>
+        <div id="id_address_container" class="col-md-6">
+            <div>
+                <label for="id_address">Address:</label>
+                <textarea class="form-control" cols="40" id="id_address" name="address" rows="3">{% if contact.address %}{{ contact.address }}{% endif %}</textarea>
+            </div>
+            <div id="id_address_errors">
+                {{ form.address.errors }}
+            </div>
+        </div>
+        <div id="id_notes_container" class="col-md-6">
+            <div>
+                <label for="id_notes">Notes:</label>
+                <textarea class="form-control" cols="40" id="id_notes" name="notes" rows="3">{% if contact.notes %}{{ contact.notes }}{% endif %}</textarea>
+            </div>
+            <div id="id_notes_errors">
+                {{ form.notes.errors }}
+            </div>
+        </div>
+        <div id="id_tags_container" class="col-md-6">
+            <div>
+                <label for="id_tags_0">Tags:</label>
+                {{ form.tags }}
+            </div>
+            <div id="id_tags_errors">
+                {{ form.tags.errors }}
+            </div>
+                <a href="/tags/new" class="btn btn-default">create tag</a>
+        </div>
     </div>
     <div class="md-col-6"></div>
 </form>
