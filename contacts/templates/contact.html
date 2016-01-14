@@ -48,44 +48,20 @@
         </div>
     {% endfor %}
     </div>
-    <input id="add_log" type="submit" value="Add log">
+    <button class="btn btn-default" id="add_log" type="submit">Add log</button>
 </form>
 
+{% if logs %}
 <h3>Logs</h3>
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Logged By</th>
-                <th>Kind</th>
-                <th>Link</th>
-                <th>Notes</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for log in logs %}
-            <tr>
-                <td>
-                    {% if log.time %}
-                    {{log.time | localtime}} (logged {{log.created | localtime }})
-                    {% else %}
-                    {{ log.created | localtime }}
-                    {% endif %}
-                </td>
-                <td>{{ log.logged_by }}</td>
-                <td>{{ log.kind }}</td>
-                <td><a href="{{log.link}}">{{log.link}}</a></td>
-                <td>{{log.notes}}</td>
-                <td>
-                    <a href="{% url "log-edit" pk=log.id %}">Edit</a>
-                    <a href="{% url "log-delete" pk=log.id %}">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<ul class="list-group">
+    {% for log in logs %}
+    <ul class="list-group-item">
+        <a href="{% url "log-edit" pk=log.id %}"><span class="glyphicon glyphicon-pencil"</span></a>
+        <a href="{% url "log-delete" pk=log.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+        {% include "log_line.html" %}
+    </ul>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% endblock %}

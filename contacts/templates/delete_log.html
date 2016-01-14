@@ -3,7 +3,11 @@
 {% block content %}
 <h1>Delete Log</h1>
 <p>Are you sure you want to delete the following log?</p>
-{{ logentry }}
+<ul class="list-group">
+    <li class="list-group-item">
+        {% with log=logentry %}{% include "log_line.html" %}{% endwith %}
+    </li>
+</ul>
 <form action="{% url "log-delete" pk=logentry.id %}" method="POST">
     {% csrf_token %}
     <input type="submit" value="Yes, delete." />

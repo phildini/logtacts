@@ -15,7 +15,7 @@
             (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
         </div>
         <div class="contact-list-interaction-info">
-            <span class="text-faint">Last contacted {{contact.last_contacted | localtime | naturaltime }}</span>
+            <span class="text-faint">{% if contact.last_contacted %}Last contacted {{contact.last_contacted | localtime | naturaltime }}{% endif %}</span>
         </div>
     </div>
 </li>

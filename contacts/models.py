@@ -127,6 +127,21 @@ class LogEntry(models.Model):
     def __str__(self):
         return "Log on %s" % (self.contact,)
 
+    @property
+    def display_time(self):
+        if self.time:
+            return self.time
+        else:
+            return self.created
+
+    @property
+    def action_str(self):
+        if self.kind in ('twitter', 'tumblr', 'facebook', 'email'):
+            return 'chatted with {} via {}'.format(self.contact, self.kind)
+        if self.kind is 'email':
+            return 'met with {}'.format(self.contact)
+        return 'contacted {}'.format(self.contact)
+
     def can_be_viewed_by(self, user):
         return bool(self.contact.book.bookowner_set.filter(user=user))
 
