@@ -13,18 +13,34 @@
     </div>
 </div>
 <div class="row">
-<div class="col-md-6">Email: <a href="mailto:{{ contact.email }}">{{contact.email}}</a></div>
-<div class="col-md-6">Twitter: <a href="http://twitter.com/{{ contact.twitter }}">{% if contact.twitter %}@{{ contact.twitter }}{% endif %}</a></div>
-<div class="col-md-6">Tumblr: {{ contact.tumblr }}</div>
-<div class="col-md-6">Website: <a href="{{ contact.website }}">{{ contact.website }}</a></div>
-<div class="col-md-6">Portfolio: <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a></div>
-<div class="col-md-6">Cell Phone: {{ contact.cell_phone }}</div>
-<div class="col-md-6">Home Phone: {{ contact.home_phone }}</div>
-<div class="col-md-6">Company: {{ contact.company }}</div>
-<div class="col-md-6">Address: {{ contact.address }}</div>
-<div class="col-md-6">Notes: {{ contact.notes }}</div>
+<div class="col-md-6">
+    <span class="text-muted">Email:</span> <a href="mailto:{{ contact.email }}">{{contact.email}}</a>
 </div>
-
+<div class="col-md-6">
+    <span class="text-muted">Twitter:</span> <a href="http://twitter.com/{{ contact.twitter }}">{% if contact.twitter %}@{{ contact.twitter }}{% endif %}</a>
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Website:</span> <a href="{{ contact.website }}">{{ contact.website }}</a>
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Portfolio:</span> <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a>
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Cell Phone:</span> {{ contact.cell_phone }}
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Home Phone:</span> {{ contact.home_phone }}
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Company:</span> {{ contact.company }}
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Address:</span> {{ contact.address }}
+</div>
+<div class="col-md-6">
+    <span class="text-muted">Notes:</span> {{ contact.notes }}
+</div>
+</div>
 <h3>Add Log:</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
@@ -36,19 +52,45 @@
     </ul>
     {% endif %}
     <div class="row">
-    {% for field in form %}
-        <div id="{{ field.auto_id }}_container" class="col-md-3">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
+        <div id="id_kind_container" class="col-md-3">
+            <div class="form-group">
+                <label for="id_kind">Kind:</label>
+                <select class="form-control" id="id_kind" name="kind">
+                    <option value="" selected="selected">---------</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="email">Email</option>
+                    <option value="in person">In Person</option>
+                    <option value="website">Website</option>
+                    <option value="other">Other</option>
+                    </select>
             </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
+            <div id="id_kind_errors">
+                {{ form.kind.errors }}
             </div>
         </div>
-    {% endfor %}
+        <div id="id_link_container" class="col-md-3">
+            <div class="form-group">
+                <label for="id_link">Link:</label>
+                <input class="form-control" id="id_link" maxlength="200" name="link" type="url" />
+            </div>
+            <div id="id_link_errors">
+                {{ form.link.errors }}
+            </div>
+        </div>
+        <div id="id_notes_container" class="col-md-3">
+            <div class="form-group">
+                <label for="id_notes">Notes:</label>
+                <textarea class="form-control" cols="40" id="id_notes" name="notes" rows="1"></textarea>
+            </div>
+            <div id="id_notes_errors">
+                {{ form.kind.errors }}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-default" id="add_log" type="submit">Add log</button>
+        </div>
     </div>
-    <button class="btn btn-default" id="add_log" type="submit">Add log</button>
 </form>
 
 {% if logs %}
