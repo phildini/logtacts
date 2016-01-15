@@ -32,10 +32,10 @@
     {% endif %}
     {% block content %}
     {% endblock %}
-    <footer>
+    </div>
+    <footer class="well">
         {% if user.is_authenticated %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a>
     </footer>
-    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </body>
