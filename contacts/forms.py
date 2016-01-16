@@ -32,6 +32,17 @@ class ContactForm(forms.ModelForm):
 
 
 class LogEntryForm(BootstrapForm, forms.ModelForm):
+    USER_SELECTABLE_CHOICES = (
+        ('twitter', 'Twitter'),
+        ('tumblr', 'Tumblr'),
+        ('facebook', 'Facebook'),
+        ('email', 'Email'),
+        ('in person', 'In Person'),
+        ('website', 'Website'),
+        ('other', 'Other'),
+    )
+
+    kind = forms.ChoiceField(choices=USER_SELECTABLE_CHOICES)
 
     class Meta:
         model = LogEntry

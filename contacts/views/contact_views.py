@@ -16,6 +16,7 @@ from contacts.models import (
     Contact,
     BookOwner,
     Tag,
+    LogEntry,
 )
 
 from contacts import forms
@@ -128,6 +129,14 @@ class EditContactView(BookOwnerMixin, UpdateView):
             self.request,
             "Contact updated",
         )
+        if form.has_changed:
+            note_str = 'Updated ' + ', '.join(form.changed_data)
+            LogEntry.objects.create(
+                contact = form.instance,
+                logged_by = self.request.user,
+                kind = 'edit',
+                notes = note_str,
+            )
         return super(EditContactView, self).form_valid(form)
 
 

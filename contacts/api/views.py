@@ -115,6 +115,26 @@ class ContactDetailEditAPIView(RestrictedRendererMixin, generics.RetrieveUpdateD
             pk=self.kwargs.get('pk'),
         )
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        orig_data = self.get_serializer(instance).data
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if orig_data != serializer.data:
+            changed = []
+            for item in orig_data:
+                if orig_data[item] != serializer.data[item]:
+                    changed.append(item)
+            models.LogEntry.objects.create(
+                contact = instance,
+                kind = 'edit',
+                logged_by = request.user,
+                notes = "Updated: " + ', '.join(changed),
+            )
+        return Response(serializer.data)
 
 
 class LogListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):

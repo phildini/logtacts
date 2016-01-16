@@ -107,6 +107,7 @@ class LogEntry(models.Model):
         ('in person', 'In Person'),
         ('website', 'Website'),
         ('other', 'Other'),
+        ('edit', 'Edit')
     )
 
     created = models.DateTimeField(auto_now_add=True)
@@ -138,8 +139,10 @@ class LogEntry(models.Model):
     def action_str(self):
         if self.kind in ('twitter', 'tumblr', 'facebook', 'email'):
             return 'chatted with {} via {}'.format(self.contact, self.kind)
-        if self.kind is 'email':
+        if self.kind == 'in person':
             return 'met with {}'.format(self.contact)
+        if self.kind == 'edit':
+            return "edited {}'s contact info".format(self.contact)
         return 'contacted {}'.format(self.contact)
 
     def can_be_viewed_by(self, user):
