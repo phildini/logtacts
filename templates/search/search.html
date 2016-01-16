@@ -7,7 +7,6 @@
 {% block content %}
     <h2>Search{% if query %} - "{{ query }}"{% endif %}</h2>
         {% if query %}
-            <ul class="contact-list media-list">
             {% for result in page_obj.object_list %}
                 {% with contact=result.object %}
                 {% include "contact_list_item.html" %}
@@ -15,7 +14,6 @@
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
-            </ul>
             {% if page_obj.has_previous or page_obj.has_next %}
                 <div>
                     {% if page_obj.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
