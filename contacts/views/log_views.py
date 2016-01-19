@@ -5,6 +5,7 @@ from django.views.generic import (
     DeleteView,
     UpdateView,
 )
+from django.shortcuts import redirect
 
 import contacts.forms
 from contacts.models import LogEntry
@@ -15,12 +16,23 @@ class EditLogView(LoggedInMixin, UpdateView):
     template_name = 'edit_log.html'
     form_class = contacts.forms.LogEntryForm
 
+    def dispatch(self, request, *args, **kwargs):
+        response = super(EditLogView, self).dispatch(request, *args, **kwargs)
+        if response.status_code == 200:
+            if self.object.kind == 'edit':
+                messages.warning(self.request, "Edit logs cannot be changed")
+                return redirect(
+                    reverse(
+                        'contacts-view',
+                        kwargs={'pk': self.object.contact.id},
+                    ),
+                )
+        return response
+
     def get_object(self, queryset=None):
         instance = super(LoggedInMixin, self).get_object(queryset)
-
         if not instance.can_be_edited_by(self.request.user):
             raise PermissionDenied
-
         return instance
 
     def get_success_url(self):
@@ -40,6 +52,19 @@ class DeleteLogView(LoggedInMixin, DeleteView):
 
     model = LogEntry
     template_name = 'delete_log.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(EditLogView, self).dispatch(request, *args, **kwargs)
+        if response.status_code == 200:
+            if self.object.kind == 'edit':
+                messages.warning(self.request, "Edit logs cannot be changed")
+                return redirect(
+                    reverse(
+                        'contacts-view',
+                        kwargs={'pk': self.object.contact.id},
+                    ),
+                )
+        return response
 
     def get_object(self, queryset=None):
         instance = super(LoggedInMixin, self).get_object(queryset)
