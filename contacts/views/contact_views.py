@@ -166,7 +166,6 @@ class CreateTagView(BookOwnerMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(CreateTagView, self).get_context_data(**kwargs)
         context['action'] = reverse('tags-new')
-
         return context
 
     def form_valid(self, form):
@@ -175,6 +174,38 @@ class CreateTagView(BookOwnerMixin, CreateView):
             "Tag created",
         )
         return super(CreateTagView, self).form_valid(form)
+
+class EditTagView(BookOwnerMixin, UpdateView):
+    model = Tag
+    template_name = 'edit_tag.html'
+    form_class = forms.TagForm
+
+    def get_success_url(self):
+        return reverse('contacts-list')
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Tag updated",
+        )
+        return super(EditTagView, self).form_valid(form)
+
+
+class DeleteTagView(BookOwnerMixin, DeleteView):
+
+    model = Tag
+    template_name = 'delete_tag.html'
+
+    def get_success_url(self):
+        return reverse('contacts-list')
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Tag deleted",
+        )
+        return super(DeleteTagView, self).form_valid(form)
+
 
 class TaggedContactListView(BookOwnerMixin, ListView):
 

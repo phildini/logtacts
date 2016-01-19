@@ -92,6 +92,16 @@ urlpatterns = [
         name='tags-new',
     ),
     url(
+        r'^tags/(?P<pk>\d+)/edit/$',
+        contact_views.EditTagView.as_view(),
+        name='tags-edit',
+    ),
+    url(
+        r'^tags/(?P<pk>\d+)/delete/$',
+        contact_views.DeleteTagView.as_view(),
+        name='tags-delete',
+    ),
+    url(
         r'^tagged/(?P<pk>\d+)/$',
         contact_views.TaggedContactListView.as_view(),
         name='contacts-tagged',

@@ -6,8 +6,13 @@
 
 {% block content %}
 <div class="row">
-    <h3>{% if tag %}"{{ tag.tag }}" Contacts{% else %}Contacts{% endif %}
-    <a href="{% url "contacts-new" %}" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></a></h3>
+    <h3>
+    {% if tag %}"{{ tag.tag }}" Contacts{% else %}Contacts{% endif %}
+    {% if tag %}
+    <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></a>
+    {% else %}
+    <a href="{% url "contacts-new" %}" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></a>
+    {% endif %}
     </h3>
     {% for contact in object_list %}
     <div class="col-md-4">{% include "contact_list_item.html" %}</div>

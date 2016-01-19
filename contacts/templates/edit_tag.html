@@ -6,7 +6,7 @@
 {% else %}
 <h2>Add Tag</h2>
 {% endif %}
-<form action="{{ action }}" method="POST">
+<form method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
     <ul>

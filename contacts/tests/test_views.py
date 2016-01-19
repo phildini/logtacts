@@ -213,3 +213,71 @@ class TagViewTests(TestCase):
         )
         self.assertEqual(len(response.context_data.get('tags')), 1)
         self.assertEqual(len(response.context_data.get('contact_list')), 1)
+
+
+class EditTagViewTests(TestCase):
+
+    def setUp(self):
+        book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
+        self.contact = factories.ContactFactory.create(book=book)
+        self.tag = factories.TagFactory.create(tag='Test2', book=book)
+        self.contact.tags.add(self.tag)
+        self.request_factory = RequestFactory()
+
+    def test_edit_tag_view_200(self):
+        request = self.request_factory.get(
+            reverse('tags-edit', kwargs={'pk': self.tag.pk}),
+        )
+        request.user = self.user
+        response = views.contact_views.EditTagView.as_view()(
+            request,
+            pk=self.tag.pk,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit_tag_view_renders(self):
+        request = self.request_factory.get(
+            reverse('tags-edit', kwargs={'pk': self.tag.pk}),
+        )
+        request.user = self.user
+        response = views.contact_views.EditTagView.as_view()(
+            request,
+            pk=self.tag.pk,
+        )
+        response.render()
+
+
+# class DeleteTagViewTests(TestCase):
+
+#     def setUp(self):
+#         book = factories.BookFactory.create()
+#         self.user = UserFactory.create(username='phildini')
+#         bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
+#         self.contact = factories.ContactFactory.create(book=book)
+#         self.tag = factories.TagFactory.create(tag='Test', book=book)
+#         self.contact.tags.add(self.tag)
+#         self.request_factory = RequestFactory()
+
+#     def test_delete_tag_view_200(self):
+#         request = self.request_factory.get(
+#             reverse('tags-delete', kwargs={'pk': self.tag.id}),
+#         )
+#         request.user = self.user
+#         response = views.contact_views.DeleteTagView.as_view()(
+#             request,
+#             pk=self.tag.pk,
+#         )
+#         self.assertEqual(response.status_code, 200)
+
+#     def test_delete_tag_view_renders(self):
+#         request = self.request_factory.get(
+#             reverse('tags-delete', kwargs={'pk': self.tag.id}),
+#         )
+#         request.user = self.user
+#         response = views.contact_views.DeleteTagView.as_view()(
+#             request,
+#             pk=self.tag.pk,
+#         )
+#         response.render()
