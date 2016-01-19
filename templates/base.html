@@ -44,12 +44,18 @@
                     <li class="dropdown hidden-xs hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!<span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            {% if user.is_staff %}
+                            <li><a href="/admin/">Admin</a></li>
+                            {% endif %}
                             <li><a href="/u/">Settings</a></li>
                             <li><a href="/logout/">Logout</a></li>
                             <li><a href="{% url "create-invite" %}">Invite others</a></li>
                             <li><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>
                         </ul>
                     </li>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <li class="visible-sm visible-xs"><a href="/admin/">Admin</a></li>
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="/u/">Settings</a></li>
                     <li class="visible-sm visible-xs"><a href="/logout/">Logout</a></li>
