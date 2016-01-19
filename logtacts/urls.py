@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from contacts.views import (
     contact_views,
@@ -102,4 +103,9 @@ urlpatterns = [
         name='accept-invite',
     ),
     url(r'^u/', include('profiles.urls')),
+    url(
+        r'^policies$', 
+        TemplateView.as_view(template_name='policies.html'),
+        name='policies',
+    ),
 ]
