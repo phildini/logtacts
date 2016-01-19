@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<a href="{% url "contacts-list" %}">back to contacts</a>
-
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -13,19 +10,30 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <ul class="list-group">
-    {% for field in form %}
-        <li id="{{ field.auto_id }}_container" class="list-group-item">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
-            </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
+    <div class="form-group">
+        <label for="id_username">Username</label>
+        {{ form.username.help_text }}
+        {{ form.username.errors }}
+        <input id="id_username" class="form-control" maxlength="30" name="username" type="text" {% if user.username %}value="{{ user.username }}"{% endif %}/>
+    </div>
+    <div class="form-group">
+        {{ form.first_name.help_text }}
+        <label for="id_first_name">Firstname</label>
+        {{ form.first_name.errors }}
+        <input id="id_first_name" class="form-control" maxlength="30" name="first_name" type="text" {% if user.first_name %}value="{{ user.first_name }}"{% endif %}/>
+    </div>
+    <div class="form-group">
+        {{ form.last_name.help_text }}
+        <label for="id_last_name">Lastname</label>
+        {{ form.last_name.errors }}
+        <input id="id_last_name" class="form-control" maxlength="30" name="last_name" type="text" {% if user.last_name %}value="{{ user.last_name }}"{% endif %}/>
+    </div>
+    <div class="form-group">
+        {{ form.email.help_text }}
+        <label for="id_email">Email</label>
+        {{ form.email.errors }}
+        <input id="id_email" class="form-control" maxlength="30" name="email" type="text" {% if user.email %}value="{{ user.email }}"{% endif %}/>
+    </div>
     <input id="add_log" type="submit" value="Save">
 </form>
 {% endblock %}
