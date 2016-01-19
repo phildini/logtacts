@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{% url "contacts-list" %}">back to contacts</a>
+
+<form action="{{ action }}" method="POST">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <ul class="list-group">
+    {% for field in form %}
+        <li id="{{ field.auto_id }}_container" class="list-group-item">
+            {{ field.help_text }}
+            <div>
+                {{ field.label_tag }} {{ field }}
+            </div>
+            <div id="{{ field.auto_id }}_errors">
+                {{ field.errors }}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+    <input id="add_log" type="submit" value="Save">
+</form>
+{% endblock %}

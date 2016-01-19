@@ -5,4 +5,4 @@ python:
 env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
 install: "pip install -r requirements.txt"
-script: "coverage run manage.py test contacts"
+script: "coverage run manage.py test contacts profiles && coverage report --include='./*'"

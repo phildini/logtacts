@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.views import login, logout
 
 from contacts.views import (
     contact_views,
@@ -38,18 +37,12 @@ urlpatterns = [
         contact_api_views.LogListCreateAPIView.as_view(),
     ),
     url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
-    # url(
-    #     r'^api/tags/(?P<pk>[0-9]+)$',
-    #     contact_api_views.TagDetailAPIView.as_view(),
-    # ),
-    url(r'^login/$', login),
-    url(r'^logout/$', logout),
+    url(r'^', include('django.contrib.auth.urls')),
     url(
         r'^set-password/$',
         ChangePasswordView.as_view(),
         name='set-password',
     ),
-    url(r'^account/', include('django.contrib.auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(
         r'^search/',
@@ -108,4 +101,5 @@ urlpatterns = [
         AcceptInviteView.as_view(),
         name='accept-invite',
     ),
+    url(r'^u/', include('profiles.urls')),
 ]
