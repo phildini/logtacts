@@ -3,13 +3,10 @@
 {% block content %}
 
 {% if object.id %}
-<h1>Edit Log</h1>
+<h2>Edit Log</h2>
 {% else %}
-<h1>Add Log</h1>
+<h2>Add Log</h2>
 {% endif %}
-
-<a href="{% url "contacts-list" %}">back to contacts</a>
-
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -19,19 +16,21 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <ul class="list-group">
-    {% for field in form %}
-        <li id="{{ field.auto_id }}_container" class="list-group-item">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
-            </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-    <input id="add_log" type="submit" value="Save">
+    <div class="form-group">
+        <label for="id_kind">Kind</label>
+        {{ form.kind.errors }}
+        {{ form.kind }}
+    </div>
+    <div class="form-group">
+        <label for="id_link">Link</label>
+        {{ form.link.errors }}
+        <input class="form-control" id="id_link" maxlength="200" name="link" type="url" {% if object.link %}value="{{ object.link }}"{% endif %}/>
+    </div>
+    <div class="form-group">
+        <label for="id_notes">Notes</label>
+        {{ form.notes.errors }}
+        <textarea class="form-control" cols="40" id="id_notes" name="notes" rows="1">{% if object.notes %}{{ object.notes }}{% endif %}</textarea>
+    </div>
+    <input class="btn btn-primary" id="add_log" type="submit" value="Save">
 </form>
 {% endblock %}
