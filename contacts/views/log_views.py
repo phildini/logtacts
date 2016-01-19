@@ -54,7 +54,7 @@ class DeleteLogView(LoggedInMixin, DeleteView):
     template_name = 'delete_log.html'
 
     def dispatch(self, request, *args, **kwargs):
-        response = super(EditLogView, self).dispatch(request, *args, **kwargs)
+        response = super(DeleteLogView, self).dispatch(request, *args, **kwargs)
         if response.status_code == 200:
             if self.object.kind == 'edit':
                 messages.warning(self.request, "Edit logs cannot be changed")
