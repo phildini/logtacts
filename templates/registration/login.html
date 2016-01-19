@@ -2,25 +2,28 @@
 
 {% block content %}
 
+<div class="row">
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 {% csrf_token %}
-<table>
-<tr>
-    <td><strong>Username:</strong></td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
+<div class="form-group">
+    <label for="id_username">Username</label>
+    {{ form.username.errors}}
+    <input id="id_username" class="form-control" maxlength="254" name="username" type="text" />
+</div>
+<div class="form-group">
+    <label for="id_password">Password</label>
+    {{ form.password.errors }}
+    <input id="id_password" class="form-control" name="password" type="password" />
+</div>
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
+<div>
+    <a href="/password_reset/">Forgot password?</a>
+</div>
 </form>
-
+</div>
 {% endblock %}
