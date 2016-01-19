@@ -12,7 +12,7 @@
                 {% include "contact_list_item.html" %}
                 {% endwith %}
             {% empty %}
-                <p>No results found.</p>
+                <p>No contacts found.</p>
             {% endfor %}
             {% if page_obj.has_previous or page_obj.has_next %}
                 <div>
@@ -21,5 +21,7 @@
                     {% if page_obj.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
                 </div>
             {% endif %}
+        {% else %}
+            <p>Please enter a search term</p>
         {% endif %}
 {% endblock %}

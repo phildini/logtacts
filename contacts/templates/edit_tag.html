@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-{% if log.id %}
-<h1>Edit Tag</h1>
+{% if tag.id %}
+<h2>Edit Tag</h2>
 {% else %}
-<h1>Add Tag</h1>
+<h2>Add Tag</h2>
 {% endif %}
-
-<a href="{% url "contacts-list" %}">back to contacts</a>
-
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -19,19 +15,23 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <ul class="list-group">
-    {% for field in form %}
-        <li id="{{ field.auto_id }}_container" class="list-group-item">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
-            </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-    <input id="add_tag" type="submit" value="Save">
+    <div class="form-group col-md-6">
+        {{ form.tag.help_text}}
+        <label for="id_tag">Tag</label>
+        {{ form.tag.errors }}
+        <input class="form-control" id="id_tag" maxlength="100" name="tag" type="text" {% if tag.tag %}value="{{ tag.tag }}"{% endif %}/>
+    </div>
+    <div class="form-group col-md-6">
+        {{ form.color.help_text}}
+        <label for="id_color">Color</label>
+        {{ form.color.errors }}
+        <div class="input-group">
+            <span class="input-group-addon">#</span>
+            <input class="form-control" id="id_color" maxlength="20" name="color" type="text" {% if tag.color %}value="{{ tag.color }}"{% endif %}/>
+        </div>
+    </div>
+    <div class="col-md-6">
+    <input class="btn btn-default" id="add_tag" type="submit" value="Save" />
+    </div>
 </form>
 {% endblock %}
