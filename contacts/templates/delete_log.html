@@ -10,7 +10,7 @@
 </ul>
 <form action="{% url "log-delete" pk=logentry.id %}" method="POST">
     {% csrf_token %}
-    <input type="submit" value="Yes, delete." />
-    <a href="{% url "contacts-view" pk=logentry.contact.id %}">No, cancel.</a>
+    <input class="btn btn-danger" type="submit" value="Yes, delete." />
+    <a class="btn btn-primary" href="{% url "contacts-view" pk=logentry.contact.id %}">No, cancel.</a>
 </form>
 {% endblock %}

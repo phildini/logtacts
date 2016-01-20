@@ -3,9 +3,9 @@
 {% block content %}
 
 {% if invitation.id %}
-<h1>Edit Invite</h1>
+<h3>Edit Invite</h3>
 {% else %}
-<h1>Share your contact book with:</h1>
+<h3>Share your contact book with:</h3>
 {% endif %}
 
 <form action="{{ action }}" method="POST">
@@ -17,19 +17,11 @@
         {% endfor %}
     </ul>
     {% endif %}
-    <ul class="list-group">
-    {% for field in form %}
-        <li id="{{ field.auto_id }}_container" class="list-group-item">
-            {{ field.help_text }}
-            <div>
-                {{ field.label_tag }} {{ field }}
-            </div>
-            <div id="{{ field.auto_id }}_errors">
-                {{ field.errors }}
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-    <input id="add_invite" type="submit" value="Save">
+    <div class="form-group">
+        <label class="sr-only" for="id_email">Email</label>
+        <input id="id_email" class="form-control" maxlength="254" name="email" type="email" placeholder="Email"/>
+        {{ form.email.errors }}
+    </div>
+    <input id="add_invite" class="btn btn-primary" type="submit" value="Send Invite">
 </form>
 {% endblock %}

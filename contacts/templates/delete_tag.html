@@ -5,7 +5,7 @@
 <p>Are you sure you want to delete {{ tag }}?</p>
 <form action="{% url "tags-delete" pk=tag.id %}" method="POST">
     {% csrf_token %}
-    <input type="submit" value="Yes, delete." />
-    <a href="{% url "contacts-list" %}">No, cancel.</a>
+    <input class="btn btn-danger" type="submit" value="Yes, delete." />
+    <a class="btn btn-primary" href="{% url "contacts-list" %}">No, cancel.</a>
 </form>
 {% endblock %}
