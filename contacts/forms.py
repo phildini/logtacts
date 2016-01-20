@@ -23,7 +23,7 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        exclude = ['created', 'changed', 'book']
+        exclude = ['created', 'changed', 'book', 'last_contact']
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
             'notes': forms.Textarea(attrs={'rows':3}),

@@ -41,6 +41,7 @@ class ContactManager(models.Manager):
 class Contact(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
+    last_contact = models.DateTimeField(blank=True, null=True)
     book = models.ForeignKey('Book', blank=True, null=True)
     name = models.CharField(max_length=255)
     email = models.EmailField(blank=True, null=True)
@@ -64,8 +65,9 @@ class Contact(models.Model):
         return reverse('contacts-view', kwargs={'pk': self.id})
 
     def last_contacted(self):
-        last_log = LogEntry.objects.filter(contact=self).latest('created')
-        return last_log.created
+        if self.last_contact:
+            return self.last_contact
+
 
     def can_be_viewed_by(self, user):
         return bool(self.book.bookowner_set.filter(user=user))

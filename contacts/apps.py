@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
 
-class Contacts(AppConfig):
+class ContactConfig(AppConfig):
     name = 'contacts'
+
+    def ready(self):
+        import contacts.signals

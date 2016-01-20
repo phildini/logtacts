@@ -175,3 +175,11 @@ class LogEntryModelTests(TestCase):
     def test_log_cant_be_edited_by_bad(self):
         user = UserFactory.create(username='asheesh')
         self.assertFalse(self.log.can_be_edited_by(user))
+
+    def test_creating_log_updates_contact(self):
+        self.assertTrue(self.contact.last_contact)
+        self.assertEqual(self.log.created, self.contact.last_contact)
+
+    def test_creating_edit_log_no_contact_update(self):
+        edit_log = factories.LogFactory.create(kind='edit', contact=self.contact)
+        self.assertEqual(self.log.created, self.contact.last_contact)
