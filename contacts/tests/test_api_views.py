@@ -242,7 +242,7 @@ class LogListCreateAPIViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-    def test_contact_list_view_wrong_user_for_book(self):
+    def test_log_list_view_wrong_user_for_book(self):
         request = self.factory.get(self.url, format='json')
         user = UserFactory.create(username='asheesh')
         force_authenticate(request, user=user)
@@ -267,18 +267,17 @@ class LogListCreateAPIViewTests(TestCase):
         response.render()
         self.assertEqual(response.status_code, 201)
 
-    # This test still needs fixing
-    # def test_contact_create_view_wrong_book_for_user(self):
-    #     request = self.factory.post(
-    #         '/api/contacts/',
-    #         {'contact': str(self.contact.id)},
-    #         format='json',
-    #     )
-    #     user = UserFactory.create(username='asheesh')
-    #     force_authenticate(request, user=user)
-    #     response = views.LogListCreateAPIView.as_view()(
-    #         request,
-    #         pk=self.contact.id,
-    #     )
-    #     response.render()
-    #     self.assertEqual(response.status_code, 404)
+    def test_log_create_view_wrong_book_for_user(self):
+        request = self.factory.post(
+            '/api/contacts/',
+            {'contact': str(self.contact.id)},
+            format='json',
+        )
+        user = UserFactory.create(username='asheesh')
+        force_authenticate(request, user=user)
+        response = views.LogListCreateAPIView.as_view()(
+            request,
+            pk=self.contact.id,
+        )
+        response.render()
+        self.assertEqual(response.status_code, 404)
