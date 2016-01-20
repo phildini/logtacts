@@ -29,6 +29,13 @@ class ContactListView(BookOwnerMixin, ListView):
 
     def get_queryset(self):
         qs = super(ContactListView, self).get_queryset()
+        sort = self.request.GET.get('s')
+        if sort == 'oldnew':
+            return qs.order_by('last_contact')
+        if sort == 'newold':
+            return qs.order_by('-last_contact')
+        if sort == 'za':
+            return qs.order_by('-name')
         return qs.order_by('name')
 
     def get_context_data(self, **kwargs):

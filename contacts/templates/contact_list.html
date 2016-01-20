@@ -11,7 +11,15 @@
     {% if tag %}
     <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></a>
     {% else %}
-    <a href="{% url "contacts-new" %}" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></a>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="?s=oldnew">Old to New</a></li>
+            <li><a href="?s=newold">New to Old</a></li>
+            <li><a href="?s=az">A to z</a></li>
+            <li><a href="?s=za">z to A</a></li>
+        </ul>
+    </div>
     {% endif %}
     </h3>
     {% for contact in object_list %}
@@ -19,7 +27,7 @@
     {% endfor %}
 </div>
 <div class="row">
-<h3>Tags <a href="{% url "tags-new" %}" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span></a></h3>
+<h3>Tags <a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a></h3>
     {% for tag in tags %}
         <div class="tag-list-tag" style="float: left; margin-right:10px;"><a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default">{{ tag }}</span></a></div>
     {% endfor %}
