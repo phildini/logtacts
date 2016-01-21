@@ -37,7 +37,7 @@ class ContactListView(BookOwnerMixin, ListView):
         if sort == 'newold':
             return qs.extra(
                 select={'last_null': 'last_contact IS NULL'}
-            ).order_by('-last_contact', 'last_null')
+            ).order_by('-last_contact', '-last_null')
         if sort == 'za':
             return qs.order_by('-name')
         return qs.order_by('name')
