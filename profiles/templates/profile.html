@@ -34,6 +34,13 @@
         {{ form.email.errors }}
         <input id="id_email" class="form-control" maxlength="30" name="email" type="text" {% if user.email %}value="{{ user.email }}"{% endif %}/>
     </div>
+    <div class="checkbox">
+        {{ form.send_contact_reminders.help_text }}
+        <label for="id_send_contact_reminders">
+            <input type="checkbox" {% if send_contact_reminders %}checked="checked"{% endif %} name="send_contact_reminders" id="id_send_contact_reminders">Send contact reminders
+        </label>
+        {{ form.send_contact_reminders.errors }}
+    </div>
     <input id="add_log" type="submit" value="Save">
 </form>
 {% endblock %}
