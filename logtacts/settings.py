@@ -91,7 +91,7 @@ INSTALLED_APPS = (
     'invitations',
     'rest_framework',
     'rest_framework.authtoken',
-    'profiles',
+    'profiles.apps.ProfilesConfig',
 )
 
 MIDDLEWARE_CLASSES = (

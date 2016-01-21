@@ -1,4 +1,5 @@
 import logging
+import requests
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
 from django.core.management.base import BaseCommand

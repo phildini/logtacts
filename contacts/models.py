@@ -54,6 +54,7 @@ class Contact(models.Model):
     company = models.CharField(max_length=100, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
+    should_surface = models.BooleanField(blank=True, default=True)
     tags = models.ManyToManyField(Tag, blank=True)
 
     objects = ContactManager()
