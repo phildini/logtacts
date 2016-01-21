@@ -23,6 +23,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand hidden-sm hidden-xs" href="{% url "contacts-list" %}">LOGTACTS</a>
+                {% if user.is_authenticated %}
                 <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
                         <div class="input-group">
@@ -40,7 +41,7 @@
                         <span class="icon-bar"></span>
                     </button>
                 </form>
-                
+                {% endif %}
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">

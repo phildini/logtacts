@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Welcome to Logtacts!</h1>
+<div class="jumbotron">
+<h1>Better contact management.</h1>
 <p>Logtacts is a work-in-progress for better contact management for families, a sort of family CRM. Right now, you can add contacts and log when you chat with them.</p>
-<p>Logtacts is alpha software, currently comes with no warranty. Currently, you use it at your own risk.</p>
-<p>Please <a href="{% url "login" %}">login</a>.
+<p>Logtacts is alpha software, and currently comes with no warranty. You use it at your own risk.</p>
+<p><a class="btn btn-success" href="{% url "login" %}">Login</a></p>
+</div>
 {% endblock %}
