@@ -31,13 +31,9 @@ class ContactListView(BookOwnerMixin, ListView):
         qs = super(ContactListView, self).get_queryset()
         sort = self.request.GET.get('s')
         if sort == 'oldnew':
-            return qs.extra(
-                select={'last_null': 'last_contact IS NULL'}
-            ).order_by('last_contact', 'last_null')
+            return qs.order_by('last_contact')
         if sort == 'newold':
-            return qs.extra(
-                select={'last_null': 'last_contact IS NULL'}
-            ).order_by('-last_contact', '-last_null')
+            return qs.order_by('-last_contact')
         if sort == 'za':
             return qs.order_by('-name')
         return qs.order_by('name')
