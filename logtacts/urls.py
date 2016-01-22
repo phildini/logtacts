@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from allauth.account import views as allauth_views
+
 from contacts.views import (
     contact_views,
     log_views,
@@ -40,11 +42,8 @@ urlpatterns = [
     url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
     url(r'^', include('django.contrib.auth.urls')),
     url(
-        r'^allauth_login/',
-        'allauth.account.views.login',
-        name='account_login',
-    ),
-    url(r'^signup/', 'allauth.account.views.signup', name='account_signup'),
+        r'^allauth_login/', allauth_views.login, name='account_login'),
+    url(r'^signup/', allauth_views.signup, name='account_signup'),
     url(
         r'^hold/',
         TemplateView.as_view(template_name='signup_success.html'),
