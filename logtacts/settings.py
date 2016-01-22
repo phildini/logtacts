@@ -39,8 +39,6 @@ SECRET_KEY = '!3yyflcosue5z!d225xmf(4g2blxlu+ac0jzjf+%8wh0t23*=!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = DEBUG
-
 ALLOWED_HOSTS = []
 
 SITE_ID=1
@@ -84,11 +82,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'allauth',
+    'allauth.account',
     'django_gravatar',
     'djangosecure',
     'haystack',
     'contacts.apps.ContactConfig',
-    'invitations',
+    'invitations.apps.InvitationConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'profiles.apps.ProfilesConfig',
@@ -106,10 +106,14 @@ MIDDLEWARE_CLASSES = (
     'logtacts.middleware.TimezoneMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 ROOT_URLCONF = 'logtacts.urls'
 
 WSGI_APPLICATION = 'logtacts.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

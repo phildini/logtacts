@@ -12,13 +12,9 @@ class InvitationForm(forms.ModelForm):
         fields = ['email']
 
     def clean(self):
-        try:
-            existing_user = User.objects.get(
-                email=self.cleaned_data.get('email'),
-            )
-        except User.DoesNotExist:
-            existing_user = None
-        if existing_user:
+        if User.objects.filter(email=self.cleaned_data.get('email')).exists():
+            raise forms.ValidationError('User with email already exists!')
+        if Invitation.objects.filter(email=self.cleaned_data.get('email')).exists():
             raise forms.ValidationError('User with email already exists!')
         return self.cleaned_data
 

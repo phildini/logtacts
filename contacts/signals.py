@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import LogEntry
+from .models import Book, BookOwner, LogEntry
 
 
 @receiver(post_save, sender=LogEntry)
@@ -16,3 +17,13 @@ def log_last_contact(sender, **kwargs):
         if not instance.contact.last_contact:
             instance.contact.last_contact = time
             instance.contact.save()
+
+
+@receiver(post_save, sender=User)
+def create_book_for_new_user(sender, instance=None, created=False, **kwargs):
+    if not kwargs.get('raw') and instance and created:
+        try:
+            BookOwner.objects.get(user=instance)
+        except BookOwner.DoesNotExist:
+            book = Book.objects.create(name="{}'s Contacts".format(instance))
+            BookOwner.objects.create(user=instance, book=book)

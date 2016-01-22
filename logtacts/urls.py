@@ -40,6 +40,17 @@ urlpatterns = [
     url(r'^api/tags/$', contact_api_views.TagListCreateAPIView.as_view()),
     url(r'^', include('django.contrib.auth.urls')),
     url(
+        r'^allauth_login/',
+        'allauth.account.views.login',
+        name='account_login',
+    ),
+    url(r'^signup/', 'allauth.account.views.signup', name='account_signup'),
+    url(
+        r'^hold/',
+        TemplateView.as_view(template_name='signup_success.html'),
+        name='account_inactive',
+    ),
+    url(
         r'^set-password/$',
         ChangePasswordView.as_view(),
         name='set-password',

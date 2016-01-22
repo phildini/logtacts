@@ -1,5 +1,6 @@
 import logging
 import requests
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
 from django.core.management.base import BaseCommand
@@ -31,7 +32,7 @@ class Command(BaseCommand):
                         invite.sender,
                         Site.objects.get_current().domain,
                         invite.key,
-                    ),
+                    )
             else:
                 subject = "[Logtacts] Invitation to join Logtacts from %s" % (invite.sender)
                 body = "Go to https://%s/invites/accept/%s/ to join!" % (
@@ -46,6 +47,9 @@ class Command(BaseCommand):
                     to=[invite.email,],
                 )
                 message.send()
+                invite.status = Invitation.SENT
+                invite.sent = timezone.now()
+                invite.save()
             except:
                 logger.exception('Problem sending invite %s' % (invite.id))
                 invite.status = Invitation.ERROR
@@ -61,8 +65,5 @@ class Command(BaseCommand):
                         )
                 except:
                     logger.exception("Error sending error to slack")
-            invite.status = Invitation.SENT
-            invite.sent = timezone.now()
-            invite.save()
 
 
