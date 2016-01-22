@@ -26,15 +26,6 @@ class ContactSearchAPIViewTests(TestCase):
         response.render()
         self.assertEqual(response.status_code, 400)
 
-    def test_contact_search_no_book(self):
-        request = self.factory.get('/api/search/?q=phil', format='json')
-        user = UserFactory.create(username="asheesh")
-        force_authenticate(request, user=user)
-        response = views.ContactSearchAPIView.as_view()(request)
-        response.render()
-        self.assertEqual(response.status_code, 400)
-
-
 
 class TagListAPIViewTests(TestCase):
 
