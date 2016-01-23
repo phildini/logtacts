@@ -3,22 +3,12 @@ from django.core.exceptions import ValidationError
 
 from contacts.models import Contact, LogEntry, Tag
 
-class BootstrapForm(object):
-
-    def __init__(self, *args, **kwargs):
-        super(BootstrapForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs['class'] = 'form-control'
-
 class ContactForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         book = kwargs.pop('book')
         super(ContactForm, self).__init__(*args, **kwargs)
         choices = Tag.objects.filter(book=book).values_list('id', 'tag')
-        for field in self.fields:
-            if field != 'tags':
-                self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['tags'].choices = choices
 
     class Meta:
@@ -31,7 +21,7 @@ class ContactForm(forms.ModelForm):
         }
 
 
-class LogEntryForm(BootstrapForm, forms.ModelForm):
+class LogEntryForm(forms.ModelForm):
     USER_SELECTABLE_CHOICES = (
         ('twitter', 'Twitter'),
         ('tumblr', 'Tumblr'),
@@ -52,7 +42,7 @@ class LogEntryForm(BootstrapForm, forms.ModelForm):
         }
  
 
-class TagForm(BootstrapForm, forms.ModelForm):
+class TagForm(forms.ModelForm):
 
     class Meta:
         model = Tag
