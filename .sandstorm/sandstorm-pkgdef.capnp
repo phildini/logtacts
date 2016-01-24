@@ -243,5 +243,6 @@ const myCommand :Spk.Manifest.Command = (
     # Export SANDSTORM=1 into the environment, so that apps running within Sandstorm
     # can detect if $SANDSTORM="1" at runtime, switching UI and/or backend to use
     # the app's Sandstorm-specific integration code.
+    (key = "HOME", value="/var")
   ]
 );
