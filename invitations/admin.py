@@ -1,9 +1,10 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import Invitation
 from .forms import InvitationAdminAddForm, InvitationAdminUpdateForm
 
 
-class InvitationAdmin(admin.ModelAdmin):
+class InvitationAdmin(SimpleHistoryAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
 

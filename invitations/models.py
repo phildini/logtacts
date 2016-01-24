@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.crypto import get_random_string
+from simple_history.models import HistoricalRecords
 from contacts.models import Book
 
 
@@ -39,6 +40,7 @@ class Invitation(models.Model):
     sender = models.ForeignKey(User)
     book = models.ForeignKey(Book, blank=True, null=True)
     key = models.CharField(max_length=32, unique=True)
+    history = HistoricalRecords()
 
     objects = InvitationManager()
 

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 
+from simple_history.models import HistoricalRecords
+
 
 class TagManager(models.Manager):
 
@@ -17,6 +19,7 @@ class Tag(models.Model):
     tag = models.CharField(max_length=100)
     color = models.CharField(max_length=20, blank=True, null=True)
     book = models.ForeignKey('Book', blank=True, null=True)
+    history = HistoricalRecords()
 
     objects = TagManager()
 
@@ -56,6 +59,7 @@ class Contact(models.Model):
     notes = models.TextField(blank=True, null=True)
     should_surface = models.BooleanField(blank=True, default=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    history = HistoricalRecords()
 
     objects = ContactManager()
 
@@ -81,6 +85,7 @@ class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -96,6 +101,7 @@ class BookOwner(models.Model):
     changed = models.DateTimeField(auto_now=True)
     book = models.ForeignKey('Book')
     user = models.ForeignKey(User)
+    history = HistoricalRecords()
 
     def __str__(self):
         return "{} is an owner of {}".format(self.user, self.book)
@@ -127,6 +133,7 @@ class LogEntry(models.Model):
     location = models.CharField(max_length=255, blank=True, null=True)
     logged_by = models.ForeignKey(User, blank=True, null=True, related_name='logged_by')
     notes = models.TextField(blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return "Log on %s" % (self.contact,)

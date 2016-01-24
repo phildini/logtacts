@@ -1,4 +1,5 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import (
     Contact,
     Tag,
@@ -7,8 +8,8 @@ from .models import (
     LogEntry,
 )
 
-admin.site.register(Contact)
-admin.site.register(Tag)
-admin.site.register(Book)
-admin.site.register(BookOwner)
-admin.site.register(LogEntry)
+admin.site.register(Contact, SimpleHistoryAdmin)
+admin.site.register(Tag, SimpleHistoryAdmin)
+admin.site.register(Book, SimpleHistoryAdmin)
+admin.site.register(BookOwner, SimpleHistoryAdmin)
+admin.site.register(LogEntry, SimpleHistoryAdmin)
