@@ -3,6 +3,7 @@ import requests
 from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from contacts.models import Contact
