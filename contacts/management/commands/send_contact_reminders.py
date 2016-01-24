@@ -14,11 +14,11 @@ class Command(BaseCommand):
     help = "send reminder for contacts to contact"
 
     def handle(self, *args, **options):
-        logger.log("Starting contact reminder sending")
+        logger.debug("Starting contact reminder sending")
         last_month = timezone.now() - timedelta(weeks=4)
         profiles_opted_in = Profile.objects.filter(send_contact_reminders=True)
         for profile in profiles_opted_in:
-            logger.log("Starting compilation for {}".format(profile.user))
+            logger.debug("Starting compilation for {}".format(profile.user))
             contact = Contact.objects.get_contacts_for_user(
                 profile.user
             ).filter(
@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 contact.last_contact,
             )
             try:
-                logger.log("Trying to send message to {} about {}".format(
+                logger.debug("Trying to send message to {} about {}".format(
                     profile.user, contact
                 ))
                 message = EmailMessage(
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                     to=[profile.user.email],
                 )
                 message.send()
-                logger.log("Sent message to {} successfuly".format(profile.user))
+                logger.debug("Sent message to {} successfuly".format(profile.user))
             except:
                 logger.exception('Problem sending reminder for %s' % (profile))
                 try:
