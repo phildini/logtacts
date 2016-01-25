@@ -144,7 +144,8 @@ const pkgdef :Spk.PackageDefinition = (
       ( sourcePath = "/",    # Then search the system root directory.
         hidePaths = [ "home", "proc", "sys",
                       "etc/passwd", "etc/hosts", "etc/host.conf",
-                      "etc/nsswitch.conf", "etc/resolv.conf" ]
+                      "etc/nsswitch.conf", "etc/resolv.conf",
+                      "db.sqlite3" ]
         # You probably don't want the app pulling files from these places,
         # so we hide them. Note that /dev, /var, and /tmp are implicitly
         # hidden because Sandstorm itself provides them.

@@ -13,6 +13,7 @@ UWSGI_SOCKET_FILE=/var/run/uwsgi.sock
 
 
 /opt/app/env/bin/python /opt/app/manage.py migrate --settings=logtacts.sandstorm_settings
+/opt/app/env/bin/python /opt/app/manage.py rebuild_index --noinput --settings=logtacts.sandstorm_settings 
 
 # Spawn uwsgi
 HOME=/var uwsgi \

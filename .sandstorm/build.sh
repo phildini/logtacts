@@ -7,6 +7,12 @@ else
     echo "$VENV exists, moving on"
 fi
 
+if [ -f /opt/django-sandstorm/setup.py ] ; then
+    pushd /opt/django-sandstorm/
+    $VENV/bin/pip install -e .
+    popd
+fi
+
 if [ -f /opt/app/requirements.txt ] ; then
     $VENV/bin/pip install -r /opt/app/requirements.txt
 fi

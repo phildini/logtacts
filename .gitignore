@@ -58,3 +58,4 @@ docs/_build/
 
 *.sublime-workspace
 
+.sandstorm/.vagrant/
