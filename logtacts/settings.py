@@ -39,6 +39,8 @@ SECRET_KEY = '!3yyflcosue5z!d225xmf(4g2blxlu+ac0jzjf+%8wh0t23*=!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SANDSTORM = False
+
 ALLOWED_HOSTS = []
 
 SITE_ID=1
