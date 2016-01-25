@@ -4,5 +4,9 @@ python:
  - "3.5"
 env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
+before_install:
+  - pip install codecov
+after_success:
+  - codecov
 install: "pip install -r requirements.txt"
 script: "coverage run manage.py test contacts profiles && coverage report --include='./*'"
