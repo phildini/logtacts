@@ -3,7 +3,7 @@ from logtacts.settings import *
 
 SANDSTORM = True
 
-DEBUG = True
+DEBUG = False
 
 SECRET_KEY = get_env_variable("LOGTACTS_SECRET_KEY")
 
@@ -17,6 +17,8 @@ ADMINS = ()
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = ['*']
+
+TEMPLATES[0]['OPTIONS']['context_processors'].append('django_sandstorm.context.sandstorm')
 
 INSTALLED_APPS += (
     'django_sandstorm',

@@ -17,3 +17,4 @@ coverage==4.0.3
 factory-boy==2.6.0
 fake-factory==0.5.3
 django-simple-history==1.7.0
+django-sandstorm==0.0.1

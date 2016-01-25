@@ -1026,6 +1026,12 @@ opt/app/env/lib/python2.7/site-packages/django_gravatar/templatetags/__init__.py
 opt/app/env/lib/python2.7/site-packages/django_gravatar/templatetags/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/django_gravatar/templatetags/gravatar.py
 opt/app/env/lib/python2.7/site-packages/django_gravatar/templatetags/gravatar.pyc
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/__init__.py
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/__init__.pyc
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/context.py
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/context.pyc
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/middleware.py
+opt/app/env/lib/python2.7/site-packages/django_sandstorm/middleware.pyc
 opt/app/env/lib/python2.7/site-packages/djangosecure/__init__.py
 opt/app/env/lib/python2.7/site-packages/djangosecure/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/djangosecure/conf.py
@@ -2044,8 +2050,6 @@ opt/app/templates/registration/login.html
 opt/app/templates/search/indexes/contacts/contact_text.txt
 opt/app/templates/search/search.html
 opt/django-sandstorm
-opt/django-sandstorm/django_sandstorm/__init__.py
-opt/django-sandstorm/django_sandstorm/middleware.py
 proc/cpuinfo
 sandstorm-http-bridge
 sandstorm-http-bridge-config

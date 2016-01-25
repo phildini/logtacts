@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -25,5 +26,13 @@ def create_book_for_new_user(sender, instance=None, created=False, **kwargs):
         try:
             BookOwner.objects.get(user=instance)
         except BookOwner.DoesNotExist:
-            book = Book.objects.create(name="{}'s Contacts".format(instance))
-            BookOwner.objects.create(user=instance, book=book)
+            if settings.SANDSTORM:
+                books = Book.objects.all()
+                if len(books) > 0:
+                    book = Book.objects.all()[0]
+                else:
+                    book = Book.objects.create(name="{}'s Contacts".format(instance))
+                BookOwner.objects.create(user=instance, book=book)
+            else:
+                book = Book.objects.create(name="{}'s Contacts".format(instance))
+                BookOwner.objects.create(user=instance, book=book)

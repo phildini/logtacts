@@ -94,7 +94,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     override.vm.synced_folder "..", "/vagrant", type: "9p", accessmode: "passthrough"
   end
 
-  if File.directory?("../../django-sandstorm")
+  if ENV['USE_LOCAL_DJANGO_SANDSTORM'] and File.directory?("../../django-sandstorm")
     config.vm.synced_folder "../../django-sandstorm", "/opt/django-sandstorm"
   end
 end
