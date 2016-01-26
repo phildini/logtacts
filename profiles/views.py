@@ -1,8 +1,15 @@
-from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.views.generic import UpdateView
+from django.contrib.sites.models import Site
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.mail import EmailMessage
+from django.core.urlresolvers import reverse
+from django.utils.decorators import method_decorator
+from django.views.generic import (
+    FormView,
+    UpdateView,
+)
 
 from contacts.views import LoggedInMixin
 from . import forms
@@ -37,4 +44,41 @@ class ProfileView(LoggedInMixin, UpdateView):
         messages.success(self.request, "Profile saved")
 
         return response
+
+
+class ReviewUserView(LoggedInMixin, FormView):
+    
+    form_class = forms.ReviewUserForm
+    template_name = "review_users.html"
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ReviewUserView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('profile')
+
+    def form_valid(self, form):
+        import pdb; pdb.set_trace()
+        users = User.objects.filter(id__in=form.cleaned_data.get('users'))
+        for user in users:
+            user.is_active = True
+            user.save()
+        subject = '[Logtacts] Your account is ready!'
+        body = 'Your Logtacts account is all set and ready to go! Hooray!\nLogin at https://{}/login/'.format(
+            Site.objects.get_current().domain
+        )
+        try:
+            message = EmailMessage(
+                subject=subject,
+                body=body,
+                from_email='Logtacts Accounts <account@logtacts.com>',
+                to=['account@logtacts.com'],
+                bcc=[user.email for user in users if user.email],
+            )
+            message.send()
+        except:
+            logger.exception('Problem sending account active email')
+
+        return super(ReviewUserView, self).form_valid(form)
 

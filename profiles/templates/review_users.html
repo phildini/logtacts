@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="{{ action }}" method="POST">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="form-group">
+        <label for="id_users">Users to review</label>
+        {{ form.users.help_text }}
+        {{ form.users.errors}}
+        {{ form.users }}
+    </div>
+    <input id="add_log" type="submit" value="Approve selected">
+</form>
+{% endblock %}
