@@ -18,15 +18,9 @@
     </div>
     <div class="form-group">
         {{ form.first_name.help_text }}
-        <label for="id_first_name">Firstname</label>
+        <label for="id_first_name">Display Name</label>
         {{ form.first_name.errors }}
         <input id="id_first_name" class="form-control" maxlength="30" name="first_name" type="text" {% if user.first_name %}value="{{ user.first_name }}"{% endif %}/>
-    </div>
-    <div class="form-group">
-        {{ form.last_name.help_text }}
-        <label for="id_last_name">Lastname</label>
-        {{ form.last_name.errors }}
-        <input id="id_last_name" class="form-control" maxlength="30" name="last_name" type="text" {% if user.last_name %}value="{{ user.last_name }}"{% endif %}/>
     </div>
     <div class="form-group">
         {{ form.email.help_text }}
