@@ -32,6 +32,15 @@ class Tag(models.Model):
     def can_be_edited_by(self, user):
         return bool(self.book.bookowner_set.filter(user=user))
 
+    @property
+    def corrected_color(self):
+        if self.color:
+            if self.color.startswith('#'):
+                return self.color
+            return '#' + self.color
+        return '#123456'
+
+
 
 class ContactManager(models.Manager):
 

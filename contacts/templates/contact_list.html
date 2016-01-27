@@ -7,7 +7,7 @@
 {% block content %}
 <div class="row">
     <h3>
-    {% if tag %}"{{ tag.tag }}" Contacts{% else %}Contacts{% endif %}
+    {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts{% else %}Contacts{% endif %}
     {% if tag %}
     <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></a>
     {% else %}
@@ -29,7 +29,7 @@
 <div class="row">
 <h3>Tags <a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a></h3>
     {% for tag in tags %}
-        <div class="tag-list-tag" style="float: left; margin-right:10px;"><a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default">{{ tag }}</span></a></div>
+        <div class="tag-list-tag" style="float: left; margin-right:10px;"><a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></div>
     {% endfor %}
 </div>
 {% endblock %}

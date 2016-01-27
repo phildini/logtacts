@@ -25,10 +25,7 @@
         {{ form.color.help_text}}
         <label for="id_color">Color</label>
         {{ form.color.errors }}
-        <div class="input-group">
-            <span class="input-group-addon">#</span>
-            <input class="form-control" id="id_color" maxlength="20" name="color" type="text" {% if tag.color %}value="{{ tag.color }}"{% endif %}/>
-        </div>
+        <input class="form-control" id="id_color" maxlength="20" name="color" type="color" {% if tag.color %}value="{{ tag.color }}"{% else %}value="#123456"{% endif %} placeholder="#123456"/>
     </div>
     <div class="col-md-6">
     <input class="btn btn-default" id="add_tag" type="submit" value="Save" />

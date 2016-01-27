@@ -50,8 +50,10 @@ class TagForm(forms.ModelForm):
 
     def clean(self):
 
-        if self.cleaned_data.get('color') and len(self.cleaned_data.get('color')) > 6:
+        if self.cleaned_data.get('color') and len(self.cleaned_data.get('color')) > 7:
             raise ValidationError("Hex colors must be six digits or less!")
 
-        return self.cleaned_data
+        if self.cleaned_data.get('color') and not self.cleaned_data.get('color').startswith('#'):
+            raise ValidationError("Hex must start with #!")
 
+        return self.cleaned_data

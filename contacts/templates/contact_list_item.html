@@ -10,7 +10,7 @@
         <div class="contact-list-contact-info">
             <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
             {% for tag in contact.tags.all %}
-            <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default">{{ tag }}</span></a>
+            <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
             {% endfor %}
             (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
         </div>

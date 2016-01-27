@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-md-12">
     {% for tag in contact.tags.all %}
-        <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default">{{ tag }}</span></a>
+        <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
     {% endfor %}
     </div>
 </div>
