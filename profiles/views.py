@@ -1,3 +1,4 @@
+from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -11,12 +12,11 @@ from django.views.generic import (
     UpdateView,
 )
 
-from contacts.views import LoggedInMixin
 from . import forms
 from . import models
 
 
-class ProfileView(LoggedInMixin, UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
 
     form_class = forms.ProfileForm
     model = User
@@ -46,14 +46,10 @@ class ProfileView(LoggedInMixin, UpdateView):
         return response
 
 
-class ReviewUserView(LoggedInMixin, FormView):
+class ReviewUserView(LoginRequiredMixin, StaffuserRequiredMixin, FormView):
     
     form_class = forms.ReviewUserForm
     template_name = "review_users.html"
-
-    @method_decorator(staff_member_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ReviewUserView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('profile')

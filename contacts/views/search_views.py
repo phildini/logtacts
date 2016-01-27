@@ -1,3 +1,4 @@
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import (
@@ -8,7 +9,7 @@ from haystack.generic_views import SearchView
 from contacts.models import Book
 
 
-class ContactSearchView(SearchView):
+class ContactSearchView(LoginRequiredMixin,SearchView):
     """ Searches across whole Library
 
     Restricts search to books and series in one Library.
@@ -16,13 +17,6 @@ class ContactSearchView(SearchView):
 
     paginate_by = settings.LIST_PAGINATE_BY
     paginate_orphans = settings.LIST_PAGINATE_ORPHANS
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect(
-                '/login?next={}'.format(request.path)
-            )
-        return super(ContactSearchView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super(ContactSearchView, self).get_queryset()

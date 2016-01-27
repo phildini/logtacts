@@ -1,3 +1,4 @@
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import SetPasswordForm
@@ -21,12 +22,11 @@ from contacts.models import (
     BookOwner,
 )
 
-from contacts.views import LoggedInMixin
 from .models import Invitation
 from .forms import InvitationForm
 
 
-class CreateInviteView(LoggedInMixin, CreateView):
+class CreateInviteView(LoginRequiredMixin, CreateView):
 
     model = Invitation
     form_class = InvitationForm
@@ -82,7 +82,7 @@ class AcceptInviteView(View):
         return redirect(reverse('set-password'))
 
 
-class ChangePasswordView(FormView):
+class ChangePasswordView(LoginRequiredMixin, FormView):
 
     form_class = SetPasswordForm
     template_name = "set_password.html"

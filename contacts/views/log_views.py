@@ -1,3 +1,4 @@
+from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -9,9 +10,8 @@ from django.shortcuts import redirect
 
 import contacts.forms
 from contacts.models import LogEntry
-from contacts.views import LoggedInMixin
 
-class EditLogView(LoggedInMixin, UpdateView):
+class EditLogView(LoginRequiredMixin, UpdateView):
     model = LogEntry
     template_name = 'edit_log.html'
     form_class = contacts.forms.LogEntryForm
@@ -30,7 +30,7 @@ class EditLogView(LoggedInMixin, UpdateView):
         return response
 
     def get_object(self, queryset=None):
-        instance = super(LoggedInMixin, self).get_object(queryset)
+        instance = super(EditLogView, self).get_object(queryset)
         if not instance.can_be_edited_by(self.request.user):
             raise PermissionDenied
         return instance
@@ -48,7 +48,7 @@ class EditLogView(LoggedInMixin, UpdateView):
         )
         return super(EditLogView, self).form_valid(form)
 
-class DeleteLogView(LoggedInMixin, DeleteView):
+class DeleteLogView(LoginRequiredMixin, DeleteView):
 
     model = LogEntry
     template_name = 'delete_log.html'
@@ -67,7 +67,7 @@ class DeleteLogView(LoggedInMixin, DeleteView):
         return response
 
     def get_object(self, queryset=None):
-        instance = super(LoggedInMixin, self).get_object(queryset)
+        instance = super(DeleteLogView, self).get_object(queryset)
 
         if not instance.can_be_edited_by(self.request.user):
             raise PermissionDenied
