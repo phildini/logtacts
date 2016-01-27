@@ -6,6 +6,7 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.NgramField(document=True, use_template=True)
     book = indexes.IntegerField(model_attr="book_id")
+    tags = indexes.MultiValueField()
 
     def get_model(self):
         return Contact
@@ -15,3 +16,6 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_updated_field(self):
         return 'changed'
+
+    def prepare_tags(self, obj):
+        return [tag.tag for tag in obj.tags.all()]

@@ -4,3 +4,6 @@
 {{ object.company }}
 {{ object.notes }}
 {{ object.address }}
+{% for tag in object.tags.all %}
+{{ tag }}
+{% endfor %}
