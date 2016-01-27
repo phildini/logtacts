@@ -96,6 +96,6 @@ class ChangePasswordView(FormView):
     def form_valid(self, form):
         messages.success(
             self.request,
-            "Welcome to Logtacts!",
+            "Welcome to ContactOtter!",
         )
         return super(ChangePasswordView, self).form_valid(form)

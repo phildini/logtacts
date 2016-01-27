@@ -64,16 +64,16 @@ class ReviewUserView(LoggedInMixin, FormView):
         for user in users:
             user.is_active = True
             user.save()
-        subject = '[Logtacts] Your account is ready!'
-        body = 'Your Logtacts account is all set and ready to go! Hooray!\nLogin at https://{}/login/'.format(
+        subject = '[ContactOtter] Your account is ready!'
+        body = 'Your ContactOtter account is all set and ready to go! Hooray!\nLogin at https://{}/login/'.format(
             Site.objects.get_current().domain
         )
         try:
             message = EmailMessage(
                 subject=subject,
                 body=body,
-                from_email='Logtacts Accounts <account@logtacts.com>',
-                to=['account@logtacts.com'],
+                from_email='ContactOtter Accounts <account@contactotter.com>',
+                to=['account@contactotter.com'],
                 bcc=[user.email for user in users if user.email],
             )
             message.send()

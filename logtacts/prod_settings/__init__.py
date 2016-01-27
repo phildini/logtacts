@@ -11,7 +11,6 @@ SECRET_KEY = get_env_variable("LOGTACTS_SECRET_KEY")
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '.herokuapp.com',
     '.pebble.ink',
     '.logtacts.com',
     '.contactotter.com',

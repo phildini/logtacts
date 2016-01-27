@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <title>Logtacts</title>
+        <title>ContactOtter</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static "css/contacts.css" %}">
@@ -22,7 +22,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand hidden-sm hidden-xs" href="/">LOGTACTS</a>
+                <a class="navbar-brand hidden-sm hidden-xs" href="/">ContactOtter</a>
                 {% if user.is_authenticated %}
                 <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
@@ -82,7 +82,7 @@
     {% endblock %}
     </div>
     <footer class="well">
-        {% if user.is_authenticated and not SANDSTORM %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a> | &copy; Logtacts {% now "Y" %} | <a href="/policies">Policies</a>
+        {% if user.is_authenticated and not SANDSTORM %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a> | &copy; ContactOtter {% now "Y" %} | <a href="/policies">Policies</a>
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

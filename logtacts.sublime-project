@@ -5,8 +5,13 @@
 			"path": ".",
             "folder_exclude_patterns":
             [
-                "htmlcov"
+                "htmlcov",
+                ".coverage"
             ],
+            "file_exclude_patters":
+            [
+                ".coverage"
+            ]
 		}
 	]
 }

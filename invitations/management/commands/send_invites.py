@@ -24,9 +24,9 @@ class Command(BaseCommand):
             invite.status = Invitation.PROCESSING
             invite.save()
             if invite.book:
-                subject = "[Logtacts] Invitation to share %s's contact book" % (invite.sender)
+                subject = "[ContactOtter] Invitation to share %s's contact book" % (invite.sender)
                 body = (
-                        "%s has invited you to share their contact book on Logtacts.\n"
+                        "%s has invited you to share their contact book on ContactOtter.\n"
                         "Go to https://%s/invites/accept/%s/ to join!"
                     ) % (
                         invite.sender,
@@ -34,7 +34,7 @@ class Command(BaseCommand):
                         invite.key,
                     )
             else:
-                subject = "[Logtacts] Invitation to join Logtacts from %s" % (invite.sender)
+                subject = "[ContactOtter] Invitation to join ContactOtter from %s" % (invite.sender)
                 body = "Go to https://%s/invites/accept/%s/ to join!" % (
                         Site.objects.get_current().domain,
                         invite.key,
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 message = EmailMessage(
                     subject=subject,
                     body=body,
-                    from_email="invites@logtacts.com",
+                    from_email="ContactOtter <invites@contactotter.com>",
                     to=[invite.email,],
                 )
                 message.send()

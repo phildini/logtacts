@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 last_contact__lte=last_month,
                 should_surface=True,
             ).order_by('?')[0]
-            subject = '[Logtacts] Contact reminder'
+            subject = '[ContactOtter] Contact reminder'
             body = (
                 "You haven't contacted %s (https://%s/%s) in since %s - maybe send them a note?"
             ) % (
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 message = EmailMessage(
                     subject=subject,
                     body=body,
-                    from_email="reminders@logtacts.com",
+                    from_email="ContactOtter <reminders@contactotter.com>",
                     to=[profile.user.email],
                 )
                 message.send()
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 try:
                     if not settings.DEBUG:
                         payload = {
-                            'text': 'Error in logtacts remidner: {}'.format(profile)
+                            'text': 'Error in logtacts reminder: {}'.format(profile)
                         }
                         r = requests.post(
                             settings.SLACK_WEBHOOK_URL,
