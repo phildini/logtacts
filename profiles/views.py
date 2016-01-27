@@ -59,7 +59,6 @@ class ReviewUserView(LoggedInMixin, FormView):
         return reverse('profile')
 
     def form_valid(self, form):
-        import pdb; pdb.set_trace()
         users = User.objects.filter(id__in=form.cleaned_data.get('users'))
         for user in users:
             user.is_active = True
