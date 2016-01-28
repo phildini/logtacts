@@ -116,6 +116,7 @@ opt/app/contacts/templates/contact_list_item.html
 opt/app/contacts/templates/edit_contact.html
 opt/app/contacts/templates/edit_tag.html
 opt/app/contacts/templates/log_line.html
+opt/app/contacts/urls.py
 opt/app/contacts/views/__init__.py
 opt/app/contacts/views/__init__.pyc
 opt/app/contacts/views/contact_views.py
@@ -209,6 +210,20 @@ opt/app/env/lib/python2.7/site-packages/allauth/models.py
 opt/app/env/lib/python2.7/site-packages/allauth/models.pyc
 opt/app/env/lib/python2.7/site-packages/allauth/utils.py
 opt/app/env/lib/python2.7/site-packages/allauth/utils.pyc
+opt/app/env/lib/python2.7/site-packages/braces/__init__.py
+opt/app/env/lib/python2.7/site-packages/braces/__init__.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/__init__.py
+opt/app/env/lib/python2.7/site-packages/braces/views/__init__.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/_access.py
+opt/app/env/lib/python2.7/site-packages/braces/views/_access.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/_ajax.py
+opt/app/env/lib/python2.7/site-packages/braces/views/_ajax.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/_forms.py
+opt/app/env/lib/python2.7/site-packages/braces/views/_forms.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/_other.py
+opt/app/env/lib/python2.7/site-packages/braces/views/_other.pyc
+opt/app/env/lib/python2.7/site-packages/braces/views/_queries.py
+opt/app/env/lib/python2.7/site-packages/braces/views/_queries.pyc
 opt/app/env/lib/python2.7/site-packages/click/__init__.py
 opt/app/env/lib/python2.7/site-packages/click/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/click/_compat.py
@@ -305,6 +320,8 @@ opt/app/env/lib/python2.7/site-packages/django/contrib/admin/utils.py
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/utils.pyc
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/__init__.py
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/__init__.pyc
+opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/decorators.py
+opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/decorators.pyc
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/main.py
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/views/main.pyc
 opt/app/env/lib/python2.7/site-packages/django/contrib/admin/widgets.py
@@ -1827,6 +1844,8 @@ opt/app/env/lib/python2.7/site-packages/simple_history/templatetags/__init__.py
 opt/app/env/lib/python2.7/site-packages/simple_history/templatetags/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/simple_history/templatetags/simple_history_compat.py
 opt/app/env/lib/python2.7/site-packages/simple_history/templatetags/simple_history_compat.pyc
+opt/app/env/lib/python2.7/site-packages/six.py
+opt/app/env/lib/python2.7/site-packages/six.pyc
 opt/app/env/lib/python2.7/site-packages/unipath/__init__.py
 opt/app/env/lib/python2.7/site-packages/unipath/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/unipath/abstractpath.py
