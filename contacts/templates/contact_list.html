@@ -7,10 +7,10 @@
 {% block content %}
 <div class="row">
     <h3>
-    {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts{% else %}Contacts{% endif %}
+    {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts{% elif contact_list %}Contacts{% endif %}
     {% if tag %}
     <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></a>
-    {% else %}
+    {% elif contact_list %}
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
         <ul class="dropdown-menu">
@@ -22,8 +22,10 @@
     </div>
     {% endif %}
     </h3>
-    {% for contact in object_list %}
-    <div class="col-md-4">{% include "contact_list_item.html" %}</div>
+    {% for contact in contact_list %}
+        <div class="col-md-4">{% include "contact_list_item.html" %}</div>
+    {% empty %}
+        <p class="lead">Oh dear! You don't have any contacts! Let's <a href="{% url "contacts-new" %}">add some</a>.</p>
     {% endfor %}
 </div>
 <div class="row">
