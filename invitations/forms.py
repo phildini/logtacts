@@ -7,6 +7,8 @@ from .models import Invitation
 
 class InvitationForm(forms.ModelForm):
 
+    share_book = forms.BooleanField(required=False)
+
     class Meta:
         model = Invitation
         fields = ['email']

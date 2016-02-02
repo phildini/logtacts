@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 body = "Go to https://%s/invites/accept/%s/ to join!" % (
                         Site.objects.get_current().domain,
                         invite.key,
-                    ),
+                    )
             try:
                 message = EmailMessage(
                     subject=subject,

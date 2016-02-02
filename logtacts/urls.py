@@ -14,7 +14,6 @@ from contacts.urls import (
 from invitations.views import (
     CreateInviteView,
     AcceptInviteView,
-    ChangePasswordView,
 )
 
 from logtacts.views import HomeView
@@ -34,11 +33,6 @@ urlpatterns = [
         r'^hold/',
         TemplateView.as_view(template_name='signup_success.html'),
         name='account_inactive',
-    ),
-    url(
-        r'^set-password/$',
-        ChangePasswordView.as_view(),
-        name='set-password',
     ),
     url(r'^admin/dashboard', ReviewUserView.as_view()),
     url(r'^admin/', include(admin.site.urls)),

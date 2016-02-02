@@ -37,9 +37,10 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.sender = self.request.user
-        form.instance.book = BookOwner.objects.get(
-            user=self.request.user,
-        ).book
+        if form.cleaned_data.get('share_book'):
+            form.instance.book = BookOwner.objects.get(
+                user=self.request.user,
+            ).book
         messages.success(
             self.request,
             "Invited {}".format(form.cleaned_data.get('email')),
@@ -47,9 +48,13 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
         return super(CreateInviteView, self).form_valid(form)
 
 
-class AcceptInviteView(View):
+class AcceptInviteView(FormView):
 
-    def dispatch(self, request, *args, **kwargs):
+    form_class = SetPasswordForm
+    template_name = "set_password.html"
+
+    def get(self, request, *args, **kwargs):
+        response = super(AcceptInviteView, self).get(request, *args, **kwargs)
         if request.user.is_authenticated():
             messages.warning(
                 self.request,
@@ -79,13 +84,7 @@ class AcceptInviteView(View):
         login(request, user)
         invite.status = invite.ACCEPTED
         invite.save()
-        return redirect(reverse('set-password'))
-
-
-class ChangePasswordView(LoginRequiredMixin, FormView):
-
-    form_class = SetPasswordForm
-    template_name = "set_password.html"
+        return response
 
     def get_success_url(self):
         return reverse('contacts-list')
@@ -98,4 +97,4 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
             self.request,
             "Welcome to ContactOtter!",
         )
-        return super(ChangePasswordView, self).form_valid(form)
+        return super(AcceptInviteView, self).form_valid(form)

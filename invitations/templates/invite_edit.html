@@ -5,7 +5,7 @@
 {% if invitation.id %}
 <h3>Edit Invite</h3>
 {% else %}
-<h3>Share your contact book with:</h3>
+<h3>Invite a friend to ContactOtter!</h3>
 {% endif %}
 
 <form action="{{ action }}" method="POST">
@@ -21,6 +21,13 @@
         <label class="sr-only" for="id_email">Email</label>
         <input id="id_email" class="form-control" maxlength="254" name="email" type="email" placeholder="Email"/>
         {{ form.email.errors }}
+    </div>
+    <div class="checkbox">
+        {{ form.share_book.help_text }}
+        <label for="id_share_book">
+            <input type="checkbox" {% if share_book %}checked="checked"{% endif %} name="share_book" id="id_share_book">Share your contact book. (Checking this will share your book with this person. Leaving it blank will create a new book for them.)
+        </label>
+        {{ form.share_book.errors }}
     </div>
     <input id="add_invite" class="btn btn-primary" type="submit" value="Send Invite">
 </form>

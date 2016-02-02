@@ -21,7 +21,7 @@ def log_last_contact(sender, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def create_book_for_new_user(sender, instance=None, created=False, **kwargs):
+def create_book_for_sandstorm_user(sender, instance=None, created=False, **kwargs):
     if not kwargs.get('raw') and instance and created:
         try:
             BookOwner.objects.get(user=instance)
@@ -32,7 +32,4 @@ def create_book_for_new_user(sender, instance=None, created=False, **kwargs):
                     book = Book.objects.all()[0]
                 else:
                     book = Book.objects.create(name="{}'s Contacts".format(instance))
-                BookOwner.objects.create(user=instance, book=book)
-            else:
-                book = Book.objects.create(name="{}'s Contacts".format(instance))
                 BookOwner.objects.create(user=instance, book=book)

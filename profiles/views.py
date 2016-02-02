@@ -12,6 +12,8 @@ from django.views.generic import (
     UpdateView,
 )
 
+from contacts import models as contact_models
+
 from . import forms
 from . import models
 
@@ -59,6 +61,11 @@ class ReviewUserView(LoginRequiredMixin, StaffuserRequiredMixin, FormView):
         for user in users:
             user.is_active = True
             user.save()
+            book = contact_models.Book.objects.create(
+                name="{}'s Contacts".format(user),
+            )
+            contact_models.BookOwner.objects.create(book=book, user=user)
+
         subject = '[ContactOtter] Your account is ready!'
         body = 'Your ContactOtter account is all set and ready to go! Hooray!\nLogin at https://{}/login/'.format(
             Site.objects.get_current().domain

@@ -45,7 +45,7 @@ class Invitation(models.Model):
     objects = InvitationManager()
 
     def __str__(self):
-        return "{} invited {} to {}".format(
-            self.sender, self.email, self.book,
+        return "{} invited {} to {} ({})".format(
+            self.sender, self.email, self.book, self.status
         )
     
