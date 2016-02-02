@@ -5,7 +5,15 @@ from simple_history.admin import SimpleHistoryAdmin
 from . import models
 
 class ActiveUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff')
+    list_display = (
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'last_login',
+        'is_active',
+        'is_staff',
+    )
 
 admin.site.unregister(User)
 admin.site.register(User, ActiveUserAdmin)
