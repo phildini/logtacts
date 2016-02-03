@@ -5,23 +5,19 @@
 {% load humanize %}
 
 {% block content %}
-    <h2>Search{% if query %} - "{{ query }}"{% endif %}</h2>
-        {% if query %}
-            {% for result in page_obj.object_list %}
-                {% with contact=result.object %}
-                {% include "contact_list_item.html" %}
-                {% endwith %}
-            {% empty %}
-                <p>No contacts found.</p>
-            {% endfor %}
-            {% if page_obj.has_previous or page_obj.has_next %}
-                <div>
-                    {% if page_obj.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
-                    |
-                    {% if page_obj.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            <p>Please enter a search term</p>
+    <h2>Search - {% if query %}"{{ query }}"{% endif %} {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span>{% endif %}</h2>
+        {% for result in page_obj.object_list %}
+            {% with contact=result.object %}
+            {% include "contact_list_item.html" %}
+            {% endwith %}
+        {% empty %}
+            <p>No contacts found.</p>
+        {% endfor %}
+        {% if page_obj.has_previous or page_obj.has_next %}
+            <div>
+                {% if page_obj.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page_obj.has_previous %}</a>{% endif %}
+                |
+                {% if page_obj.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page_obj.has_next %}</a>{% endif %}
+            </div>
         {% endif %}
 {% endblock %}

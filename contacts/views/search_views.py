@@ -6,7 +6,10 @@ from django.shortcuts import (
     redirect,
 )
 from haystack.generic_views import SearchView
-from contacts.models import Book
+from haystack.inputs import AutoQuery
+from haystack.query import SearchQuerySet
+from contacts.forms import ContactSearchForm
+from contacts.models import Book, Tag
 
 
 class ContactSearchView(LoginRequiredMixin,SearchView):
@@ -17,11 +20,32 @@ class ContactSearchView(LoginRequiredMixin,SearchView):
 
     paginate_by = settings.LIST_PAGINATE_BY
     paginate_orphans = settings.LIST_PAGINATE_ORPHANS
+    form_class = ContactSearchForm
 
-    def get_queryset(self):
-        queryset = super(ContactSearchView, self).get_queryset()
+    def get_form_kwargs(self, *args, **kwargs):
+        form_kwargs = super(ContactSearchView, self).get_form_kwargs(*args, **kwargs)
         try:
             book = Book.objects.get(bookowner__user=self.request.user)
         except Book.DoesNotExist:
             raise Http404()
-        return queryset.filter(book=book.id)
+        parts = self.request.GET.get('q').split(' ')
+        query_parts = []
+        self.tag = None
+        if parts:
+            for part in parts:
+                if part.startswith('tag:'):
+                    tag_str = part.split(':')[1]
+                    self.tag = Tag.objects.get(book=book, tag=tag_str)
+                else:
+                    query_parts.append(part)
+        queryset = SearchQuerySet().filter(book=book.id)
+        if self.tag:
+            queryset = queryset.filter(tags_ids=self.tag.id)
+        form_kwargs['data'] = {'q': ' '.join(query_parts)}
+        form_kwargs['searchqueryset'] = queryset
+        return form_kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ContactSearchView, self).get_context_data(*args, **kwargs)
+        context['tag'] = self.tag
+        return context

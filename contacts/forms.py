@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from haystack.forms import ModelSearchForm
 
 from contacts.models import Contact, LogEntry, Tag
 
@@ -57,3 +58,17 @@ class TagForm(forms.ModelForm):
             raise ValidationError("Hex must start with #!")
 
         return self.cleaned_data
+
+
+class ContactSearchForm(ModelSearchForm):
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+
+        sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+        return sqs

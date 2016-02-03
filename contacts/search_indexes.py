@@ -7,6 +7,7 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.NgramField(document=True, use_template=True)
     book = indexes.IntegerField(model_attr="book_id")
     tags = indexes.MultiValueField()
+    tags_ids = indexes.MultiValueField()
 
     def get_model(self):
         return Contact
@@ -19,3 +20,6 @@ class ContactIndex(indexes.SearchIndex, indexes.Indexable):
 
     def prepare_tags(self, obj):
         return [tag.tag for tag in obj.tags.all()]
+
+    def prepare_tags_ids(self, obj):
+        return [tag.id for tag in obj.tags.all()]
