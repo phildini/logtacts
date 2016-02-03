@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h3>User Settings</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -37,4 +38,29 @@
     </div>
     <input id="add_log" type="submit" value="Save">
 </form>
+{% if tokens %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Tokens</h4>
+        <p>These are what you need for connecting with bots and other 3rd-party integrations</p>
+        <ul class="list-group">
+            {% for token in tokens %}
+            <li class="list-group-item">{{ token }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if invitations %}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Invitations</h4>
+        <ul class="list-group">
+            {% for invitation in invitations %}
+            <li class="list-group-item">You invited {{ invitation.email }}{% if invitation.book %} to your contact book {% else %} to ContactOtter{% endif %}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

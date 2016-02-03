@@ -11,8 +11,10 @@ from django.views.generic import (
     FormView,
     UpdateView,
 )
+from rest_framework.authtoken.models import Token
 
 from contacts import models as contact_models
+from invitations.models import Invitation
 
 from . import forms
 from . import models
@@ -30,6 +32,8 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
+        context['tokens'] = Token.objects.filter(user=self.request.user)
+        context['invitations'] = Invitation.objects.filter(sender=self.request.user)
         context['send_contact_reminders'] = self.profile.send_contact_reminders
         return context
 
