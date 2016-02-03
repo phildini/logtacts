@@ -1,3 +1,4 @@
+import re
 from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.http import Http404
@@ -28,24 +29,32 @@ class ContactSearchView(LoginRequiredMixin,SearchView):
             book = Book.objects.get(bookowner__user=self.request.user)
         except Book.DoesNotExist:
             raise Http404()
-        parts = self.request.GET.get('q').split(' ')
-        query_parts = []
-        self.tag = None
-        if parts:
-            for part in parts:
-                if part.startswith('tag:'):
-                    tag_str = part.split(':')[1]
-                    self.tag = Tag.objects.get(book=book, tag=tag_str)
-                else:
-                    query_parts.append(part)
+        query = self.request.GET.get('q')
+        results = re.split(
+            r'(?P<tag>\w+\:(?:\"[\w\s]+\"|\w+\b))',
+            query,
+        )
+        self.tags = []
+        parts = []
+        for result in results:
+            if result.startswith('tag:'):
+                tag_str = result.strip().split(':')[1].strip('"')
+                try:
+                    self.tags.append(Tag.objects.get(book=book, tag=tag_str))
+                except Tag.DoesNotExist:
+                    pass
+            else:
+                parts.append(result.strip())
         queryset = SearchQuerySet().filter(book=book.id)
-        if self.tag:
-            queryset = queryset.filter(tags_ids=self.tag.id)
-        form_kwargs['data'] = {'q': ' '.join(query_parts)}
+        if self.tags:
+            queryset = queryset.filter(tags_ids__in=[tag.id for tag in self.tags])
+
+        query = ' '.join(parts)
+        form_kwargs['data'] = {'q': query.strip()}
         form_kwargs['searchqueryset'] = queryset
         return form_kwargs
 
     def get_context_data(self, *args, **kwargs):
         context = super(ContactSearchView, self).get_context_data(*args, **kwargs)
-        context['tag'] = self.tag
+        context['tags'] = self.tags
         return context
