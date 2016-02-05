@@ -2,20 +2,29 @@
 {% load tz %}
 {% load humanize %}
 
-<div class="tag-list-tag media">
-    <a class="pull-left" href="{{ contact.get_absolute_url }}">
-        <img class="media-object" src="{% gravatar_url contact.email 50 %}">
-    </a>
-    <div class="media-body">
-        <div class="contact-list-contact-info">
-            <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
-            {% for tag in contact.tags.all %}
-            <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
-            {% endfor %}
-            (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
+<div class="panel panel-default contact media">
+    <div class="panel-body">
+        <div class="checkbox pull-left contact-select">
+            <label class="media-object">
+                <input type="checkbox">
+            </label>
         </div>
-        <div class="contact-list-interaction-info">
-            <span class="text-faint">{% if contact.last_contact %}Last contacted {{ contact.last_contact | localtime | naturaltime }}{% endif %}</span>
+        <div class="media media-body">
+            <a class="pull-left" href="{{ contact.get_absolute_url }}">
+                <img class="media-object" src="{% gravatar_url contact.email 50 %}">
+            </a>
+            <div class="media-body">
+                <div class="contact-list-contact-info">
+                    <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
+                    {% for tag in contact.tags.all %}
+                    <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+                    {% endfor %}
+                    (<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>)
+                </div>
+                <div class="contact-list-interaction-info">
+                    <span class="text-faint">{% if contact.last_contact %}Last contacted {{ contact.last_contact | localtime | naturaltime }}{% endif %}</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

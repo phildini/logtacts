@@ -13,3 +13,15 @@
 .text-faint {
     color: lightgrey;
 }
+
+.contact.panel.panel-default .panel-body {
+    padding: 5px;
+}
+
+.contact.panel {
+    margin-bottom: 5px;
+}
+
+.media .media {
+    margin-top: 0;
+}
