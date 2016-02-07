@@ -44,6 +44,16 @@ contact_urls = [
         search_views.ContactSearchView.as_view(),
         name="search",
     ),
+    url(
+        r'^emails/',
+        contact_views.ExportEmailView.as_view(),
+        name='contact_emails',
+    ),
+    url(
+        r'^emailexport/',
+        contact_views.email_csv_view,
+        name='contact_email_export',
+    ),
 ]
 
 tag_urls = [

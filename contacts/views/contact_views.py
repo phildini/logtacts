@@ -1,5 +1,8 @@
+import csv
+import json
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
 )
@@ -9,6 +12,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
     FormView,
+    TemplateView,
 )
 from django.utils import timezone
 
@@ -22,10 +26,32 @@ from contacts.models import (
 from contacts import forms
 from contacts.views import BookOwnerMixin
 
-class ContactListView(BookOwnerMixin, ListView):
+class ContactListView(BookOwnerMixin, FormView, ListView):
 
     model = Contact
     template_name = 'contact_list.html'
+    form_class = forms.MultiContactForm
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('contacts-list')
+
+    def get_form_kwargs(self):
+        kwargs = super(ContactListView, self).get_form_kwargs()
+        kwargs['contact_ids'] = [contact.id for contact in self.get_queryset()]
+        return kwargs
+
+    def form_valid(self, form, *args, **kwargs):
+        contact_ids = []
+        for contact in form.cleaned_data:
+            if form.cleaned_data[contact]:
+                contact_ids.append(contact.split('_')[1])
+        self.request.session['selected_contacts'] = json.dumps(contact_ids)
+        if not contact_ids:
+            messages.info(self.request, "No contacts selected.")
+            return HttpResponseRedirect(reverse('contacts-list'))
+        if self.request.POST.get('emails'):
+            return HttpResponseRedirect(reverse('contact_emails'))
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
         qs = super(ContactListView, self).get_queryset()
@@ -214,10 +240,7 @@ class DeleteTagView(BookOwnerMixin, DeleteView):
         return super(DeleteTagView, self).form_valid(form)
 
 
-class TaggedContactListView(BookOwnerMixin, ListView):
-
-    model = Contact
-    template_name = 'contact_list.html'
+class TaggedContactListView(ContactListView):
 
     def get_queryset(self):
         return Contact.objects.get_contacts_for_user(self.request.user).filter(
@@ -231,7 +254,55 @@ class TaggedContactListView(BookOwnerMixin, ListView):
             pk=self.kwargs.get('pk'),
         )
         context['tag'] = self.tag
-        context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
 
         return context
+
+
+class ExportEmailView(BookOwnerMixin, TemplateView):
+
+    template_name = 'export_emails.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ExportEmailView, self).get_context_data(*args, **kwargs)
+        selected_contacts = json.loads(
+            self.request.session.get('selected_contacts')
+        )
+        try:
+            contacts = Contact.objects.get_contacts_for_user(
+                self.request.user
+            ).filter(
+                id__in=selected_contacts
+            )
+        except TypeError:
+            contacts = []
+            messages.warning(
+                self.request,
+                "Woops! Problem fetching contacts. Try again.",
+            )
+        context['contacts'] = contacts
+        return context
+
+
+def email_csv_view(request):
+    selected_contacts = json.loads(
+        request.session.get('selected_contacts')
+    )
+    try:
+        contacts = Contact.objects.get_contacts_for_user(
+            request.user
+        ).filter(
+            id__in=selected_contacts
+        )
+    except TypeError:
+        contacts = []
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="contact_emails.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Email'])
+    for contact in contacts:
+        writer.writerow([contact.name, contact.email])
+
+    return response
+
+
 

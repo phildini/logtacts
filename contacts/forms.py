@@ -72,3 +72,14 @@ class ContactSearchForm(ModelSearchForm):
             sqs = sqs.load_all()
 
         return sqs
+
+
+class MultiContactForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        contact_ids = kwargs.pop('contact_ids')
+        super(MultiContactForm, self).__init__(*args, **kwargs)
+        for contact_id in contact_ids:
+            self.fields['contact_%s' % (contact_id,)] = forms.BooleanField(
+                required=False
+            )

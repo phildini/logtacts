@@ -2,16 +2,16 @@
 {% load tz %}
 {% load humanize %}
 
-<div class="panel panel-default contact media">
-    <div class="panel-body">
+<div class="contact media">
+    <div>
         <div class="checkbox pull-left contact-select">
-            <label class="media-object">
-                <input type="checkbox">
+            <label for="id_contact_{{ contact.id }}" class="media-object">
+                <input id="id_contact_{{ contact.id }}" name="contact_{{ contact.id }}" class="input-lg" type="checkbox">
             </label>
         </div>
         <div class="media media-body">
             <a class="pull-left" href="{{ contact.get_absolute_url }}">
-                <img class="media-object" src="{% gravatar_url contact.email 50 %}">
+                <img class="media-object img-circle"src="{% gravatar_url contact.email 50 %}">
             </a>
             <div class="media-body">
                 <div class="contact-list-contact-info">
