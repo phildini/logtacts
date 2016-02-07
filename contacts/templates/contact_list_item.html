@@ -5,9 +5,11 @@
 <div class="contact media">
     <div>
         <div class="checkbox pull-left contact-select">
+            {% if editable %}
             <label for="id_contact_{{ contact.id }}" class="media-object">
                 <input id="id_contact_{{ contact.id }}" name="contact_{{ contact.id }}" class="input-lg" type="checkbox">
             </label>
+            {% endif %}
         </div>
         <div class="media media-body">
             <a class="pull-left" href="{{ contact.get_absolute_url }}">

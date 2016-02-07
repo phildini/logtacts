@@ -67,6 +67,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
         context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
+        context['editable'] = True
         return context
 
 class ContactView(BookOwnerMixin, FormView):
