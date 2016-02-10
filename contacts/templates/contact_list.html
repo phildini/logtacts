@@ -11,7 +11,7 @@
     <h3>
     {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts{% elif contact_list %}Contacts{% endif %}
     {% if tag %}
-    <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></a>
+    <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
     {% endif %}
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
@@ -26,6 +26,7 @@
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></button>
         <ul class="dropdown-menu">
             <li><input class="btn btn-default" name="emails" id="emails-submit" type="submit" value="Export emails" /></li>
+            <li><input class="btn btn-default" name="addresses" id="addresses-submit" type="submit" value="Export addresses" /></li>
         </ul>
     </h3>
     {% for contact in contact_list %}

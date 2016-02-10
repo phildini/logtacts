@@ -54,6 +54,16 @@ contact_urls = [
         contact_views.email_csv_view,
         name='contact_email_export',
     ),
+    url(
+        r'^addresses/',
+        contact_views.ExportAddressView.as_view(),
+        name='contact_addresses',
+    ),
+    url(
+        r'^addressexport/',
+        contact_views.address_csv_view,
+        name='contact_address_export',
+    ),
 ]
 
 tag_urls = [

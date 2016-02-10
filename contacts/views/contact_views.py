@@ -51,6 +51,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             return HttpResponseRedirect(reverse('contacts-list'))
         if self.request.POST.get('emails'):
             return HttpResponseRedirect(reverse('contact_emails'))
+        if self.request.POST.get('addresses'):
+            return HttpResponseRedirect(reverse('contact_addresses'))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
@@ -284,6 +286,31 @@ class ExportEmailView(BookOwnerMixin, TemplateView):
         return context
 
 
+class ExportAddressView(BookOwnerMixin, TemplateView):
+
+    template_name = 'export_addresses.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ExportAddressView, self).get_context_data(*args, **kwargs)
+        selected_contacts = json.loads(
+            self.request.session.get('selected_contacts')
+        )
+        try:
+            contacts = Contact.objects.get_contacts_for_user(
+                self.request.user
+            ).filter(
+                id__in=selected_contacts
+            )
+        except TypeError:
+            contacts = []
+            messages.warning(
+                self.request,
+                "Woops! Problem fetching contacts. Try again.",
+            )
+        context['contacts'] = contacts
+        return context
+
+
 def email_csv_view(request):
     selected_contacts = json.loads(
         request.session.get('selected_contacts')
@@ -306,4 +333,23 @@ def email_csv_view(request):
     return response
 
 
+def address_csv_view(request):
+    selected_contacts = json.loads(
+        request.session.get('selected_contacts')
+    )
+    try:
+        contacts = Contact.objects.get_contacts_for_user(
+            request.user
+        ).filter(
+            id__in=selected_contacts
+        )
+    except TypeError:
+        contacts = []
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="contact_addresses.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Address'])
+    for contact in contacts:
+        writer.writerow([contact.name, contact.address])
 
+    return response
