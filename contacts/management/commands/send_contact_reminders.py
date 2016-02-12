@@ -5,7 +5,8 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
 from django.utils import timezone
 from contacts.models import Contact
 from profiles.models import Profile
@@ -27,25 +28,25 @@ class Command(BaseCommand):
                 last_contact__lte=last_month,
                 should_surface=True,
             ).order_by('?')[0]
-            subject = '[ContactOtter] Contact reminder'
-            body = (
-                "You haven't contacted %s (https://%s/%s) in since %s - maybe send them a note?"
-            ) % (
-                contact.name,
-                Site.objects.get_current().domain,
-                contact.id,
-                contact.last_contact,
+            subject = '[Contact Otter] Contact reminder'
+            context = {
+                'contact': contact,
+                'domain': Site.objects.get_current().domain,
+
+            }
+            txt = get_template('email/contact_reminder.txt').render(context)
+            html = get_template('email/contact_reminder.html').render(context)
+            message = EmailMultiAlternatives(
+                subject=subject,
+                body=txt,
+                from_email="ContactOtter <reminders@contactotter.com>",
+                to=[profile.user.email],
             )
+            message.attach_alternative(html, "text/html")
             try:
                 logger.debug("Trying to send message to {} about {}".format(
                     profile.user, contact
                 ))
-                message = EmailMessage(
-                    subject=subject,
-                    body=body,
-                    from_email="ContactOtter <reminders@contactotter.com>",
-                    to=[profile.user.email],
-                )
                 message.send()
                 logger.debug("Sent message to {} successfuly".format(profile.user))
             except:
