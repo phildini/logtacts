@@ -137,7 +137,7 @@ jQuery('.js-add-trello').on('click', function(){
     });
     if (Trello.authorized()) {
         Trello.addCard({
-            url: "http://localhost:8000{{ contact.get_absolute_url }}",
+            url: "http://{{ request.site.domain }}{{ contact.get_absolute_url }}",
             name: "Reminder to contact {{ contact.name }}"
         });
     }
