@@ -123,6 +123,12 @@
 <script src="https://api.trello.com/1/client.js?key=41bbf97505510b509337638635476574"></script>
 <script type="text/javascript">
 var empty = function(){};
+var addOnceAuthed = function() {
+    Trello.addCard({
+        url: "http://{{ request.site.domain }}{{ contact.get_absolute_url }}",
+        name: "Reminder to contact {{ contact.name }}"
+    });
+};
 jQuery('.js-add-trello').on('click', function(){
     Trello.authorize({
       type: "popup",
@@ -132,15 +138,9 @@ jQuery('.js-add-trello').on('click', function(){
         read: true,
         write: true },
       expiration: "never",
-      success: empty,
+      success: addOnceAuthed,
       error: empty
-    });
-    if (Trello.authorized()) {
-        Trello.addCard({
-            url: "http://{{ request.site.domain }}{{ contact.get_absolute_url }}",
-            name: "Reminder to contact {{ contact.name }}"
-        });
-    }
+    }); 
 });
 </script>
 {% endblock %}
