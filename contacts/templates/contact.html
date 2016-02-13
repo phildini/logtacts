@@ -140,7 +140,8 @@ jQuery('.js-add-trello').on('click', function(){
       expiration: "never",
       success: addOnceAuthed,
       error: empty
-    }); 
+    });
+    jQuery(this).blur(); 
 });
 </script>
 {% endblock %}
