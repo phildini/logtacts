@@ -4,7 +4,15 @@
 {% load gravatar %}
 
 {% block content %}
-<h1>{% gravatar contact.email 60 %} {{ contact.name }} <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+<h1>
+    {% gravatar contact.email 60 %} {{ contact.name }}
+    <div class="btn-group" role="group">
+        <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+        {% if not SANDSTORM %}
+        <a href="javascript:void(0)" class="btn btn-default js-add-trello"><span class="glyphicon glyphicon-list-alt"></span> Add Trello Reminder</a>
+        {% endif %}
+    </div>
+</h1>
 <div class="row">
     <div class="col-md-12">
     {% for tag in contact.tags.all %}
@@ -110,5 +118,29 @@
     {% endfor %}
 </ul>
 {% endif %}
-
+{% endblock %}
+{% block js %}
+<script src="https://api.trello.com/1/client.js?key=41bbf97505510b509337638635476574"></script>
+<script type="text/javascript">
+var empty = function(){};
+jQuery('.js-add-trello').on('click', function(){
+    Trello.authorize({
+      type: "popup",
+      name: "Contact Otter",
+      persist: true,
+      scope: {
+        read: true,
+        write: true },
+      expiration: "never",
+      success: empty,
+      error: empty
+    });
+    if (Trello.authorized()) {
+        Trello.addCard({
+            url: "http://localhost:8000{{ contact.get_absolute_url }}",
+            name: "Reminder to contact {{ contact.name }}"
+        });
+    }
+});
+</script>
 {% endblock %}
