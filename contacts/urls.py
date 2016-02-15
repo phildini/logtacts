@@ -64,6 +64,11 @@ contact_urls = [
         contact_views.address_csv_view,
         name='contact_address_export',
     ),
+    url(
+        r'^fullexport/',
+        contact_views.export_full_contact_book_json_view,
+        name="fullexport",
+    )
 ]
 
 tag_urls = [

@@ -2,7 +2,7 @@ import csv
 import json
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import (
     get_object_or_404,
 )
@@ -16,6 +16,7 @@ from django.views.generic import (
 )
 from django.utils import timezone
 
+from contacts.api import serializers
 from contacts.models import (
     Contact,
     BookOwner,
@@ -352,4 +353,18 @@ def address_csv_view(request):
     for contact in contacts:
         writer.writerow([contact.name, contact.address])
 
+    return response
+
+
+def export_full_contact_book_json_view(request):
+    contacts = Contact.objects.get_contacts_for_user(request.user)
+    contact_serializer = serializers.ContactSerializer(contacts, many=True)
+    tags = Tag.objects.get_tags_for_user(request.user)
+    tag_serializer = serializers.TagSerializer(tags, many=True)
+    export = {
+        'contacts': contact_serializer.data,
+        'tags': tag_serializer.data,
+    }
+    response = JsonResponse(export)
+    response['Content-Disposition'] = 'attachment; filename="full_export.json"'
     return response
