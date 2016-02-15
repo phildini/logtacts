@@ -362,6 +362,7 @@ def export_full_contact_book_json_view(request):
     tags = Tag.objects.get_tags_for_user(request.user)
     tag_serializer = serializers.TagSerializer(tags, many=True)
     export = {
+        'version': 1,
         'contacts': contact_serializer.data,
         'tags': tag_serializer.data,
     }
