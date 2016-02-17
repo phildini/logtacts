@@ -52,6 +52,7 @@ coverage.xml
 *.sqlite3
 .env
 whoosh_index/
+newrelic.ini
 
 # Sphinx documentation
 docs/_build/
