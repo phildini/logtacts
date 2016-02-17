@@ -1,4 +1,4 @@
-Django==1.9.1
+Django==1.9.2
 django-allauth==0.24.1
 dj-database-url==0.3.0
 django-gravatar2==1.4.0
