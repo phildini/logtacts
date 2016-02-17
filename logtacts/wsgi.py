@@ -16,4 +16,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "logtacts.prod_settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
-application = newrelic.agent.wsgi_application()(application)
+application = newrelic.agent.WSGIApplicationWrapper(application)
