@@ -5,7 +5,6 @@ django-gravatar2==1.4.0
 djangorestframework==3.3.2
 django-braces==1.8.1
 gunicorn==19.1.1
-newrelic==2.28.0.26
 psycopg2==2.5.4
 python-json-logger==0.0.6
 pytz==2014.7
@@ -19,3 +18,4 @@ factory-boy==2.6.0
 fake-factory==0.5.3
 django-simple-history==1.7.0
 django-sandstorm==0.0.2
+opbeat==3.2.1

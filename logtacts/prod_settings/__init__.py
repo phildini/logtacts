@@ -28,4 +28,15 @@ STATIC_URL = '//logtacts.s3.amazonaws.com/assets/'
 
 INSTALLED_APPS += (
     'gunicorn',
+    'opbeat.contrib.django',
 )
+
+MIDDLEWARE_CLASSES = (
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+) + MIDDLEWARE_CLASSES
+
+OPBEAT = {
+    'ORGANIZATION_ID': get_env_variable("OPBEAT_ORG_ID"),
+    'APP_ID': get_env_variable("OPBEAT_APP_ID"),
+    'SECRET_TOKEN': get_env_variable("OPBEAT_SECRET_KEY"),
+}
