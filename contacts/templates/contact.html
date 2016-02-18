@@ -77,14 +77,10 @@
                 {{ form.kind.errors }}
             </div>
         </div>
-        <div id="id_link_container" class="col-md-3">
-            <div class="form-group">
-                <label for="id_link">Link:</label>
-                <input class="form-control" id="id_link" maxlength="200" name="link" type="url" />
-            </div>
-            <div id="id_link_errors">
-                {{ form.link.errors }}
-            </div>
+        <div id="id_date_container" class="col-md-3">
+            <label for="id_time">Date</label>
+            {{ form.time.errors }}
+            <input class="form-control" type="date" name="time" value="{% now "Y-m-d" %}" id="id_time">
         </div>
         <div id="id_notes_container" class="col-md-3">
             <div class="form-group">

@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from haystack.forms import ModelSearchForm
+from floppyforms import widgets
 
 from contacts.models import Contact, LogEntry, Tag
 
@@ -37,9 +38,10 @@ class LogEntryForm(forms.ModelForm):
 
     class Meta:
         model = LogEntry
-        fields = ['kind','link','notes']
+        fields = ['kind','link','notes', 'time']
         widgets = {
             'notes': forms.Textarea(attrs={'rows':1}),
+            'time': widgets.DateInput(attrs={'class':'form-control'}),
         }
  
 

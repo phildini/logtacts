@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'profiles.apps.ProfilesConfig',
     'simple_history',
+    'floppyforms',
 )
 
 MIDDLEWARE_CLASSES = (

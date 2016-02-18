@@ -19,3 +19,4 @@ fake-factory==0.5.3
 django-simple-history==1.7.0
 django-sandstorm==0.0.2
 opbeat==3.2.1
+django-floppyforms==1.6.1
