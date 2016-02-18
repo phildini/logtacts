@@ -74,6 +74,15 @@
                 {{ form.portfolio.errors }}
             </div>
         </div>
+        <div id="id_tumblr_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_tumblr">Tumblr</label>
+                <input class="form-control" id="id_tumblr" maxlength="255" name="tumblr" type="text" placeholder="tumblr" {% if contact.tumblr %}value="{{ contact.tumblr }}"{% endif %}/>
+            </div>
+            <div id="id_tumblr_errors">
+                {{ form.tumblr.errors }}
+            </div>
+        </div>
         <div id="id_cell_phone_container" class="col-md-6">
             <div class="form-group">
                 <label class="sr-only" for="id_cell_phone">Cell phone</label>
@@ -99,6 +108,31 @@
             </div>
             <div id="id_company_errors">
                 {{ form.company.errors }}
+            </div>
+        </div>
+        <div id="id_work_email_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_work_email">Work Email</label>
+                <input class="form-control" id="id_work_email" maxlength="254" name="work_email" type="email" placeholder="work_email" {% if contact.work_email %}value="{{ contact.work_email }}"{% endif %}/>
+            </div>
+            <div id="id_work_email_errors">
+                {{ form.work_email.errors }}
+            </div>
+        </div>
+        <div id="id_work_phone_container" class="col-md-6">
+            <div class="form-group">
+                <label class="sr-only" for="id_work_phone">Work phone</label>
+                <input class="form-control" id="id_work_phone" maxlength="20" name="work_phone" type="text" placeholder="Mobile Phone" {% if contact.work_phone %}value="{{ contact.work_phone }}"{% endif %}/>
+            </div>
+            <div id="id_work_phone_errors">
+                {{ form.work_phone.errors }}
+            </div>
+        </div>
+        <div id="id_birthday_container" class="col-md-3">
+            <div class="form-group">
+                <label for="id_birthday">Birthday</label>
+                {{ form.time.errors }}
+                <input class="form-control" type="date" name="birthday" id="id_birthday">
             </div>
         </div>
         <div id="id_address_container" class="col-md-6">

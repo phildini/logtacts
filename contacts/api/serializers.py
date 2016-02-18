@@ -16,7 +16,7 @@ class ContactSerializer(serializers.ModelSerializer):
         model = models.Contact
         fields = ('id', 'book', 'name', 'email', 'twitter', 'tumblr', 'website', 
             'portfolio', 'cell_phone', 'home_phone', 'company', 'address',
-            'notes', 'tags', 'created', 'changed', 'logentry_set')
+            'notes', 'tags', 'created', 'changed', 'logentry_set', 'birthday','work_phone','work_email')
 
 
 class TagSerializer(serializers.ModelSerializer):

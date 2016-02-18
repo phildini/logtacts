@@ -15,7 +15,9 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        exclude = ['created', 'changed', 'book', 'last_contact']
+        fields = ('name','email','twitter','tumblr','website','portfolio',
+            'cell_phone','home_phone','company','address','notes','birthday',
+            'work_phone','work_email','tags')
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
             'notes': forms.Textarea(attrs={'rows':3}),

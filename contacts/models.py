@@ -67,6 +67,9 @@ class Contact(models.Model):
     address = models.TextField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     should_surface = models.BooleanField(blank=True, default=True)
+    birthday = models.DateField(blank=True, null=True)
+    work_phone = models.CharField(max_length=20, blank=True)
+    work_email = models.EmailField(blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     history = HistoricalRecords()
 
