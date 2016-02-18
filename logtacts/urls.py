@@ -26,8 +26,7 @@ urlpatterns = [
     url(r'^api/', include(api_urls)),
     url(r'^tags/', include(tag_urls)),
     url(r'^log/', include(log_urls)),
-    url(
-        r'^allauth_login/', allauth_views.login, name='account_login'),
+    url(r'^allauth_login/', allauth_views.login, name='account_login'),
     url(r'^signup/', allauth_views.signup, name='account_signup'),
     url(
         r'^hold/',
