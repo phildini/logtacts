@@ -57,7 +57,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
-        qs = super(ContactListView, self).get_queryset()
+        qs = super(ContactListView, self).get_queryset().prefetch_related('tags')
         sort = self.request.GET.get('s')
         if sort == 'oldnew':
             return qs.order_by('last_contact')
@@ -246,17 +246,20 @@ class DeleteTagView(BookOwnerMixin, DeleteView):
 
 class TaggedContactListView(ContactListView):
 
-    def get_queryset(self):
-        return Contact.objects.get_contacts_for_user(self.request.user).filter(
-            tags__id=self.kwargs.get('pk'),
-        ).order_by('name')
-
-    def get_context_data(self, **kwargs):
-        context = super(TaggedContactListView, self).get_context_data(**kwargs)
+    def dispatch(self, request, *args, **kwargs):
         self.tag = get_object_or_404(
             Tag.objects.get_tags_for_user(self.request.user),
             pk=self.kwargs.get('pk'),
         )
+        return super(TaggedContactListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return super(TaggedContactListView, self).get_queryset().filter(
+            tags__id=self.kwargs.get('pk'),
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(TaggedContactListView, self).get_context_data(**kwargs)
         context['tag'] = self.tag
 
         return context
