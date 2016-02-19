@@ -122,7 +122,7 @@
         <div id="id_work_phone_container" class="col-md-6">
             <div class="form-group">
                 <label class="sr-only" for="id_work_phone">Work phone</label>
-                <input class="form-control" id="id_work_phone" maxlength="20" name="work_phone" type="text" placeholder="Mobile Phone" {% if contact.work_phone %}value="{{ contact.work_phone }}"{% endif %}/>
+                <input class="form-control" id="id_work_phone" maxlength="20" name="work_phone" type="text" placeholder="Work Phone" {% if contact.work_phone %}value="{{ contact.work_phone }}"{% endif %}/>
             </div>
             <div id="id_work_phone_errors">
                 {{ form.work_phone.errors }}
