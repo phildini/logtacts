@@ -113,7 +113,7 @@
         <div id="id_work_email_container" class="col-md-6">
             <div class="form-group">
                 <label class="sr-only" for="id_work_email">Work Email</label>
-                <input class="form-control" id="id_work_email" maxlength="254" name="work_email" type="email" placeholder="work_email" {% if contact.work_email %}value="{{ contact.work_email }}"{% endif %}/>
+                <input class="form-control" id="id_work_email" maxlength="254" name="work_email" type="email" placeholder="Work Email" {% if contact.work_email %}value="{{ contact.work_email }}"{% endif %}/>
             </div>
             <div id="id_work_email_errors">
                 {{ form.work_email.errors }}
@@ -131,8 +131,8 @@
         <div id="id_birthday_container" class="col-md-3">
             <div class="form-group">
                 <label for="id_birthday">Birthday</label>
-                {{ form.time.errors }}
-                <input class="form-control" type="date" name="birthday" id="id_birthday">
+                {{ form.birthday.errors }}
+                <input class="form-control" type="date" name="birthday" id="id_birthday" {% if contact.birthday %}value="{{ contact.birthday | date:"Y-m-d" }}"{% endif %}>
             </div>
         </div>
         <div id="id_address_container" class="col-md-6">

@@ -25,40 +25,40 @@
     <span class="text-muted">Email:</span> <a href="mailto:{{ contact.email }}">{{contact.email}}</a>
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Twitter:</span> <a href="http://twitter.com/{{ contact.twitter }}">{% if contact.twitter %}@{{ contact.twitter }}{% endif %}</a>
+    <span class="text-muted">Twitter:</span> {% if contact.twitter %}<a href="http://twitter.com/{{ contact.twitter }}">@{{ contact.twitter }}</a>{% endif %}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Website:</span> <a href="{{ contact.website }}">{{ contact.website }}</a>
+    <span class="text-muted">Website:</span>{% if contact.website %} <a href="{{ contact.website }}">{{ contact.website }}</a>{% endif %}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Portfolio:</span> <a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a>
+    <span class="text-muted">Portfolio:</span> {% if contact.portfolio %}<a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a>{% endif %}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Tumblr:</span> {{contact.tumblr}}
+    <span class="text-muted">Tumblr:</span> {{ contact.tumblr | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Cell Phone:</span> {{ contact.cell_phone }}
+    <span class="text-muted">Cell Phone:</span> {{ contact.cell_phone | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Home Phone:</span> {{ contact.home_phone }}
+    <span class="text-muted">Home Phone:</span> {{ contact.home_phone | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Company:</span> {{ contact.company }}
+    <span class="text-muted">Company:</span> {{ contact.company | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Work Email:</span> {{ contact.work_email }}
+    <span class="text-muted">Work Email:</span> {{ contact.work_email | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Work Phone:</span> {{ contact.work_phone }}
+    <span class="text-muted">Work Phone:</span> {{ contact.work_phone | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Birthday:</span> {{ contact.birthday }}
+    <span class="text-muted">Birthday:</span> {{ contact.birthday | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Address:</span> {{ contact.address }}
+    <span class="text-muted">Address:</span> {{ contact.address | default_if_none:"" }}
 </div>
 <div class="col-md-6">
-    <span class="text-muted">Notes:</span> {{ contact.notes }}
+    <span class="text-muted">Notes:</span> {{ contact.notes | default_if_none:"" }}
 </div>
 </div>
 <h3>Add Log:</h3>
