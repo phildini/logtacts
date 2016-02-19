@@ -17,7 +17,7 @@ const pkgdef :Spk.PackageDefinition = (
     # This manifest is included in your app package to tell Sandstorm
     # about your app.
 
-    appTitle = (defaultText = "Logtacts"),
+    appTitle = (defaultText = "Contact Otter"),
 
     appVersion = 0,  # Increment this for every release.
 
@@ -54,7 +54,7 @@ const pkgdef :Spk.PackageDefinition = (
         #marketBig = (svg = embed "path/to/market-big-300x300.svg"),
       ),
 
-      website = "https://www.logtacts.com",
+      website = "https://www.contactotter.com",
       # This should be the app's main website url.
 
       codeUrl = "https://github.com/phildini/logtacts/",
@@ -65,7 +65,7 @@ const pkgdef :Spk.PackageDefinition = (
       # The license this package is distributed under.  See
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#license
 
-      categories = [],
+      categories = [productivity,communications],
       # A list of categories/genres to which this app belongs, sorted with best fit first.
       # See the list of categories at
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#categories

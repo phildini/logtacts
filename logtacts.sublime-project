@@ -12,6 +12,9 @@
             [
                 ".coverage"
             ]
-		}
+		},
+        {
+            "path": "../django-sandstorm"
+        }
 	]
 }

@@ -9,6 +9,7 @@ fi
 
 if [ -f /opt/django-sandstorm/setup.py ] ; then
     pushd /opt/django-sandstorm/
+    $VENV/bin/pip uninstall django-sandstorm
     $VENV/bin/pip install -e .
     popd
 else
