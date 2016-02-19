@@ -4,6 +4,7 @@
     <head>
         <title>ContactOtter</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% include "favicon.html" %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static "css/contacts.css" %}">
         <script>
@@ -22,7 +23,9 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand hidden-sm hidden-xs" href="/">ContactOtter</a>
+                <a class="navbar-brand hidden-sm hidden-xs" href="/">
+                <img src="{% static "img/contactotter.svg" %}" width="20"> ContactOtter
+                </a>
                 {% if user.is_authenticated %}
                 <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
