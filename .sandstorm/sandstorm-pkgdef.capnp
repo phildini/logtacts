@@ -107,10 +107,7 @@ const pkgdef :Spk.PackageDefinition = (
         (width = 1280, height = 502, jpeg = embed "search.png"),
         (width = 1266, height = 617, jpeg = embed "edit_contact.png"),
       ],
-      #changeLog = (defaultText = embed "path/to/sandstorm-specific/changelog.md"),
-      # Documents the history of changes in Github-flavored markdown format (with the same restrictions
-      # as govern `description`). We recommend formatting this with an H1 heading for each version
-      # followed by a bullet list of changes.
+      changeLog = (defaultText = embed "changelog.md"),
     ),
   ),
 
