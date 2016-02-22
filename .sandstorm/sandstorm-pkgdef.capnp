@@ -17,9 +17,9 @@ const pkgdef :Spk.PackageDefinition = (
 
     appTitle = (defaultText = "Contact Otter"),
 
-    appVersion = 1,  # Increment this for every release.
+    appVersion = 2,  # Increment this for every release.
 
-    appMarketingVersion = (defaultText = "0.0.1"),
+    appMarketingVersion = (defaultText = "0.0.2"),
     # Human-readable representation of appVersion. Should match the way you
     # identify versions of your app in documentation and marketing.
 
@@ -46,7 +46,9 @@ const pkgdef :Spk.PackageDefinition = (
       # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/package.capnp
       icons = (
         # Various icons to represent the app in various contexts.
-        appGrid = (svg = embed "contactotter.svg"),
+        appGrid = (svg = embed "appGrid.svg"),
+        grain = (svg = embed "grain.svg"),
+        market = (svg = embed "market.svg"),
       ),
 
       website = "https://www.contactotter.com",
