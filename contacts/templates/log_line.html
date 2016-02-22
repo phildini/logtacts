@@ -1,1 +1,1 @@
-{{ log.display_time | date:"l, M j, Y"}} - {{ log.logged_by }} {{ log.action_str }}. Notes: {{ log.notes }} {% if log.link %}(<a href="{{ log.link }}">Link</a>){% endif %}
+{{ log.display_time | date:"l, M j, Y"}} - {% if log.logged_by.firstname }}{{ log.logged_by.first_name }}{% else %}{{ log.logged_by }}{% endif %} {{ log.action_str }}. Notes: {{ log.notes }} {% if log.link %}(<a href="{{ log.link }}">Link</a>){% endif %}
