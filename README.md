@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/phildini/logtacts.svg)](https://travis-ci.org/phildini/logtacts)[![codecov.io](https://codecov.io/github/phildini/logtacts/coverage.svg?branch=master)](https://codecov.io/github/phildini/logtacts?branch=master)
 
-logtacts
-========
+Contact Otter
+=============
 
 Better contact management.
 

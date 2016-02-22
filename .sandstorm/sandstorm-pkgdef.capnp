@@ -14,12 +14,10 @@ const pkgdef :Spk.PackageDefinition = (
   # your keyring. All updates must be signed with the same key.
 
   manifest = (
-    # This manifest is included in your app package to tell Sandstorm
-    # about your app.
 
     appTitle = (defaultText = "Contact Otter"),
 
-    appVersion = 0,  # Increment this for every release.
+    appVersion = 1,  # Increment this for every release.
 
     appMarketingVersion = (defaultText = "0.0.1"),
     # Human-readable representation of appVersion. Should match the way you
@@ -48,10 +46,7 @@ const pkgdef :Spk.PackageDefinition = (
       # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/package.capnp
       icons = (
         # Various icons to represent the app in various contexts.
-        #appGrid = (svg = embed "path/to/appgrid-128x128.svg"),
-        #grain = (svg = embed "path/to/grain-24x24.svg"),
-        #market = (svg = embed "path/to/market-150x150.svg"),
-        #marketBig = (svg = embed "path/to/market-big-300x300.svg"),
+        appGrid = (svg = embed "contactotter.svg"),
       ),
 
       website = "https://www.contactotter.com",
@@ -78,19 +73,7 @@ const pkgdef :Spk.PackageDefinition = (
         # requests as well as app store administrator requests, so it is very important that this be a
         # valid address with someone paying attention to it.
 
-        #pgpSignature = embed "path/to/pgp-signature",
-        # PGP signature attesting responsibility for the app ID. This is a binary-format detached
-        # signature of the following ASCII message (not including the quotes, no newlines, and
-        # replacing <app-id> with the standard base-32 text format of the app's ID):
-        #
-        # "I am the author of the Sandstorm.io app with the following ID: <app-id>"
-        #
-        # You can create a signature file using `gpg` like so:
-        #
-        #     echo -n "I am the author of the Sandstorm.io app with the following ID: <app-id>" | gpg --sign > pgp-signature
-        #
-        # Further details including how to set up GPG and how to use keybase.io can be found
-        # at https://docs.sandstorm.io/en/latest/developing/publishing-apps/#verify-your-identity
+        pgpSignature = embed "pgp-signature",
 
         upstreamAuthor = "Philip James",
         # Name of the original primary author of this app, if it is different from the person who
@@ -99,17 +82,9 @@ const pkgdef :Spk.PackageDefinition = (
         # Remove this line if you consider yourself as the author of the app.
       ),
 
-      #pgpKeyring = embed "path/to/pgp-keyring",
-      # A keyring in GPG keyring format containing all public keys needed to verify PGP signatures in
-      # this manifest (as of this writing, there is only one: `author.pgpSignature`).
-      #
-      # To generate a keyring containing just your public key, do:
-      #
-      #     gpg --export <key-id> > keyring
-      #
-      # Where `<key-id>` is a PGP key ID or email address associated with the key.
+      pgpKeyring = embed "pgp-keyring",
 
-      #description = (defaultText = embed "path/to/description.md"),
+      description = (defaultText = embed "description.md"),
       # The app's description description in Github-flavored Markdown format, to be displayed e.g.
       # in an app store. Note that the Markdown is not permitted to contain HTML nor image tags (but
       # you can include a list of screenshots separately).
@@ -124,8 +99,11 @@ const pkgdef :Spk.PackageDefinition = (
         # Sizes are given in device-independent pixels, so if you took these
         # screenshots on a Retina-style high DPI screen, divide each dimension by two.
 
-        #(width = 746, height = 795, jpeg = embed "path/to/screenshot-1.jpeg"),
-        #(width = 640, height = 480, png = embed "path/to/screenshot-2.png"),
+        (width = 1280, height = 367, jpeg = embed "tag_list.png"),
+        (width = 1280, height = 504, jpeg = embed "contact_display.png"),
+        (width = 1278, height = 345, jpeg = embed "contact_list.png"),
+        (width = 1280, height = 502, jpeg = embed "search.png"),
+        (width = 1266, height = 617, jpeg = embed "edit_contact.png"),
       ],
       #changeLog = (defaultText = embed "path/to/sandstorm-specific/changelog.md"),
       # Documents the history of changes in Github-flavored markdown format (with the same restrictions

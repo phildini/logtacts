@@ -2177,11 +2177,13 @@ opt/app/profiles/templates/profile.html
 opt/app/profiles/urls.py
 opt/app/profiles/views.py
 opt/app/templates/base.html
+opt/app/templates/favicon.html
 opt/app/templates/home.html
 opt/app/templates/policies.html
 opt/app/templates/registration/login.html
 opt/app/templates/search/indexes/contacts/contact_text.txt
 opt/app/templates/search/search.html
+opt/django-sandstorm
 proc/cpuinfo
 sandstorm-http-bridge
 sandstorm-http-bridge-config
@@ -2218,6 +2220,8 @@ usr/lib/python2.7/UserList.pyc
 usr/lib/python2.7/__future__.py
 usr/lib/python2.7/__future__.pyc
 usr/lib/python2.7/_abcoll.py
+usr/lib/python2.7/_strptime.py
+usr/lib/python2.7/_strptime.pyc
 usr/lib/python2.7/_weakrefset.py
 usr/lib/python2.7/abc.py
 usr/lib/python2.7/argparse.py
