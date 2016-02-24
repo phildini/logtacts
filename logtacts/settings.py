@@ -174,8 +174,8 @@ EMAIL_HOST = 'smtp.mandrillapp.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pjj@philipjohnjames.com'
 EMAIL_HOST_PASSWORD = get_env_variable('MANDRILL_KEY')
-DEFAULT_FROM_EMAIL = 'site@inkpebble.com'
-SERVER_EMAIL = 'site@inkpebble.com'
+DEFAULT_FROM_EMAIL = 'site@contactotter.com'
+SERVER_EMAIL = 'site@contactotter.com'
 
 SLACK_WEBHOOK_URL = get_env_variable('SLACK_WEBHOOK_URL')
 
@@ -185,6 +185,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
 }
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED=True
 
 LOGGING = {
     'version': 1,
