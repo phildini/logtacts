@@ -1,10 +1,10 @@
-### What you expected to happen
+#### What you expected to happen
 
-### What actually happened
+#### What actually happened
 
-### Steps to reproduce
+#### Steps to reproduce
 - 
 
-#### Is this on sandstorm?
-- [] yes
-- [] no
+##### Is this on sandstorm?
+- [ ] yes
+- [ ] no
