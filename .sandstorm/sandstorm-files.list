@@ -116,8 +116,11 @@ opt/app/contacts/signals.py
 opt/app/contacts/templates/contact.html
 opt/app/contacts/templates/contact_list.html
 opt/app/contacts/templates/contact_list_item.html
+opt/app/contacts/templates/delete_contact.html
+opt/app/contacts/templates/delete_log.html
 opt/app/contacts/templates/delete_tag.html
 opt/app/contacts/templates/edit_contact.html
+opt/app/contacts/templates/edit_log.html
 opt/app/contacts/templates/edit_tag.html
 opt/app/contacts/templates/export_addresses.html
 opt/app/contacts/templates/export_emails.html
