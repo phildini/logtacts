@@ -5,7 +5,7 @@
 <h3>Contact Addresses <a href="{% url "contact_address_export" %}" class="btn btn-primary">Download CSV</a></h3>
 <ul>
 {% for contact in contacts %}
-    <li>{{ contact.name }} {{ contact.address }}</li>
+    <li>{{ contact.name }} {{ contact.preferred_address }}</li>
 {% endfor %}
 </ul>
 {% else %}

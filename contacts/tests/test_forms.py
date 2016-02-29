@@ -1,6 +1,9 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
+import contacts as contact_constants
 from contacts import forms
 from contacts import factories
+from contacts import models
 
 
 class ContactFormTests(TestCase):
@@ -8,6 +11,7 @@ class ContactFormTests(TestCase):
     def setUp(self):
         self.book = factories.BookFactory.create()
         self.tag = factories.TagFactory.create(book=self.book)
+        self.contact = factories.ContactFactory(book=self.book)
 
     def test_form_without_book(self):
         with self.assertRaises(KeyError):
@@ -32,6 +36,220 @@ class ContactFormTests(TestCase):
         bad_tag = factories.TagFactory.create()
         correct_choices = [(self.tag.id, self.tag.tag)]
         self.assertEqual(form.fields['tags'].choices, correct_choices)
+
+    def test_form_field_creation(self):
+        form_data = {
+            'document_email_1': 'hello@hello.com',
+            'document_email_1_label': 'Email',
+            'document_email_1_pref': True,
+            'name': 'Philip James',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data
+        )
+        self.assertTrue('document_email_1' in form.fields)
+        self.assertTrue('document_email_1_label' in form.fields)
+        self.assertTrue('document_email_1_pref' in form.fields)
+
+    def test_form_save_existing_field_email(self):
+        field = factories.FieldFactory(contact=self.contact)
+        field.save()
+        form_data = {
+            'name': 'Philip James',
+            'document_email_{}'.format(field.id): 'philip+test@contactotter.com',
+            'document_email_{}_label'.format(field.id): 'New email',
+            'document_email_{}_pref'.format(field.id): '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        self.assert_(form.is_valid())
+        form.save()
+        field = models.Field.objects.get(id=field.id)
+        self.assertEqual(field.value, 'philip+test@contactotter.com')
+        self.assertEqual(field.label, 'New email')
+
+    def test_form_save_existing_field_email(self):
+        field = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_DATE,
+            value='2015-01-01',
+        )
+        field.save()
+        form_data = {
+            'name': 'Philip James',
+            'document_date_{}'.format(field.id): '2016-01-01',
+            'document_date_{}_label'.format(field.id): 'New date',
+            'document_date_{}_pref'.format(field.id): '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        self.assert_(form.is_valid())
+        form.save()
+        field = models.Field.objects.get(id=field.id)
+        self.assertEqual(field.value, '2016-01-01')
+        self.assertEqual(field.label, 'New date')
+
+    def test_form_save_existing_field_url(self):
+        field = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_URL,
+            value='http://www.logtacts.com',
+        )
+        field.save()
+        form_data = {
+            'name': 'Philip James',
+            'document_url_{}'.format(field.id): 'http://www.contactotter.com',
+            'document_url_{}_label'.format(field.id): 'New URL',
+            'document_url_{}_pref'.format(field.id): '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        self.assert_(form.is_valid())
+        form.save()
+        field = models.Field.objects.get(id=field.id)
+        self.assertEqual(field.value, 'http://www.contactotter.com')
+        self.assertEqual(field.label, 'New URL')
+
+    def test_form_save_existing_field_duplicate_url_pref(self):
+        form_data = {
+            'name': 'Philip James',
+            'document_url_new.1': 'http://www.contactotter.com',
+            'document_url_new.1_label': 'New URL',
+            'document_url_new.1_pref': '[on]',
+            'document_url_new.2': 'http://www.contactotter.com',
+            'document_url_new.2_label': 'New URL',
+            'document_url_new.2_pref': '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        with self.assertRaises(ValidationError):
+            form.is_valid()
+            form.save()
+
+    def test_form_save_existing_field_duplicate_phone_pref(self):
+        form_data = {
+            'name': 'Philip James',
+            'document_phone_new.1': '4158675309',
+            'document_phone_new.1_label': 'New phone',
+            'document_phone_new.1_pref': '[on]',
+            'document_phone_new.2': '4158675309',
+            'document_phone_new.2_label': 'New phone',
+            'document_phone_new.2_pref': '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        with self.assertRaises(ValidationError):
+            form.is_valid()
+            form.save()
+
+    def test_form_save_existing_field_duplicate_email_pref(self):
+        form_data = {
+            'name': 'Philip James',
+            'document_email_new.1': 'philip@contactotter.com',
+            'document_email_new.1_label': 'New email',
+            'document_email_new.1_pref': '[on]',
+            'document_email_new.2': 'philip@contactotter.com',
+            'document_email_new.2_label': 'New email',
+            'document_email_new.2_pref': '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        with self.assertRaises(ValidationError):
+            form.is_valid()
+            form.save()
+
+    def test_form_save_existing_field_duplicate_twitter_pref(self):
+        form_data = {
+            'name': 'Philip James',
+            'document_twitter_new.1': '@phildini',
+            'document_twitter_new.1_label': 'New twitter',
+            'document_twitter_new.1_pref': '[on]',
+            'document_twitter_new.2': '@phildini',
+            'document_twitter_new.2_label': 'New twitter',
+            'document_twitter_new.2_pref': '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        with self.assertRaises(ValidationError):
+            form.is_valid()
+            form.save()
+
+    def test_form_save_existing_field_duplicate_address_pref(self):
+        form_data = {
+            'name': 'Philip James',
+            'document_address_new.1': '1600 Pennsylvania Ave.',
+            'document_address_new.1_label': 'New address',
+            'document_address_new.1_pref': '[on]',
+            'document_address_new.2': '1600 Pennsylvania Ave.',
+            'document_address_new.2_label': 'New address',
+            'document_address_new.2_pref': '[on]',
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        with self.assertRaises(ValidationError):
+            form.is_valid()
+            form.save()
+
+    def test_form_deleted_fields(self):
+        field1 = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_URL,
+            value='http://www.logtacts.com',
+        )
+        field2 = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_URL,
+            value='http://www.logtacts.com',
+        )
+        field3 = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_URL,
+            value='http://www.logtacts.com',
+        )
+        form_data = {
+            'name': 'Philip James',
+            'deleted_fields': '{},{},{}'.format(field1.id, field2.id, 20)
+        }
+        form = forms.ContactForm(
+            book=self.book,
+            data=form_data,
+            instance=self.contact,
+        )
+        form.is_valid()
+        form.save()
+        self.assertEquals(
+            len(models.Field.objects.filter(contact=self.contact)),
+            1,
+        )
+        self.assertEquals(
+            models.Field.objects.get(contact=self.contact),
+            field3,
+        )
 
 
 class LogEntryFormTests(TestCase):

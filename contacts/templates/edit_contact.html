@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block content %}
 
 {% if contact.id %}
@@ -16,8 +18,9 @@
 {% endif %}
 <a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
 </div>
-<form action="{{ action }}" method="POST" id="contactForm">
+<form class="form-inline" action="{{ action }}" method="POST" id="contactForm">
     {% csrf_token %}
+    <input type="hidden" name="deleted_fields" id="deleted_fields" value="" />
     {% if form.non_field_errors %}
     <ul>
         {% for error in form.non_field_errors %}
@@ -26,124 +29,170 @@
     </ul>
     {% endif %}
     <div class="row">
-        <div id="id_name_container" class="col-md-6">
+        <div id="id_name_container" class="col-md-12">
             <div class="form-group">
-                <label class="sr-only" for="id_name">Name</label>
+                <label for="id_name">Name</label>
                 <input class="form-control" id="id_name" maxlength="255" name="name" type="text" placeholder="Name"{% if contact.name %}value="{{ contact.name }}"{% endif %}/>
             </div>
             <div id="id_name_errors">
                 {{ form.name.errors }}
             </div>
         </div>
-        <div id="id_email_container" class="col-md-6">
-            <div class="form-group">
-                <label class="sr-only" for="id_email">Email</label>
-                <input class="form-control" id="id_email" maxlength="254" name="email" type="email" placeholder="Email" {% if contact.email %}value="{{ contact.email }}"{% endif %}/>
-            </div>
-            <div id="id_email_errors">
-                {{ form.email.errors }}
-            </div>
+    </div>
+    <hr />
+    <div class="row" id="js-email-fields">
+        <div class="col-md-12">
+        <h4>Email <a href="javascript:void(0);" class="js-add-email btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4> 
         </div>
-        <div id="id_twitter_container" class="col-md-6">
+        {% for field in contact.emails %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_twitter">Twitter:</label>
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">@</span>
-                    <input class="form-control" id="id_twitter" maxlength="140" name="twitter" type="text" placeholder="Twitter"{% if contact.twitter %}value="{{ contact.twitter }}"{% endif %}/>
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <div class="input-group">
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="254" name="document_{{ field.kind }}_{{ field.id }}" type="email" placeholder="{{ field.label }}" value="{{ field.value }}" />
+                    <div class="input-group-addon">
+                        <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
+                    </div>
                 </div>
             </div>
-            <div id="id_twitter_errors">
-                {{ form.twitter.errors }}
-            </div>
         </div>
-        <div id="id_website_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-twitter-fields">
+        <div class="col-md-12">
+        <h4>Twitter <a href="javascript:void(0);" class="js-add-twitter btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.twitters %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_website">Website</label>
-                <input class="form-control" id="id_website" maxlength="255" name="website" type="url" placeholder="Website"{% if contact.website %}value="{{ contact.website }}"{% endif %}/>
-            </div>
-            <div id="id_website_errors">
-                {{ form.website.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">@</span>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="140" name="document_{{ field.kind }}_{{ field.id }}" type="text" placeholder="{{ field.label }}" value="{{ field.value }}" />
+                    <div class="input-group-addon">
+                         <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="id_portfolio_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-url-fields">
+        <div class="col-md-12">
+        <h4>Links <a href="javascript:void(0);" class="js-add-url btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.urls %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_portfolio">Portfolio</label>
-                <input class="form-control" id="id_portfolio" maxlength="255" name="portfolio" type="url" placeholder="Portfolio" {% if contact.portfolio %}value="{{ contact.portfolio }}"{% endif %}/>
-            </div>
-            <div id="id_portfolio_errors">
-                {{ form.portfolio.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="url" placeholder="{{ field.label }}" value="{{ field.value }}" />
             </div>
         </div>
-        <div id="id_tumblr_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-phone-fields">
+        <div class="col-md-12">
+        <h4>Phone Numbers <a href="javascript:void(0);" class="js-add-phone btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.phones %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_tumblr">Tumblr</label>
-                <input class="form-control" id="id_tumblr" maxlength="255" name="tumblr" type="text" placeholder="tumblr" {% if contact.tumblr %}value="{{ contact.tumblr }}"{% endif %}/>
-            </div>
-            <div id="id_tumblr_errors">
-                {{ form.tumblr.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <div class="input-group">
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="phone" placeholder="{{ field.label }}" value="{{ field.value }}" />
+                    <div class="input-group-addon">
+                         <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="id_cell_phone_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-text-fields">
+        <div class="col-md-12">
+        <h4>Other <a href="javascript:void(0);" class="js-add-text btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.generics %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_cell_phone">Cell phone</label>
-                <input class="form-control" id="id_cell_phone" maxlength="20" name="cell_phone" type="text" placeholder="Mobile Phone" {% if contact.cell_phone %}value="{{ contact.cell_phone }}"{% endif %}/>
-            </div>
-            <div id="id_cell_phone_errors">
-                {{ form.cell_phone.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="text" placeholder="{{ field.label }}" value="{{ field.value }}" />
             </div>
         </div>
-        <div id="id_home_phone_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-date-fields">
+        <div class="col-md-12">
+        <h4>Dates <a href="javascript:void(0);" class="js-add-date btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.dates %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_home_phone">Home phone</label>
-                <input class="form-control" id="id_home_phone" maxlength="20" name="home_phone" type="text" placeholder="Home Phone"{% if contact.home_phone %}value="{{ contact.home_phone }}"{% endif %}/>
-            </div>
-            <div id="id_home_phone_errors">
-                {{ form.home_phone.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                </div>
+                <input class="form-control" type="date" name="document_{{ field.kind }}_{{ field.id }}" id="id_document_{{ field.kind }}_{{ field.id }}" value="{{ field.value }}">
             </div>
         </div>
-        <div id="id_company_container" class="col-md-6">
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row" id="js-address-fields">
+        <div class="col-md-12">
+        <h4>Addresses <a href="javascript:void(0);" class="js-add-address btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        </div>
+        {% for field in contact.addresses %}
+        <div class="col-md-6" id="{{ field.id }}">
             <div class="form-group">
-                <label class="sr-only" for="id_company">Company</label>
-                <input class="form-control" id="id_company" maxlength="100" name="company" type="text" placeholder="Company" {% if contact.company %}value="{{ contact.company }}"{% endif %}/>
-            </div>
-            <div id="id_company_errors">
-                {{ form.company.errors }}
-            </div>
-        </div>
-        <div id="id_work_email_container" class="col-md-6">
-            <div class="form-group">
-                <label class="sr-only" for="id_work_email">Work Email</label>
-                <input class="form-control" id="id_work_email" maxlength="254" name="work_email" type="email" placeholder="Work Email" {% if contact.work_email %}value="{{ contact.work_email }}"{% endif %}/>
-            </div>
-            <div id="id_work_email_errors">
-                {{ form.work_email.errors }}
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
+                    <div class="input-group-addon">
+                        <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
+                    </div>
+                </div>
+                <textarea class="form-control" cols="40" id="id_document_{{ field.kind }}_{{ field.id }}" name="document_{{ field.kind }}_{{ field.id }}" rows="3">{{ field.value }}</textarea>
             </div>
         </div>
-        <div id="id_work_phone_container" class="col-md-6">
-            <div class="form-group">
-                <label class="sr-only" for="id_work_phone">Work phone</label>
-                <input class="form-control" id="id_work_phone" maxlength="20" name="work_phone" type="text" placeholder="Work Phone" {% if contact.work_phone %}value="{{ contact.work_phone }}"{% endif %}/>
-            </div>
-            <div id="id_work_phone_errors">
-                {{ form.work_phone.errors }}
-            </div>
-        </div>
-        <div id="id_birthday_container" class="col-md-3">
-            <div class="form-group">
-                <label for="id_birthday">Birthday</label>
-                {{ form.birthday.errors }}
-                <input class="form-control" type="date" name="birthday" id="id_birthday" {% if contact.birthday %}value="{{ contact.birthday | date:"Y-m-d" }}"{% endif %}>
-            </div>
-        </div>
-        <div id="id_address_container" class="col-md-6">
-            <div>
-                <label for="id_address">Address:</label>
-                <textarea class="form-control" cols="40" id="id_address" name="address" rows="3">{% if contact.address %}{{ contact.address }}{% endif %}</textarea>
-            </div>
-            <div id="id_address_errors">
-                {{ form.address.errors }}
-            </div>
-        </div>
+        {% endfor %}
+    </div>
+    <hr />
+    <div class="row">
         <div id="id_notes_container" class="col-md-6">
             <div>
                 <label for="id_notes">Notes:</label>
@@ -174,4 +223,120 @@
 {% endif %}
 <a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
 </div>
+
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="{% static 'js/contact_edit.js' %}?v=1"></script>
+<script id="js-blank-email-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Email label">
+            </div>
+            <div class="input-group">
+                <input class="form-control" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="254" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="email" placeholder="Email address" />
+                <div class="input-group-addon">
+                    <input type="checkbox" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="js-blank-twitter-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Twitter label">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">@</span>
+                <input class="form-control" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="140" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="text" placeholder="twitter" />
+                <div class="input-group-addon">
+                     <input type="checkbox" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="js-blank-url-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Link label">
+            </div>
+            <input class="form-control" id="id_document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="url" placeholder="Link URL"/>
+        </div>
+    </div>
+</script>
+<script id="js-blank-phone-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Phone number label">
+            </div>
+            <div class="input-group">
+                <input class="form-control" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="phone" placeholder="Phone number" />
+                <div class="input-group-addon">
+                     <input type="checkbox" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="js-blank-text-field" type="text/x-handlebars-template">
+    <div class="col-md-6"  id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Field label">
+            </div>
+            <input class="form-control" id="id_document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="text" placeholder="Field value" />
+        </div>
+    </div>
+</script>
+<script id="js-blank-date-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Date label">
+            </div>
+            <input class="form-control" type="date" name="document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" id="id_document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        </div>
+    </div>
+</script>
+<script id="js-blank-address-field" type="text/x-handlebars-template">
+    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <input class="form-control" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Address name">
+                <div class="input-group-addon">
+                    <input type="checkbox" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
+                </div>
+            </div>
+            <textarea class="form-control" cols="40" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" rows="3"></textarea>
+        </div>
+    </div>
+</script>
 {% endblock %}

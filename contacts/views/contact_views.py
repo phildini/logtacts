@@ -24,6 +24,7 @@ from contacts.models import (
     LogEntry,
 )
 
+import contacts as contact_settings
 from contacts import forms
 from contacts.views import BookOwnerMixin
 
@@ -149,6 +150,7 @@ class EditContactView(BookOwnerMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super(EditContactView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
         kwargs['book'] = BookOwner.objects.get(user=self.request.user).book
         return kwargs
 
@@ -158,6 +160,7 @@ class EditContactView(BookOwnerMixin, UpdateView):
             'contacts-edit',
             kwargs={'pk': self.get_object().id},
         )
+        context.update(contact_settings.FIELD_TYPES_DICT)
 
         return context
 
@@ -166,14 +169,6 @@ class EditContactView(BookOwnerMixin, UpdateView):
             self.request,
             "Contact updated",
         )
-        if form.has_changed:
-            note_str = 'Updated ' + ', '.join(form.changed_data)
-            LogEntry.objects.create(
-                contact = form.instance,
-                logged_by = self.request.user,
-                kind = 'edit',
-                notes = note_str,
-            )
         return super(EditContactView, self).form_valid(form)
 
 
@@ -332,7 +327,7 @@ def email_csv_view(request):
     writer = csv.writer(response)
     writer.writerow(['Name', 'Email'])
     for contact in contacts:
-        writer.writerow([contact.name, contact.email])
+        writer.writerow([contact.name, contact.preferred_email()])
 
     return response
 
@@ -354,7 +349,7 @@ def address_csv_view(request):
     writer = csv.writer(response)
     writer.writerow(['Name', 'Address'])
     for contact in contacts:
-        writer.writerow([contact.name, contact.address])
+        writer.writerow([contact.name, contact.preferred_address()])
 
     return response
 
@@ -365,7 +360,7 @@ def export_full_contact_book_json_view(request):
     tags = Tag.objects.get_tags_for_user(request.user)
     tag_serializer = serializers.TagSerializer(tags, many=True)
     export = {
-        'version': 1,
+        'version': 2,
         'contacts': contact_serializer.data,
         'tags': tag_serializer.data,
     }

@@ -79,6 +79,71 @@ class ContactViewTests(TestCase):
         response.render()
 
 
+class EditContactViewTests(TestCase):
+
+    def setUp(self):
+        book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
+        self.contact = factories.ContactFactory.create(book=book)
+        request_factory = RequestFactory()
+        self.request = request_factory.get(
+            reverse('contacts-edit', kwargs={'pk': self.contact.id}),
+        )
+
+
+    def test_edit_contact_view_200(self):
+        self.request.user = self.user
+        response = views.contact_views.EditContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit_contact_view_404_wrong_user(self):
+        self.request.user = UserFactory.create()
+        with self.assertRaises(Http404):
+            views.contact_views.EditContactView.as_view()(
+                self.request,
+                pk=self.contact.pk,
+            )
+
+    def test_edit_contact_view_renders(self):
+        self.request.user = self.user
+        response = views.contact_views.EditContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        response.render()
+
+
+class CreateContactViewTests(TestCase):
+
+    def setUp(self):
+        book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
+        request_factory = RequestFactory()
+        self.request = request_factory.get(
+            reverse('contacts-new'),
+        )
+
+
+    def test_create_contact_view_200(self):
+        self.request.user = self.user
+        response = views.contact_views.CreateContactView.as_view()(
+            self.request,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_contact_view_renders(self):
+        self.request.user = self.user
+        response = views.contact_views.CreateContactView.as_view()(
+            self.request,
+        )
+        response.render()
+
+
 class LogViewTests(TestCase):
 
     def setUp(self):
@@ -213,6 +278,36 @@ class TagViewTests(TestCase):
         )
         self.assertEqual(len(response.context_data.get('tags')), 1)
         self.assertEqual(len(response.context_data.get('contact_list')), 1)
+
+
+class CreateTagViewTests(TestCase):
+
+    def setUp(self):
+        book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
+        self.contact = factories.ContactFactory.create(book=book)
+        self.request_factory = RequestFactory()
+
+    def test_edit_tag_view_200(self):
+        request = self.request_factory.get(
+            reverse('tags-new'),
+        )
+        request.user = self.user
+        response = views.contact_views.CreateTagView.as_view()(
+            request,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit_tag_view_renders(self):
+        request = self.request_factory.get(
+            reverse('tags-new'),
+        )
+        request.user = self.user
+        response = views.contact_views.CreateTagView.as_view()(
+            request,
+        )
+        response.render()
 
 
 class EditTagViewTests(TestCase):

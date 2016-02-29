@@ -1,9 +1,12 @@
+import collections
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-
+from django.utils import timezone
+from jsonfield import JSONField
 from simple_history.models import HistoricalRecords
 
+import contacts as contact_settings
 
 class TagManager(models.Manager):
 
@@ -41,7 +44,6 @@ class Tag(models.Model):
         return '#123456'
 
 
-
 class ContactManager(models.Manager):
 
     def get_contacts_for_user(self, user):
@@ -51,6 +53,19 @@ class ContactManager(models.Manager):
 
 
 class Contact(models.Model):
+    
+
+    FIELD_TYPES = (
+        (contact_settings.FIELD_TYPE_EMAIL, 'Email'),
+        (contact_settings.FIELD_TYPE_URL, 'URL'),
+        (contact_settings.FIELD_TYPE_DATE,'Date'),
+        (contact_settings.FIELD_TYPE_TWITTER, 'Twitter'),
+        (contact_settings.FIELD_TYPE_PHONE, 'Phone'),
+        (contact_settings.FIELD_TYPE_ADDRESS, 'Address'),
+        (contact_settings.FIELD_TYPE_TEXT, 'Short Text'),
+        (contact_settings.FIELD_TYPE_BIG_TEXT, 'Big Text'),
+    )
+
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     last_contact = models.DateTimeField(blank=True, null=True)
@@ -70,6 +85,10 @@ class Contact(models.Model):
     birthday = models.DateField(blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True)
     work_email = models.EmailField(blank=True)
+    document = JSONField(
+        blank=True,
+        load_kwargs={'object_pairs_hook': collections.OrderedDict},
+    )
     tags = models.ManyToManyField(Tag, blank=True)
     history = HistoricalRecords()
 
@@ -85,12 +104,93 @@ class Contact(models.Model):
         if self.last_contact:
             return self.last_contact
 
-
     def can_be_viewed_by(self, user):
         return bool(self.book.bookowner_set.filter(user=user))
 
     def can_be_edited_by(self, user):
         return bool(self.book.bookowner_set.filter(user=user))
+
+    def preferred_email(self):
+        try:
+            return Field.objects.get(
+                contact=self,
+                kind=contact_settings.FIELD_TYPE_EMAIL,
+                preferred=True,
+            ).value
+        except Field.DoesNotExist:
+            try:
+                return Field.objects.filter(
+                    contact=self,
+                    kind=contact_settings.FIELD_TYPE_EMAIL,
+                )[0].value
+            except IndexError:
+                return ''
+
+    def preferred_address(self):
+        try:
+            return Field.objects.get(
+                contact=self,
+                kind=contact_settings.FIELD_TYPE_ADDRESS,
+                preferred=True,
+            ).value
+        except Field.DoesNotExist:
+            try:
+                return Field.objects.filter(
+                    contact=self,
+                    kind=contact_settings.FIELD_TYPE_ADDRESS,
+                )[0].value
+            except IndexError:
+                return ''
+
+    def fields(self):
+        return Field.objects.filter(contact=self)
+
+    def emails(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_EMAIL)
+
+    def twitters(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_TWITTER)
+
+    def phones(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_PHONE)
+
+    def urls(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_URL)
+
+    def dates(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_DATE)
+
+    def addresses(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_ADDRESS)
+
+    def generics(self):
+        return self.fields().filter(kind=contact_settings.FIELD_TYPE_TEXT)
+
+
+class Field(models.Model):
+
+    FIELD_TYPES = (
+        (contact_settings.FIELD_TYPE_EMAIL, 'Email'),
+        (contact_settings.FIELD_TYPE_URL, 'URL'),
+        (contact_settings.FIELD_TYPE_DATE,'Date'),
+        (contact_settings.FIELD_TYPE_TWITTER, 'Twitter'),
+        (contact_settings.FIELD_TYPE_PHONE, 'Phone'),
+        (contact_settings.FIELD_TYPE_ADDRESS, 'Address'),
+        (contact_settings.FIELD_TYPE_TEXT, 'Short Text'),
+        (contact_settings.FIELD_TYPE_BIG_TEXT, 'Big Text'),
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    changed = models.DateTimeField(auto_now=True)
+    contact = models.ForeignKey(Contact)
+    label = models.CharField(max_length=100)
+    kind = kind = models.CharField(
+        max_length=100,
+        choices=FIELD_TYPES,
+    )
+    preferred = models.BooleanField(default=True)
+    value = models.TextField()
+    history = HistoricalRecords()
 
 
 class Book(models.Model):

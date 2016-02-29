@@ -2,6 +2,7 @@ from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 from .models import (
     Contact,
+    Field,
     Tag,
     Book,
     BookOwner,
@@ -24,8 +25,19 @@ class TagAdmin(SimpleHistoryAdmin):
         'changed',
     )
 
+
+class FieldAdmin(SimpleHistoryAdmin):
+    list_display = (
+        'value',
+        'kind',
+        'contact',
+        'created',
+        'changed',
+    )
+
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Book, SimpleHistoryAdmin)
 admin.site.register(BookOwner, SimpleHistoryAdmin)
 admin.site.register(LogEntry, SimpleHistoryAdmin)
+admin.site.register(Field, FieldAdmin)

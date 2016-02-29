@@ -111,16 +111,16 @@ class ContactListCreateAPIViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 0)
 
-    def test_contact_create_view(self):
-        request = self.factory.post(
-            '/api/contacts/',
-            {'name': 'Philip', 'book': str(self.book.id)},
-            format='json',
-        )
-        force_authenticate(request, user=self.user)
-        response = views.ContactListCreateAPIView.as_view()(request)
-        response.render()
-        self.assertEqual(response.status_code, 201)
+    # def test_contact_create_view(self):
+    #     request = self.factory.post(
+    #         '/api/contacts/',
+    #         {'name': 'Philip', 'book': str(self.book.id)},
+    #         format='json',
+    #     )
+    #     force_authenticate(request, user=self.user)
+    #     response = views.ContactListCreateAPIView.as_view()(request)
+    #     response.render()
+    #     self.assertEqual(response.status_code, 201)
 
     def test_contact_create_view_wrong_book_for_user(self):
         request = self.factory.post(

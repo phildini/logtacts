@@ -48,3 +48,11 @@
     text-decoration: none;
     background-color: #f5f5f5;
 }
+
+hr {
+    margin: 5px 0;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}

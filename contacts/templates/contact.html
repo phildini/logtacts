@@ -5,7 +5,7 @@
 
 {% block content %}
 <h1>
-    {% gravatar contact.email 60 %} {{ contact.name }}
+    {% gravatar contact.preferred_email 60 %} {{ contact.name }}
     <div class="btn-group" role="group">
         <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
         {% if not SANDSTORM %}
@@ -20,47 +20,65 @@
     {% endfor %}
     </div>
 </div>
+{% if contact.emails %}
 <div class="row">
-<div class="col-md-6">
-    <span class="text-muted">Email:</span> <a href="mailto:{{ contact.email }}">{{contact.email}}</a>
+    {% for field in contact.emails %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> <a href="mailto:{{ field.value }}">{{ field.value }}</a>
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Twitter:</span> {% if contact.twitter %}<a href="http://twitter.com/{{ contact.twitter }}">@{{ contact.twitter }}</a>{% endif %}
+<hr />
+{% endif %}
+{% if contact.twitters %}
+<div class="row">
+    {% for field in contact.twitters %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> <a href="http://twitter.com/{{ field.value }}">@{{ field.value }}</a>
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Website:</span>{% if contact.website %} <a href="{{ contact.website }}">{{ contact.website }}</a>{% endif %}
+<hr />
+{% endif %}
+{% if contact.phones %}
+<div class="row">
+    {% for field in contact.phones %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> {{ field.value }}
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Portfolio:</span> {% if contact.portfolio %}<a href="{{ contact.portfolio }}">{{ contact.portfolio }}</a>{% endif %}
+<hr />
+{% endif %}
+{% if contact.urls %}
+<div class="row">
+    {% for field in contact.urls %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> <a href="{{ field.value }}">{{ field.value }}</a>
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Tumblr:</span> {{ contact.tumblr | default_if_none:"" }}
+<hr />
+{% endif %}
+{% if contact.generics %}
+<div class="row">
+    {% for field in contact.generics %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> {{ field.value }}
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Cell Phone:</span> {{ contact.cell_phone | default_if_none:"" }}
+<hr />
+{% endif %}
+{% if contact.addresses %}
+<div class="row">
+    {% for field in contact.addresses %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> {{ field.value }}
+    </div>
+    {% endfor %}
 </div>
-<div class="col-md-6">
-    <span class="text-muted">Home Phone:</span> {{ contact.home_phone | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Company:</span> {{ contact.company | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Work Email:</span> {{ contact.work_email | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Work Phone:</span> {{ contact.work_phone | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Birthday:</span> {{ contact.birthday | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Address:</span> {{ contact.address | default_if_none:"" }}
-</div>
-<div class="col-md-6">
-    <span class="text-muted">Notes:</span> {{ contact.notes | default_if_none:"" }}
-</div>
-</div>
+{% endif %} 
 <h3>Add Log:</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}

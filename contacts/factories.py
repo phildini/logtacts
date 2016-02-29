@@ -2,6 +2,7 @@ import factory
 
 from django.utils import timezone
 from utils.factories import UserFactory
+import contacts as contacts_constants
 from . import models
 
 
@@ -19,6 +20,15 @@ class ContactFactory(factory.django.DjangoModelFactory):
     email = "philip+test@inkpebble.com"
     twitter = "@phildini"
 
+
+class FieldFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Field
+
+    contact = factory.SubFactory(ContactFactory)
+    kind = contacts_constants.FIELD_TYPE_EMAIL
+    value = 'philip@contactotter.com'
+    preferred = True
 
 class BookOwnerFactory(factory.django.DjangoModelFactory):
     class Meta:
