@@ -1,3 +1,8 @@
+0.0.3
+=====
+
+- Fix bug with editing/deleting logs and deleting contacts
+
 0.0.2
 =====
 
