@@ -6,5 +6,4 @@
 - 
 
 ##### Is this on sandstorm?
-- [ ] yes
-- [ ] no
+(yes/no)
