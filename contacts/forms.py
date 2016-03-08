@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from haystack.forms import ModelSearchForm
 from floppyforms import widgets
 
-import contacts as contact_settings
+import contacts as contact_constants
 from contacts.models import Contact, Field, LogEntry, Tag
 
 class ContactForm(forms.ModelForm):
@@ -36,11 +36,11 @@ class ContactForm(forms.ModelForm):
                     if parts[3] == 'label':
                         self.fields[item] = forms.CharField(max_length=255)
                 else:
-                    if field_category == contact_settings.FIELD_TYPE_EMAIL:
+                    if field_category == contact_constants.FIELD_TYPE_EMAIL:
                         self.fields[item] = forms.EmailField(max_length=255)
-                    if field_category == contact_settings.FIELD_TYPE_URL:
+                    if field_category == contact_constants.FIELD_TYPE_URL:
                         self.fields[item] = forms.URLField(max_length=255)
-                    if field_category == contact_settings.FIELD_TYPE_DATE:
+                    if field_category == contact_constants.FIELD_TYPE_DATE:
                         self.fields[item] = forms.DateField()
                     else:
                         self.fields[item] = forms.CharField()
@@ -81,27 +81,27 @@ class ContactForm(forms.ModelForm):
         has_changed_list = []
         for item in document_field_dicts:
             item_dict = document_field_dicts[item]
-            if item_dict['type'] == contact_settings.FIELD_TYPE_EMAIL and item_dict.get('pref'):
+            if item_dict['type'] == contact_constants.FIELD_TYPE_EMAIL and item_dict.get('pref'):
                 if pref_email:
                     raise forms.ValidationError('Only one email can be preferred')
                 else:
                     pref_email = True
-            if item_dict['type'] == contact_settings.FIELD_TYPE_TWITTER and item_dict.get('pref'):
+            if item_dict['type'] == contact_constants.FIELD_TYPE_TWITTER and item_dict.get('pref'):
                 if pref_twitter:
                     raise forms.ValidationError('Only one twitter can be preferred')
                 else:
                     pref_twitter = True
-            if item_dict['type'] == contact_settings.FIELD_TYPE_URL and item_dict.get('pref'):
+            if item_dict['type'] == contact_constants.FIELD_TYPE_URL and item_dict.get('pref'):
                 if pref_url:
                     raise forms.ValidationError('Only one url can be preferred')
                 else:
                     pref_url = True
-            if item_dict['type'] == contact_settings.FIELD_TYPE_PHONE and item_dict.get('pref'):
+            if item_dict['type'] == contact_constants.FIELD_TYPE_PHONE and item_dict.get('pref'):
                 if pref_phone:
                     raise forms.ValidationError('Only one phone can be preferred')
                 else:
                     pref_phone = True
-            if item_dict['type'] == contact_settings.FIELD_TYPE_ADDRESS and item_dict.get('pref'):
+            if item_dict['type'] == contact_constants.FIELD_TYPE_ADDRESS and item_dict.get('pref'):
                 if pref_address:
                     raise forms.ValidationError('Only one address can be preferred')
                 else:

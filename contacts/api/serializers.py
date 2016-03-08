@@ -22,9 +22,8 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Contact
-        fields = ('id', 'book', 'name', 'email', 'twitter', 'tumblr', 'website', 
-            'portfolio', 'cell_phone', 'home_phone', 'company', 'address',
-            'notes', 'tags', 'created', 'changed', 'logentry_set', 'birthday','work_phone','work_email', 'field_set')
+        fields = ('id', 'book', 'name', 'notes', 'tags', 'created', 'changed',
+            'logentry_set', 'field_set')
 
 
 class TagSerializer(serializers.ModelSerializer):

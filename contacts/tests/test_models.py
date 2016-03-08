@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse 
 from utils.factories import UserFactory
+import contacts as contact_constants
 from contacts import factories
 from contacts import models
 
@@ -59,6 +60,26 @@ class ContactModelTests(TestCase):
             list(models.Contact.objects.get_contacts_for_user(user)),
         )
 
+    def test_preferred_address_with_preferred(self):
+        field = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_ADDRESS,
+            value='1600 Pennsylvania Ave.',
+            preferred=True,
+        )
+        self.assertEqual(self.contact.preferred_address(), field.value)
+
+    def test_preferred_address_without_preferred(self):
+        field = factories.FieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_ADDRESS,
+            value='1600 Pennsylvania Ave.',
+        )
+        self.assertEqual(self.contact.preferred_address(), field.value)
+
+    def test_preferred_address_no_address(self):
+        self.assertEqual(self.contact.preferred_address(), '')
+
 
 class TagModelTests(TestCase):
 
@@ -101,6 +122,13 @@ class TagModelTests(TestCase):
     def test_tag_cant_be_edited_by_bad(self):
         user = UserFactory.create(username='asheesh')
         self.assertFalse(self.tag.can_be_edited_by(user))
+
+    def test_corrected_color(self):
+        self.assertEqual(self.tag.corrected_color, '#123456')
+        self.tag.color = '#c0ffee'
+        self.assertEqual(self.tag.corrected_color, '#c0ffee')
+        self.tag.color = 'c0ffee'
+        self.assertEqual(self.tag.corrected_color, '#c0ffee')
 
 
 class BookModelTests(TestCase):

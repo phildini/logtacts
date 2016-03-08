@@ -160,7 +160,6 @@ class EditContactView(BookOwnerMixin, UpdateView):
             'contacts-edit',
             kwargs={'pk': self.get_object().id},
         )
-        context.update(contact_settings.FIELD_TYPES_DICT)
 
         return context
 

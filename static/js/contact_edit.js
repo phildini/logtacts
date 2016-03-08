@@ -10,72 +10,62 @@ $(document).ready(function() {
     $('.js-add-email').on('click', function() {
         $('#js-email-fields').append(
             emailFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-twitter').on('click', function() {
         $('#js-twitter-fields').append(
             twitterFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-url').on('click', function() {
         $('#js-url-fields').append(
             URLFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-phone').on('click', function() {
         $('#js-phone-fields').append(
             phoneFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-text').on('click', function() {
         $('#js-text-fields').append(
             textFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-date').on('click', function() {
         $('#js-date-fields').append(
             dateFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
     $('.js-add-address').on('click', function() {
         $('#js-address-fields').append(
             addressFieldTemplate({newItemNumber: itemFieldNumber.toString()})
-        ).on('click', '.js-remove-field', function() {
-            $('#' + $(this).attr('field_id')).remove();
-        });
+        ).on('click', '.js-remove-field', deleteClickHandler);
         $(this).blur();
         itemFieldNumber++;
     });
-    $('.js-remove-field').on('click', function(){
+    $('.js-remove-field').on('click', deleteClickHandler);
+});
+
+function deleteClickHandler(){
+    if (window.confirm("Really delete field?")) {
         if ($(this).attr('field_id').indexOf('new') < 0) {
             var deleted = $('#deleted_fields').val();
             deleted = deleted + $(this).attr('field_id') + ',';
             $('#deleted_fields').val(deleted);
         }
         $('#' + $(this).attr('field_id')).remove();
-    });
-});
+    }
+};
