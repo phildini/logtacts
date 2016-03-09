@@ -122,6 +122,7 @@ class CreateContactView(BookOwnerMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CreateContactView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
         kwargs['book'] = BookOwner.objects.get(user=self.request.user).book
         return kwargs
 

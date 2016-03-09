@@ -4,7 +4,7 @@ from haystack.forms import ModelSearchForm
 from floppyforms import widgets
 
 import contacts as contact_constants
-from contacts.models import Contact, Field, LogEntry, Tag
+from contacts.models import Contact, ContactField, LogEntry, Tag
 
 class ContactForm(forms.ModelForm):
 
@@ -45,27 +45,33 @@ class ContactForm(forms.ModelForm):
                     else:
                         self.fields[item] = forms.CharField()
 
-    def save(self, commit=True):
+    def clean(self):
         for field_id in self.cleaned_data.get('deleted_fields', '').split(','):
             if field_id:
                 try:
-                    Field.objects.get(
+                    ContactField.objects.get(
                         contact=self.instance,
                         id=field_id,
                     ).delete()
-                except Field.DoesNotExist:
+                except ContactField.DoesNotExist:
                     pass
         self.instance.book = self.book
-        response = super(ContactForm, self).save()
         document_items = None
         document_items = dict((key, value) for key, value in self.cleaned_data.items() if key.startswith('document'))
-        document_field_dicts = {}
+        self.document_field_dicts = {}
+        pref_dict = {
+            contact_constants.FIELD_TYPE_EMAIL: False,
+            contact_constants.FIELD_TYPE_TWITTER: False,
+            contact_constants.FIELD_TYPE_URL: False,
+            contact_constants.FIELD_TYPE_PHONE: False,
+            contact_constants.FIELD_TYPE_ADDRESS: False,
+        }
         if document_items:
             for item in document_items:
                 parts = item.split('_')
                 field_id = parts[2]
                 field_type = parts[1]
-                field_dict = document_field_dicts.get(field_id, {})
+                field_dict = self.document_field_dicts.get(field_id, {})
                 field_dict['type'] = field_type
                 if len(parts) == 3:
                     field_dict['value'] = document_items[item]
@@ -73,41 +79,23 @@ class ContactForm(forms.ModelForm):
                     if parts[3] == 'label':
                         field_dict['label'] = document_items[item]
                     if parts[3] == 'pref':
-                        field_dict['pref'] = document_items[item]
-                document_field_dicts[field_id] = field_dict
+                        if document_items.get(item) and pref_dict.get(field_type):
+                            raise ValidationError(
+                                'Only one {} can be preferred'.format(field_type),
+                            )
+                        else:
+                            field_dict['pref'] = document_items[item]
+                            pref_dict[field_type] = True
+                self.document_field_dicts[field_id] = field_dict
+        return super(ContactForm, self).clean()
 
-        pref_email = pref_twitter = pref_url = pref_phone = pref_address = False
-        has_changed = False
+    def save(self, commit=True):
+        response = super(ContactForm, self).save()
         has_changed_list = []
-        for item in document_field_dicts:
-            item_dict = document_field_dicts[item]
-            if item_dict['type'] == contact_constants.FIELD_TYPE_EMAIL and item_dict.get('pref'):
-                if pref_email:
-                    raise forms.ValidationError('Only one email can be preferred')
-                else:
-                    pref_email = True
-            if item_dict['type'] == contact_constants.FIELD_TYPE_TWITTER and item_dict.get('pref'):
-                if pref_twitter:
-                    raise forms.ValidationError('Only one twitter can be preferred')
-                else:
-                    pref_twitter = True
-            if item_dict['type'] == contact_constants.FIELD_TYPE_URL and item_dict.get('pref'):
-                if pref_url:
-                    raise forms.ValidationError('Only one url can be preferred')
-                else:
-                    pref_url = True
-            if item_dict['type'] == contact_constants.FIELD_TYPE_PHONE and item_dict.get('pref'):
-                if pref_phone:
-                    raise forms.ValidationError('Only one phone can be preferred')
-                else:
-                    pref_phone = True
-            if item_dict['type'] == contact_constants.FIELD_TYPE_ADDRESS and item_dict.get('pref'):
-                if pref_address:
-                    raise forms.ValidationError('Only one address can be preferred')
-                else:
-                    pref_address = True
-            if item.startswith('new'):
-                field_object = Field.objects.create(
+        for item in self.document_field_dicts:
+            item_dict = self.document_field_dicts[item]
+            if item.startswith('new') and item_dict.get('value') and item_dict.get('label'):
+                field_object = ContactField.objects.create(
                     kind=item_dict['type'],
                     contact=self.instance,
                     preferred=item_dict.get('pref', False),
@@ -115,11 +103,10 @@ class ContactForm(forms.ModelForm):
                     label = item_dict['label'],
                 )
                 field_object.save()
-                has_changed = True
                 has_changed_list.append(field_object.label)
 
             else:
-                field_object = Field.objects.get(
+                field_object = ContactField.objects.get(
                     id=item,
                     contact=self.instance,
                     kind=item_dict['type'],
@@ -128,11 +115,10 @@ class ContactForm(forms.ModelForm):
                     field_object.value = item_dict['value']
                     field_object.label = item_dict['label']
                     field_object.preferred = item_dict.get('pref', False)
-                    has_changed = True
                     has_changed_list.append(field_object.label)
                     field_object.save()
 
-        if has_changed:
+        if has_changed_list:
             note_str = 'Updated ' + ', '.join(has_changed_list)
             LogEntry.objects.create(
                 contact = self.instance,

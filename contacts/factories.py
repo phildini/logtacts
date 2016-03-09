@@ -21,9 +21,9 @@ class ContactFactory(factory.django.DjangoModelFactory):
     twitter = "@phildini"
 
 
-class FieldFactory(factory.django.DjangoModelFactory):
+class ContactFieldFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = models.Field
+        model = models.ContactField
 
     contact = factory.SubFactory(ContactFactory)
     kind = contacts_constants.FIELD_TYPE_EMAIL

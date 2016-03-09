@@ -1,0 +1,23 @@
+<div class="form-group" id="{{ field_id }}">
+    <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}_label" maxlength="255" name="document_{{ field_kind }}_{{ field_id }}_label" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_label }}">
+    {% if show_twitter %}
+    <div class="input-group">
+        <span class="input-group-addon">@</span>
+    {% endif %}
+        <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}" maxlength="254" name="document_{{ field_kind }}_{{ field_id }}" type="{{ form_field_type }}" placeholder="{{ field_label }}" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_value }}" />
+    {% if show_twitter %}
+    </div>
+    {% endif %}
+    {% if show_preferred %}
+    <div class="input-group">
+        <div class="input-group-addon">
+            <label><input type="checkbox" {% if field_pref %}checked="checked"{% endif %} id="id_document_{{ field_kind }}_{{ field_id }}_pref" name="document_{{ field_kind }}_{{ field_id }}_pref"> Preferred</label>
+        </div>
+        <div class="input-group-btn">
+    {% endif %}
+            <a class="btn btn-default js-remove-field{% if is_new %}-new{% endif %}" href="javascript:void(0);" field_id="{{ field_id }}"><span class="glyphicon glyphicon-trash"></span></a>
+    {% if show_preferred %}
+        </div>
+    </div>
+    {% endif %}
+</div>

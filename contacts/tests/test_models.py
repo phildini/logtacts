@@ -61,7 +61,7 @@ class ContactModelTests(TestCase):
         )
 
     def test_preferred_address_with_preferred(self):
-        field = factories.FieldFactory(
+        field = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_ADDRESS,
             value='1600 Pennsylvania Ave.',
@@ -70,7 +70,7 @@ class ContactModelTests(TestCase):
         self.assertEqual(self.contact.preferred_address(), field.value)
 
     def test_preferred_address_without_preferred(self):
-        field = factories.FieldFactory(
+        field = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_ADDRESS,
             value='1600 Pennsylvania Ave.',

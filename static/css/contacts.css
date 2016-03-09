@@ -14,18 +14,6 @@
     color: lightgrey;
 }
 
-/*.contact.panel.panel-default .panel-body {
-    padding: 5px;
-}
-
-.contact.panel {
-    margin-bottom: 5px;
-}
-
-.media .media {
-    margin-top: 0;
-}*/
-
 .contact .checkbox input[type=checkbox] {
     margin-top: -7px;
 }
@@ -55,4 +43,9 @@ hr {
 
 .form-group {
     margin-bottom: 10px;
+}
+
+.input-group-addon label {
+    display: inline;
+    font-weight: inherit;
 }

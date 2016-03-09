@@ -1,0 +1,18 @@
+<div class="col-md-6" id="{{ field_id }}">
+    <div class="form-group">
+        <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}_label" maxlength="255" name="document_{{ field_kind }}_{{ field_id }}_label" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_label }}">
+        {% if show_preferred %}
+        <div class="input-group">
+            <div class="input-group-addon">
+                <label><input type="checkbox" {% if field_pref %}checked="checked"{% endif %} id="id_document_{{ field_kind }}_{{ field_id }}_pref" name="document_{{ field_kind }}_{{ field_id }}_pref"> Preferred</label>
+            </div>
+            <div class="input-group-btn">
+        {% endif %}
+                <a class="btn btn-default js-remove-field{% if is_new %}-new{% endif %}" href="javascript:void(0);" field_id="{{ field_id }}"><span class="glyphicon glyphicon-trash"></span></a>
+        {% if show_preferred %}
+            </div>
+        </div>
+        {% endif %}
+        <textarea class="form-control" cols="40" id="id_document_{{ field_kind }}_{{ field_id }}" name="document_{{ field_kind }}_{{ field_id }}" rows="3">{{ field_value }}</textarea>
+    </div>
+</div>

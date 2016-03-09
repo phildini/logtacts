@@ -53,7 +53,7 @@ class ContactFormTests(TestCase):
         self.assertTrue('document_email_1_pref' in form.fields)
 
     def test_form_save_existing_field_email(self):
-        field = factories.FieldFactory(contact=self.contact)
+        field = factories.ContactFieldFactory(contact=self.contact)
         field.save()
         form_data = {
             'name': 'Philip James',
@@ -68,12 +68,12 @@ class ContactFormTests(TestCase):
         )
         self.assert_(form.is_valid())
         form.save()
-        field = models.Field.objects.get(id=field.id)
+        field = models.ContactField.objects.get(id=field.id)
         self.assertEqual(field.value, 'philip+test@contactotter.com')
         self.assertEqual(field.label, 'New email')
 
     def test_form_save_existing_field_email(self):
-        field = factories.FieldFactory(
+        field = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_DATE,
             value='2015-01-01',
@@ -92,12 +92,12 @@ class ContactFormTests(TestCase):
         )
         self.assert_(form.is_valid())
         form.save()
-        field = models.Field.objects.get(id=field.id)
+        field = models.ContactField.objects.get(id=field.id)
         self.assertEqual(field.value, '2016-01-01')
         self.assertEqual(field.label, 'New date')
 
     def test_form_save_existing_field_url(self):
-        field = factories.FieldFactory(
+        field = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_URL,
             value='http://www.logtacts.com',
@@ -116,7 +116,7 @@ class ContactFormTests(TestCase):
         )
         self.assert_(form.is_valid())
         form.save()
-        field = models.Field.objects.get(id=field.id)
+        field = models.ContactField.objects.get(id=field.id)
         self.assertEqual(field.value, 'http://www.contactotter.com')
         self.assertEqual(field.label, 'New URL')
 
@@ -135,8 +135,8 @@ class ContactFormTests(TestCase):
             data=form_data,
             instance=self.contact,
         )
-        with self.assertRaises(ValidationError):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
             form.save()
 
     def test_form_save_existing_field_duplicate_phone_pref(self):
@@ -154,8 +154,8 @@ class ContactFormTests(TestCase):
             data=form_data,
             instance=self.contact,
         )
-        with self.assertRaises(ValidationError):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
             form.save()
 
     def test_form_save_existing_field_duplicate_email_pref(self):
@@ -173,8 +173,8 @@ class ContactFormTests(TestCase):
             data=form_data,
             instance=self.contact,
         )
-        with self.assertRaises(ValidationError):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
             form.save()
 
     def test_form_save_existing_field_duplicate_twitter_pref(self):
@@ -192,8 +192,8 @@ class ContactFormTests(TestCase):
             data=form_data,
             instance=self.contact,
         )
-        with self.assertRaises(ValidationError):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
             form.save()
 
     def test_form_save_existing_field_duplicate_address_pref(self):
@@ -211,22 +211,22 @@ class ContactFormTests(TestCase):
             data=form_data,
             instance=self.contact,
         )
-        with self.assertRaises(ValidationError):
-            form.is_valid()
+        self.assertFalse(form.is_valid())
+        with self.assertRaises(ValueError):
             form.save()
 
     def test_form_deleted_fields(self):
-        field1 = factories.FieldFactory(
+        field1 = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_URL,
             value='http://www.logtacts.com',
         )
-        field2 = factories.FieldFactory(
+        field2 = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_URL,
             value='http://www.logtacts.com',
         )
-        field3 = factories.FieldFactory(
+        field3 = factories.ContactFieldFactory(
             contact=self.contact,
             kind=contact_constants.FIELD_TYPE_URL,
             value='http://www.logtacts.com',
@@ -243,11 +243,11 @@ class ContactFormTests(TestCase):
         form.is_valid()
         form.save()
         self.assertEquals(
-            len(models.Field.objects.filter(contact=self.contact)),
+            len(models.ContactField.objects.filter(contact=self.contact)),
             1,
         )
         self.assertEquals(
-            models.Field.objects.get(contact=self.contact),
+            models.ContactField.objects.get(contact=self.contact),
             field3,
         )
 

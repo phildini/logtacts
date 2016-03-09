@@ -112,14 +112,14 @@ class Contact(models.Model):
 
     def preferred_email(self):
         try:
-            return Field.objects.get(
+            return ContactField.objects.get(
                 contact=self,
                 kind=contact_settings.FIELD_TYPE_EMAIL,
                 preferred=True,
             ).value
-        except Field.DoesNotExist:
+        except ContactField.DoesNotExist:
             try:
-                return Field.objects.filter(
+                return ContactField.objects.filter(
                     contact=self,
                     kind=contact_settings.FIELD_TYPE_EMAIL,
                 )[0].value
@@ -128,14 +128,14 @@ class Contact(models.Model):
 
     def preferred_address(self):
         try:
-            return Field.objects.get(
+            return ContactField.objects.get(
                 contact=self,
                 kind=contact_settings.FIELD_TYPE_ADDRESS,
                 preferred=True,
             ).value
-        except Field.DoesNotExist:
+        except ContactField.DoesNotExist:
             try:
-                return Field.objects.filter(
+                return ContactField.objects.filter(
                     contact=self,
                     kind=contact_settings.FIELD_TYPE_ADDRESS,
                 )[0].value
@@ -143,7 +143,7 @@ class Contact(models.Model):
                 return ''
 
     def fields(self):
-        return Field.objects.filter(contact=self)
+        return ContactField.objects.filter(contact=self)
 
     def emails(self):
         return self.fields().filter(kind=contact_settings.FIELD_TYPE_EMAIL)
@@ -167,7 +167,7 @@ class Contact(models.Model):
         return self.fields().filter(kind=contact_settings.FIELD_TYPE_TEXT)
 
 
-class Field(models.Model):
+class ContactField(models.Model):
 
     FIELD_TYPES = (
         (contact_settings.FIELD_TYPE_EMAIL, 'Email'),

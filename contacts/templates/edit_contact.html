@@ -22,16 +22,15 @@
     {% csrf_token %}
     <input type="hidden" name="deleted_fields" id="deleted_fields" value="" />
     {% if form.non_field_errors %}
-    <ul>
-        {% for error in form.non_field_errors %}
-        <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
     {% endif %}
     <div class="row">
         <div id="id_name_container" class="col-md-12">
+            <h4>Name</h4>
             <div class="form-group">
-                <label for="id_name">Name</label>
+                <label class="sr-only" for="id_name">Name</label>
                 <input class="form-control" id="id_name" maxlength="255" name="name" type="text" placeholder="Name"{% if contact.name %}value="{{ contact.name }}"{% endif %}/>
             </div>
             <div id="id_name_errors">
@@ -39,163 +38,80 @@
             </div>
         </div>
     </div>
-    <hr />
-    <div class="row" id="js-email-fields">
-        <div class="col-md-12">
-        <h4>Email <a href="javascript:void(0);" class="js-add-email btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4> 
-        </div>
+    <hr class="hidden-xs hidden-sm">
+    <div class="row">
+    <div class="col-md-6" id="js-email-fields">
+        <h4>Email <a href="javascript:void(0);" class="js-add-email btn btn-xs btn-info">Add</a></h4> 
         {% for field in contact.emails %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <div class="input-group">
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="254" name="document_{{ field.kind }}_{{ field.id }}" type="email" placeholder="{{ field.label }}" value="{{ field.value }}" />
-                    <div class="input-group-addon">
-                        <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True form_field_type="email" %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
-    <div class="row" id="js-twitter-fields">
-        <div class="col-md-12">
-        <h4>Twitter <a href="javascript:void(0);" class="js-add-twitter btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
-        </div>
+    <div class="col-md-6" id="js-twitter-fields">
+        <h4>Twitter <a href="javascript:void(0);" class="js-add-twitter btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.twitters %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon">@</span>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="140" name="document_{{ field.kind }}_{{ field.id }}" type="text" placeholder="{{ field.label }}" value="{{ field.value }}" />
-                    <div class="input-group-addon">
-                         <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True form_field_type="text" show_twitter=True %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
-    <div class="row" id="js-url-fields">
-        <div class="col-md-12">
-        <h4>Links <a href="javascript:void(0);" class="js-add-url btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
-        </div>
+    </div>
+    <hr class="hidden-xs hidden-sm">
+    <div class="row">
+    <div class="col-md-6" id="js-url-fields">
+        <h4>Links <a href="javascript:void(0);" class="js-add-url btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.urls %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="url" placeholder="{{ field.label }}" value="{{ field.value }}" />
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred form_field_type="url" %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
-    <div class="row" id="js-phone-fields">
-        <div class="col-md-12">
-        <h4>Phone Numbers <a href="javascript:void(0);" class="js-add-phone btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
-        </div>
+    <div class="col-md-6" id="js-phone-fields">
+        <h4>Phone Numbers <a href="javascript:void(0);" class="js-add-phone btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.phones %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <div class="input-group">
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="phone" placeholder="{{ field.label }}" value="{{ field.value }}" />
-                    <div class="input-group-addon">
-                         <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True form_field_type="phone" %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
-    <div class="row" id="js-text-fields">
-        <div class="col-md-12">
-        <h4>Other <a href="javascript:void(0);" class="js-add-text btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
-        </div>
+    </div>
+    <hr class="hidden-xs hidden-sm">
+    <div class="row">
+    <div class="col-md-6" id="js-text-fields">
+        <h4>Other <a href="javascript:void(0);" class="js-add-text btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.generics %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}" type="text" placeholder="{{ field.label }}" value="{{ field.value }}" />
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred form_field_type="text" %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
-    <div class="row" id="js-date-fields">
-        <div class="col-md-12">
-        <h4>Dates <a href="javascript:void(0);" class="js-add-date btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
-        </div>
+    <div class="col-md-6" id="js-date-fields">
+        <h4>Dates <a href="javascript:void(0);" class="js-add-date btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.dates %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                </div>
-                <input class="form-control" type="date" name="document_{{ field.kind }}_{{ field.id }}" id="id_document_{{ field.kind }}_{{ field.id }}" value="{{ field.value }}">
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred form_field_type="date" %}
+                {% include "edit_contact_form_field.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
+    </div>
+    <hr class="hidden-xs hidden-sm">
     <div class="row" id="js-address-fields">
         <div class="col-md-12">
-        <h4>Addresses <a href="javascript:void(0);" class="js-add-address btn btn-sm btn-info"><span class="glyphicon glyphicon-plus"></span></a></h4>
+        <h4>Addresses <a href="javascript:void(0);" class="js-add-address btn btn-xs btn-info">Add</a></h4>
         </div>
         {% for field in contact.addresses %}
-        <div class="col-md-6" id="{{ field.id }}">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <a class="js-remove-field label label-default" href="javascript:void(0);" field_id="{{ field.id }}"><span class="glyphicon glyphicon-remove"></span></a>
-                    </div>
-                    <input class="form-control" id="id_document_{{ field.kind }}_{{ field.id }}_label" maxlength="255" name="document_{{ field.kind }}_{{ field.id }}_label" value="{{ field.label }}">
-                    <div class="input-group-addon">
-                        <input type="checkbox" {% if field.preferred %}checked="checked"{% endif %} id="id_document_{{ field.kind }}_{{ field.id }}_pref" name="document_{{ field.kind }}_{{ field.id }}_pref"> Preferred
-                    </div>
-                </div>
-                <textarea class="form-control" cols="40" id="id_document_{{ field.kind }}_{{ field.id }}" name="document_{{ field.kind }}_{{ field.id }}" rows="3">{{ field.value }}</textarea>
-            </div>
-        </div>
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True %}
+                {% include "edit_contact_form_field_textarea.html" %}
+            {% endwith %}
         {% endfor %}
     </div>
-    <hr />
+    <hr class="hidden-xs hidden-sm">
     <div class="row">
         <div id="id_notes_container" class="col-md-6">
+            <h4>Notes</h4>
             <div>
-                <label for="id_notes">Notes:</label>
+                <label class="sr-only" for="id_notes">Notes:</label>
                 <textarea class="form-control" cols="40" id="id_notes" name="notes" rows="3">{% if contact.notes %}{{ contact.notes }}{% endif %}</textarea>
             </div>
             <div id="id_notes_errors">
@@ -203,8 +119,9 @@
             </div>
         </div>
         <div id="id_tags_container" class="col-md-6">
+            <h4>Tags</h4>
             <div>
-                <label for="id_tags_0">Tags:</label>
+                <label class="sr-only" for="id_tags_0">Tags:</label>
                 {{ form.tags }}
             </div>
             <div id="id_tags_errors">
@@ -212,7 +129,6 @@
             </div>
         </div>
     </div>
-    <div class="md-col-6"></div>
 </form>
 
 <div class="well well-sm">
@@ -230,113 +146,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="{% static 'js/contact_edit.js' %}?v=1"></script>
 <script id="js-blank-email-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Email label">
-            </div>
-            <div class="input-group">
-                <input class="form-control" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="254" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="email" placeholder="Email address" />
-                <div class="input-group-addon">
-                    <input type="checkbox" id="id_document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_email_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
-                </div>
-            </div>
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="email" field_label="Email label" field_value="Email address" show_preferred=True form_field_type="email" is_new=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-twitter-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Twitter label">
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">@</span>
-                <input class="form-control" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="140" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="text" placeholder="twitter" />
-                <div class="input-group-addon">
-                     <input type="checkbox" id="id_document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_twitter_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
-                </div>
-            </div>
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="twitter" field_label="Twitter label" field_value="Twitter" show_preferred=True form_field_type="text" is_new=True show_twitter=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-url-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Link label">
-            </div>
-            <input class="form-control" id="id_document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_url_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="url" placeholder="Link URL"/>
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="url" field_label="Link label" field_value="Link URL" form_field_type="url" is_new=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-phone-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Phone number label">
-            </div>
-            <div class="input-group">
-                <input class="form-control" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="phone" placeholder="Phone number" />
-                <div class="input-group-addon">
-                     <input type="checkbox" id="id_document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_phone_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
-                </div>
-            </div>
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="phone" field_label="Phone number label" field_value="Phone number" show_preferred=True form_field_type="phone" is_new=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-text-field" type="text/x-handlebars-template">
-    <div class="col-md-6"  id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Field label">
-            </div>
-            <input class="form-control" id="id_document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" maxlength="255" name="document_text_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" type="text" placeholder="Field value" />
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="text" field_label="Field label" field_value="Field value" form_field_type="text" is_new=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-date-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Date label">
-            </div>
-            <input class="form-control" type="date" name="document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" id="id_document_date_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        </div>
-    </div>
+    {% with field_id="new{{newItemNumber}}" field_kind="date" field_label="Date label" form_field_type="date" is_new=True %}
+        {% include "edit_contact_form_field.html" %}
+    {% endwith %}
 </script>
 <script id="js-blank-address-field" type="text/x-handlebars-template">
-    <div class="col-md-6" id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <a class="js-remove-field-new label label-default" href="javascript:void(0);" field_id="new{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}"><span class="glyphicon glyphicon-remove"></span></a>
-                </div>
-                <input class="form-control" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" maxlength="255" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_label" placeholder="Address name">
-                <div class="input-group-addon">
-                    <input type="checkbox" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}_pref"> Preferred
-                </div>
-            </div>
-            <textarea class="form-control" cols="40" id="id_document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" name="document_address_new.{% templatetag openvariable %}newItemNumber{% templatetag closevariable %}" rows="3"></textarea>
-        </div>
-    </div>
+    {% for field in contact.addresses %}
+        {% with field_id="new{{newItemNumber}}" field_kind="address" field_label="Address name" show_preferred=True is_new=True %}
+            {% include "edit_contact_form_field_textarea.html" %}
+        {% endwith %}
+    {% endfor %}
 </script>
 {% endblock %}
