@@ -1,3 +1,8 @@
+0.0.4
+=====
+
+- Allow for custom fields on contacts
+
 0.0.3
 =====
 

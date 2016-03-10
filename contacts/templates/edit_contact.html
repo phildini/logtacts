@@ -176,10 +176,8 @@
     {% endwith %}
 </script>
 <script id="js-blank-address-field" type="text/x-handlebars-template">
-    {% for field in contact.addresses %}
-        {% with field_id="new{{newItemNumber}}" field_kind="address" field_label="Address name" show_preferred=True is_new=True %}
-            {% include "edit_contact_form_field_textarea.html" %}
-        {% endwith %}
-    {% endfor %}
+    {% with field_id="new{{newItemNumber}}" field_kind="address" field_label="Address name" show_preferred=True is_new=True %}
+        {% include "edit_contact_form_field_textarea.html" %}
+    {% endwith %}
 </script>
 {% endblock %}
