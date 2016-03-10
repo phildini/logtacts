@@ -70,7 +70,7 @@
     <div class="col-md-6" id="js-phone-fields">
         <h4>Phone Numbers <a href="javascript:void(0);" class="js-add-phone btn btn-xs btn-info">Add</a></h4>
         {% for field in contact.phones %}
-            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True form_field_type="phone" %}
+            {% with field_id=field.id field_kind=field.kind field_label=field.label field_value=field.value field_pref=field.preferred show_preferred=True form_field_type="tel" %}
                 {% include "edit_contact_form_field.html" %}
             {% endwith %}
         {% endfor %}
@@ -161,7 +161,7 @@
     {% endwith %}
 </script>
 <script id="js-blank-phone-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="phone" field_label="Phone number label" field_value="Phone number" show_preferred=True form_field_type="phone" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="phone" field_label="Phone number label" field_value="Phone number" show_preferred=True form_field_type="tel" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
