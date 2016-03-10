@@ -4,7 +4,7 @@
     <div class="input-group">
         <span class="input-group-addon">@</span>
     {% endif %}
-        <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}" maxlength="254" name="document_{{ field_kind }}_{{ field_id }}" type="{{ form_field_type }}" placeholder="{{ field_label }}" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_value }}" />
+        <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}" maxlength="254" name="document_{{ field_kind }}_{{ field_id }}" type="{{ form_field_type }}" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_value }}" />
     {% if show_twitter %}
     </div>
     {% endif %}
