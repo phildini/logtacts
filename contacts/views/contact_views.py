@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import (
     get_object_or_404,
+    redirect,
 )
 from django.views.generic import (
     CreateView,
@@ -55,6 +56,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             return HttpResponseRedirect(reverse('contact_emails'))
         if self.request.POST.get('addresses'):
             return HttpResponseRedirect(reverse('contact_addresses'))
+        if self.request.POST.get('merge'):
+            return HttpResponseRedirect(reverse('contacts_merge'))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
@@ -367,3 +370,76 @@ def export_full_contact_book_json_view(request):
     response = JsonResponse(export)
     response['Content-Disposition'] = 'attachment; filename="full_export.json"'
     return response
+
+
+class MergeContactsView(BookOwnerMixin, TemplateView):
+
+    template_name="merge_contacts.html"
+
+    def get_success_url(self):
+        return reverse('contacts-list')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MergeContactsView, self).get_context_data(*args, **kwargs)
+        selected_contacts = json.loads(
+            self.request.session.get('selected_contacts')
+        )
+        try:
+            contacts = Contact.objects.get_contacts_for_user(
+                self.request.user
+            ).filter(
+                id__in=selected_contacts
+            )
+        except TypeError:
+            contacts = []
+            messages.warning(
+                self.request,
+                "Woops! Problem fetching contacts. Try again.",
+            )
+        context['contacts'] = contacts
+        return context
+
+    def post(self, request, *args, **kwargs):
+        selected_contacts = json.loads(
+            self.request.session.get('selected_contacts')
+        )
+        try:
+            contacts = Contact.objects.get_contacts_for_user(
+                self.request.user
+            ).filter(
+                id__in=selected_contacts
+            )
+        except TypeError:
+            contacts = []
+            messages.warning(
+                self.request,
+                "Woops! Problem fetching contacts. Try again.",
+            )
+        if contacts and len(contacts) > 1:
+            contacts = list(contacts)
+            primary_contact = contacts.pop(0)
+            note_list = []
+            for contact in contacts:
+                for field in contact.fields():
+                    field.preferred = False
+                    field.contact = primary_contact
+                    field.save()
+                note_list.append(contact.name)
+                contact.delete()
+            LogEntry.objects.create(
+                contact = primary_contact,
+                logged_by = self.request.user,
+                kind = 'edit',
+                notes = "Merged with {}".format(", ".join(note_list)),
+            )
+            messages.success(
+                self.request,
+                "Successfully merged contacts.",
+            )
+            self.request.session['selected_contacts'] = None
+            return redirect(reverse(
+                'contacts-view',
+                kwargs={'pk': primary_contact.id},
+            ))
+        return redirect(reverse('contacts-list'))
+

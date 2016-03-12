@@ -68,7 +68,12 @@ contact_urls = [
         r'^fullexport/',
         contact_views.export_full_contact_book_json_view,
         name="fullexport",
-    )
+    ),
+    url(
+        r'merge/',
+        contact_views.MergeContactsView.as_view(),
+        name="contacts_merge",
+    ),
 ]
 
 tag_urls = [

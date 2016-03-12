@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Merge Contact</h1>
+<p>Are you sure you want to merge the following contacts? This can't be undone.</p>
+{% for contact in contacts %}
+    <div class="col-md-6">{% include "contact_list_item.html" %}</div>
+{% endfor %}
+<form action="{% url "contacts_merge" %}" method="POST">
+    {% csrf_token %}
+    <input class="btn btn-danger" type="submit" value="Yes, merge." />
+    <a class="btn btn-primary" href="{% url "contacts-list" %}">No, cancel.</a>
+</form>
+{% endblock %}
