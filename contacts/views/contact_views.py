@@ -28,6 +28,7 @@ from contacts.models import (
 import contacts as contact_settings
 from contacts import forms
 from contacts.views import BookOwnerMixin
+from contacts import utils
 
 class ContactListView(BookOwnerMixin, FormView, ListView):
 
@@ -269,21 +270,7 @@ class ExportEmailView(BookOwnerMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ExportEmailView, self).get_context_data(*args, **kwargs)
-        selected_contacts = json.loads(
-            self.request.session.get('selected_contacts')
-        )
-        try:
-            contacts = Contact.objects.get_contacts_for_user(
-                self.request.user
-            ).filter(
-                id__in=selected_contacts
-            )
-        except TypeError:
-            contacts = []
-            messages.warning(
-                self.request,
-                "Woops! Problem fetching contacts. Try again.",
-            )
+        contacts = utils.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
         return context
 
@@ -294,66 +281,32 @@ class ExportAddressView(BookOwnerMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ExportAddressView, self).get_context_data(*args, **kwargs)
-        selected_contacts = json.loads(
-            self.request.session.get('selected_contacts')
-        )
-        try:
-            contacts = Contact.objects.get_contacts_for_user(
-                self.request.user
-            ).filter(
-                id__in=selected_contacts
-            )
-        except TypeError:
-            contacts = []
-            messages.warning(
-                self.request,
-                "Woops! Problem fetching contacts. Try again.",
-            )
+        contacts = utils.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
         return context
 
 
 def email_csv_view(request):
-    selected_contacts = json.loads(
-        request.session.get('selected_contacts')
-    )
-    try:
-        contacts = Contact.objects.get_contacts_for_user(
-            request.user
-        ).filter(
-            id__in=selected_contacts
-        )
-    except TypeError:
-        contacts = []
+    contacts = utils.get_selected_contacts_from_request(request)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="contact_emails.csv"'
     writer = csv.writer(response)
     writer.writerow(['Name', 'Email'])
     for contact in contacts:
         writer.writerow([contact.name, contact.preferred_email()])
-
+    request.session['selected_contacts'] = None
     return response
 
 
 def address_csv_view(request):
-    selected_contacts = json.loads(
-        request.session.get('selected_contacts')
-    )
-    try:
-        contacts = Contact.objects.get_contacts_for_user(
-            request.user
-        ).filter(
-            id__in=selected_contacts
-        )
-    except TypeError:
-        contacts = []
+    contacts = utils.get_selected_contacts_from_request(request)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="contact_addresses.csv"'
     writer = csv.writer(response)
     writer.writerow(['Name', 'Address'])
     for contact in contacts:
         writer.writerow([contact.name, contact.preferred_address()])
-
+    request.session['selected_contacts'] = None
     return response
 
 
@@ -381,40 +334,12 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(MergeContactsView, self).get_context_data(*args, **kwargs)
-        selected_contacts = json.loads(
-            self.request.session.get('selected_contacts')
-        )
-        try:
-            contacts = Contact.objects.get_contacts_for_user(
-                self.request.user
-            ).filter(
-                id__in=selected_contacts
-            )
-        except TypeError:
-            contacts = []
-            messages.warning(
-                self.request,
-                "Woops! Problem fetching contacts. Try again.",
-            )
+        contacts = utils.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
         return context
 
     def post(self, request, *args, **kwargs):
-        selected_contacts = json.loads(
-            self.request.session.get('selected_contacts')
-        )
-        try:
-            contacts = Contact.objects.get_contacts_for_user(
-                self.request.user
-            ).filter(
-                id__in=selected_contacts
-            )
-        except TypeError:
-            contacts = []
-            messages.warning(
-                self.request,
-                "Woops! Problem fetching contacts. Try again.",
-            )
+        contacts = utils.get_selected_contacts_from_request(self.request)
         if contacts and len(contacts) > 1:
             contacts = list(contacts)
             primary_contact = contacts.pop(0)
