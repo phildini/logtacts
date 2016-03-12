@@ -132,7 +132,9 @@ opt/app/contacts/templates/edit_tag.html
 opt/app/contacts/templates/export_addresses.html
 opt/app/contacts/templates/export_emails.html
 opt/app/contacts/templates/log_line.html
+opt/app/contacts/templates/merge_contacts.html
 opt/app/contacts/urls.py
+opt/app/contacts/common.py
 opt/app/contacts/views/__init__.py
 opt/app/contacts/views/__init__.pyc
 opt/app/contacts/views/contact_views.py
@@ -1114,6 +1116,8 @@ opt/app/env/lib/python2.7/site-packages/django/views/decorators/csrf.py
 opt/app/env/lib/python2.7/site-packages/django/views/decorators/csrf.pyc
 opt/app/env/lib/python2.7/site-packages/django/views/decorators/debug.py
 opt/app/env/lib/python2.7/site-packages/django/views/decorators/debug.pyc
+opt/app/env/lib/python2.7/site-packages/django/views/defaults.py
+opt/app/env/lib/python2.7/site-packages/django/views/defaults.pyc
 opt/app/env/lib/python2.7/site-packages/django/views/generic/__init__.py
 opt/app/env/lib/python2.7/site-packages/django/views/generic/__init__.pyc
 opt/app/env/lib/python2.7/site-packages/django/views/generic/base.py
@@ -2194,6 +2198,7 @@ opt/app/profiles/signals.py
 opt/app/profiles/templates/profile.html
 opt/app/profiles/urls.py
 opt/app/profiles/views.py
+opt/app/templates/500.html
 opt/app/templates/base.html
 opt/app/templates/favicon.html
 opt/app/templates/home.html

@@ -79,12 +79,14 @@
     {% endfor %}
 </div>
 {% endif %}
-<hr />
+{% if contact.notes %}
 <div class="row">
     <div class="col-md-6">
         <span class="text-muted">Notes:</span> {{ contact.notes }}
     </div>
 </div>
+<hr />
+{% endif %}
 <h3>Add Log:</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}

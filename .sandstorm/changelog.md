@@ -2,6 +2,7 @@
 =====
 
 - Allow for custom fields on contacts
+- Allow contacts to be merged
 
 0.0.3
 =====
