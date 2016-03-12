@@ -349,6 +349,9 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
                     field.preferred = False
                     field.contact = primary_contact
                     field.save()
+                for log in models.LogEntry.objects.filter(contact=contact):
+                    log.contact = primary_contact
+                    log.save()
                 note_list.append(contact.name)
                 contact.delete()
             LogEntry.objects.create(
