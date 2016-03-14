@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'logtacts.context_processors.donottrack',
             ],
         },
     },
@@ -111,6 +112,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'logtacts.middleware.TimezoneMiddleware',
+    'logtacts.middleware.DoNotTrackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
