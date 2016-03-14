@@ -97,6 +97,8 @@ INSTALLED_APPS = (
     'profiles.apps.ProfilesConfig',
     'simple_history',
     'floppyforms',
+    'nexus',
+    'gargoyle',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -238,4 +240,12 @@ LOGGING = {
             'level': 'DEBUG',
         },
     },
+}
+
+GARGOYLE_SWITCH_DEFAULTS = {
+    'read_only_mode': {
+        'is_active': False,
+        'label': 'Read-only mode',
+        'description': 'Put the site into read-only mode, minus admin panel',
+    }
 }

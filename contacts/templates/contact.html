@@ -2,12 +2,13 @@
 
 {% load tz %}
 {% load gravatar %}
+{% load gargoyle_tags %}
 
 {% block content %}
 <h1>
     {% gravatar contact.preferred_email 60 %} {{ contact.name }}
     <div class="btn-group" role="group">
-        <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+        <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}><span class="glyphicon glyphicon-pencil"></span> Edit</a>
         {% if not SANDSTORM %}
         <a href="javascript:void(0)" class="btn btn-default js-add-trello"><span class="glyphicon glyphicon-list-alt"></span> Add Trello Reminder</a>
         {% endif %}
@@ -87,6 +88,7 @@
 </div>
 <hr />
 {% endif %}
+{% ifnotswitch read_only_mode %}
 <h3>Add Log:</h3>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
@@ -134,6 +136,7 @@
         </div>
     </div>
 </form>
+{% endifnotswitch %}
 
 {% if logs %}
 <h3>Logs</h3>

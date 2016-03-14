@@ -4,6 +4,9 @@ from django.views.generic import TemplateView
 
 from allauth.account import views as allauth_views
 
+import nexus
+import gargoyle
+
 from contacts.urls import (
     api_urls,
     contact_urls,
@@ -21,6 +24,7 @@ from logtacts.views import HomeView
 from profiles.views import ReviewUserView
 
 admin.autodiscover()
+gargoyle.autodiscover()
 
 urlpatterns = [
     url(r'^api/', include(api_urls)),
@@ -36,6 +40,7 @@ urlpatterns = [
     ),
     url(r'^admin/dashboard', ReviewUserView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^nexus/', include(nexus.site.urls)),
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
     url(

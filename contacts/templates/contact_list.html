@@ -3,6 +3,7 @@
 {% load gravatar %}
 {% load tz %}
 {% load humanize %}
+{% load gargoyle_tags %}
 
 {% block content %}
 <form method="POST" action="{{ action }}">
@@ -10,9 +11,9 @@
 <div class="row">
     <h3>
     {% if tag %}<span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts{% elif contact_list %}Contacts{% endif %}
-    {% if tag %}
+    {% if tag %}{% ifnotswitch read_only_mode %}
     <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
-    {% endif %}
+    {% endifnotswitch %}{% endif %}
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
         <ul class="dropdown-menu">
@@ -32,13 +33,13 @@
     </h3>
     {% for contact in contact_list %}
         <div class="col-md-6">{% include "contact_list_item.html" %}</div>
-    {% empty %}
+    {% empty %}{% ifnotswitch read_only_mode %}
         <p class="lead">Oh dear! You don't have any contacts! Let's <a href="{% url "contacts-new" %}">add some</a>.</p>
-    {% endfor %}
+    {% endifnotswitch %}{% endfor %}
 </div>
 </form>
 <div class="row">
-<h3>Tags <a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a></h3>
+<h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
     <div class="col-md-12">
     {% for tag in tags %}
         <div class="tag-list-tag" style="float: left; margin-right:10px;"><a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></div>

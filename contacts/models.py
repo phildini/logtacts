@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-from jsonfield import JSONField
 from simple_history.models import HistoricalRecords
 
 import contacts as contact_settings
@@ -85,10 +84,6 @@ class Contact(models.Model):
     birthday = models.DateField(blank=True, null=True)
     work_phone = models.CharField(max_length=20, blank=True)
     work_email = models.EmailField(blank=True)
-    document = JSONField(
-        blank=True,
-        load_kwargs={'object_pairs_hook': collections.OrderedDict},
-    )
     tags = models.ManyToManyField(Tag, blank=True)
     history = HistoricalRecords()
 
