@@ -29,10 +29,10 @@ class ContactSearchView(LoginRequiredMixin,SearchView):
             book = Book.objects.get(bookowner__user=self.request.user)
         except Book.DoesNotExist:
             raise Http404()
-        query = self.request.GET.get('q')
+        self.query = self.request.GET.get('q')
         results = re.split(
             r'(?P<tag>\w+\:(?:\"[\w\s]+\"|\w+\b))',
-            query,
+            self.query,
         )
         self.tags = []
         parts = []
@@ -57,4 +57,5 @@ class ContactSearchView(LoginRequiredMixin,SearchView):
     def get_context_data(self, *args, **kwargs):
         context = super(ContactSearchView, self).get_context_data(*args, **kwargs)
         context['tags'] = self.tags
+        context['query_raw'] = self.query
         return context
