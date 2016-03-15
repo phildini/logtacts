@@ -4,7 +4,7 @@
 <html>
     <head>
         <title>ContactOtter</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
         {% include "favicon.html" %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static "css/contacts.css" %}?v=1">
@@ -26,9 +26,19 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand hidden-sm hidden-xs" href="/">
+                {% if user.is_authenticated %}
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% endif %}
+                <a class="navbar-brand" href="/">
                 <img src="{% static "img/contactotter.svg" %}" width="20"> ContactOtter
                 </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 {% if user.is_authenticated %}
                 <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
@@ -40,18 +50,8 @@
                         </div>
                     </div>
                     <a href="{% url "contacts-new" %}" class="btn btn-success navbar-btn" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Add Contact</a>
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
                 </form>
-                {% endif %}
-            </div>
-            <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
                     <li class="dropdown hidden-xs hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!<span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -66,7 +66,6 @@
                             <li><a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a><li>
                         </ul>
                     </li>
-                    {% endif %}
                     {% if user.is_staff %}
                     <li class="visible-sm visible-xs"><a href="/admin/">Admin</a></li>
                     {% endif %}
@@ -77,6 +76,7 @@
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>
                 </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
