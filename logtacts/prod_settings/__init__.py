@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     '.pebble.ink',
     '.logtacts.com',
     '.contactotter.com',
+    '.herokuapp.com',
 ]
 
 SECURE_SSL_REDIRECT = True
