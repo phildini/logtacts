@@ -36,6 +36,14 @@ MIDDLEWARE_CLASSES = (
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
 ) + MIDDLEWARE_CLASSES
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': get_env_variable('BONSAI_URL'),
+        'INDEX_NAME': 'contactotter',
+    },
+}
+
 OPBEAT = {
     'ORGANIZATION_ID': get_env_variable("OPBEAT_ORG_ID"),
     'APP_ID': get_env_variable("OPBEAT_APP_ID"),
