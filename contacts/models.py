@@ -192,7 +192,7 @@ class ContactField(models.Model):
         max_length=100,
         choices=FIELD_TYPES,
     )
-    preferred = models.BooleanField(default=True)
+    preferred = models.BooleanField(default=False)
     value = models.TextField()
     history = HistoricalRecords()
 
