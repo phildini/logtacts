@@ -48,7 +48,7 @@ class ContactManager(models.Manager):
     def get_contacts_for_user(self, user):
         return self.filter(
             book__bookowner__user=user,
-        ).prefetch_related('contactfield_set', 'tags')
+        )
 
 
 class Contact(models.Model):
