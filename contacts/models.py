@@ -48,7 +48,7 @@ class ContactManager(models.Manager):
     def get_contacts_for_user(self, user):
         return self.filter(
             book__bookowner__user=user,
-        )
+        ).prefetch_related('contactfield_set', 'tags')
 
 
 class Contact(models.Model):
@@ -105,61 +105,70 @@ class Contact(models.Model):
     def can_be_edited_by(self, user):
         return bool(self.book.bookowner_set.filter(user=user))
 
+    @property
     def preferred_email(self):
-        try:
-            return ContactField.objects.get(
-                contact=self,
-                kind=contact_settings.FIELD_TYPE_EMAIL,
-                preferred=True,
-            ).value
-        except ContactField.DoesNotExist:
+        if not (hasattr(self, '_preferred_email') and self._preferred_email):
             try:
-                return ContactField.objects.filter(
+                self._preferred_email = ContactField.objects.get(
                     contact=self,
                     kind=contact_settings.FIELD_TYPE_EMAIL,
-                )[0].value
-            except IndexError:
-                return ''
+                    preferred=True,
+                ).value
+            except ContactField.DoesNotExist:
+                try:
+                    self._preferred_email = ContactField.objects.filter(
+                        contact=self,
+                        kind=contact_settings.FIELD_TYPE_EMAIL,
+                    )[0].value
+                except IndexError:
+                    self._preferred_email = ''
+        return self._preferred_email
 
+    @property
     def preferred_address(self):
-        try:
-            return ContactField.objects.get(
-                contact=self,
-                kind=contact_settings.FIELD_TYPE_ADDRESS,
-                preferred=True,
-            ).value
-        except ContactField.DoesNotExist:
+        if not (hasattr(self, '_preferred_address') and self._preferred_address):
             try:
-                return ContactField.objects.filter(
+                self._preferred_address = ContactField.objects.get(
                     contact=self,
                     kind=contact_settings.FIELD_TYPE_ADDRESS,
-                )[0].value
-            except IndexError:
-                return ''
+                    preferred=True,
+                ).value
+            except ContactField.DoesNotExist:
+                try:
+                    self._preferred_address = ContactField.objects.filter(
+                        contact=self,
+                        kind=contact_settings.FIELD_TYPE_ADDRESS,
+                    )[0].value
+                except IndexError:
+                    self._preferred_address = ''
+        return self._preferred_address
 
-    def fields(self):
-        return ContactField.objects.filter(contact=self)
+    @property
+    def contactfields(self):
+        if not (hasattr(self, '_contactfields') and self._contactfields):
+            self._contactfields = ContactField.objects.filter(contact=self)
+        return self._contactfields
 
     def emails(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_EMAIL)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_EMAIL)
 
     def twitters(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_TWITTER)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_TWITTER)
 
     def phones(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_PHONE)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_PHONE)
 
     def urls(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_URL)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_URL)
 
     def dates(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_DATE)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_DATE)
 
     def addresses(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_ADDRESS)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_ADDRESS)
 
     def generics(self):
-        return self.fields().filter(kind=contact_settings.FIELD_TYPE_TEXT)
+        return self.contactfields.filter(kind=contact_settings.FIELD_TYPE_TEXT)
 
 
 class ContactField(models.Model):

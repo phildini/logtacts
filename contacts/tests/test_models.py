@@ -67,7 +67,7 @@ class ContactModelTests(TestCase):
             value='1600 Pennsylvania Ave.',
             preferred=True,
         )
-        self.assertEqual(self.contact.preferred_address(), field.value)
+        self.assertEqual(self.contact.preferred_address, field.value)
 
     def test_preferred_address_without_preferred(self):
         field = factories.ContactFieldFactory(
@@ -75,10 +75,10 @@ class ContactModelTests(TestCase):
             kind=contact_constants.FIELD_TYPE_ADDRESS,
             value='1600 Pennsylvania Ave.',
         )
-        self.assertEqual(self.contact.preferred_address(), field.value)
+        self.assertEqual(self.contact.preferred_address, field.value)
 
     def test_preferred_address_no_address(self):
-        self.assertEqual(self.contact.preferred_address(), '')
+        self.assertEqual(self.contact.preferred_address, '')
 
 
 class TagModelTests(TestCase):

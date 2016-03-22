@@ -293,7 +293,7 @@ def email_csv_view(request):
     writer = csv.writer(response)
     writer.writerow(['Name', 'Email'])
     for contact in contacts:
-        writer.writerow([contact.name, contact.preferred_email()])
+        writer.writerow([contact.name, contact.preferred_email])
     request.session['selected_contacts'] = None
     return response
 
@@ -305,7 +305,7 @@ def address_csv_view(request):
     writer = csv.writer(response)
     writer.writerow(['Name', 'Address'])
     for contact in contacts:
-        writer.writerow([contact.name, contact.preferred_address()])
+        writer.writerow([contact.name, contact.preferred_address])
     request.session['selected_contacts'] = None
     return response
 
@@ -345,7 +345,7 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
             primary_contact = contacts.pop(0)
             note_list = []
             for contact in contacts:
-                for field in contact.fields():
+                for field in contact.contactfields:
                     field.preferred = False
                     field.contact = primary_contact
                     field.save()
