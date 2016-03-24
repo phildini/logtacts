@@ -62,15 +62,18 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
-        qs = super(ContactListView, self).get_queryset().prefetch_related('tags')
-        sort = self.request.GET.get('s')
-        if sort == 'oldnew':
-            return qs.order_by('last_contact')
-        if sort == 'newold':
-            return qs.order_by('-last_contact')
-        if sort == 'za':
-            return qs.order_by('-name')
-        return qs.order_by('name')
+        if not (hasattr(self, '_queryset') and self._queryset):
+            self._queryset = super(ContactListView, self).get_queryset().prefetch_related('tags')
+            sort = self.request.GET.get('s')
+            if sort == 'oldnew':
+                self._queryset = self._queryset.order_by('last_contact')
+            if sort == 'newold':
+                self._queryset = self._queryset.order_by('-last_contact')
+            if sort == 'za':
+                self._queryset = self._queryset.order_by('-name')
+            else:
+                self._queryset = self._queryset.order_by('name')
+        return self._queryset
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
