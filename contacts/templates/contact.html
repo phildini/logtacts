@@ -76,6 +76,9 @@
     {% for field in contact.addresses %}
     <div class="col-md-6">
         <span class="text-muted">{{ field.label }}:</span> {{ field.value }}
+        <a href="https://maps.google.com/?q={{ field.url_quoted }}">
+            <span class="glyphicon glyphicon-map-marker"></span>
+        </a>
     </div>
     {% endfor %}
 </div>

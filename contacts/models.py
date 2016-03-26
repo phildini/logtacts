@@ -1,4 +1,5 @@
 import collections
+from six.moves.urllib.parse import quote_plus
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -215,6 +216,11 @@ class ContactField(models.Model):
     preferred = models.BooleanField(default=False)
     value = models.TextField()
     history = HistoricalRecords()
+
+    def url_quoted(self):
+        return quote_plus(
+            self.value.replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ')
+        )
 
 
 class Book(models.Model):
