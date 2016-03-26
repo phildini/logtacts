@@ -1,12 +1,20 @@
 language: python
 python:
- - "2.7"
- - "3.5"
+- '2.7'
+- '3.5'
 env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
 before_install:
-  - pip install codecov
+- pip install codecov
 after_success:
-  - codecov
-install: "pip install -r requirements.txt"
-script: "coverage run manage.py test contacts profiles invitations && coverage report --include='./*'"
+- codecov
+install: pip install -r requirements.txt
+script: coverage run manage.py test contacts profiles invitations && coverage report
+  --include='./*'
+deploy:
+  provider: heroku
+  api_key:
+    secure: Bl2keh8zLObWpXoK+ahd3X8Z+ITDvsfpM9jzCRHyycCM0sV07xlqNwUH+CJEYWN2hOgvBcnoL30eMMJ9aI9vWoo5NPR+0t9hM9Il4MJfjUVdD4leX7nMjvrXXew4GCNDi1elzHZXdyxai11D0iRpbt3oQgcdQZPv52Op26hNRNU=
+  app: co-stage
+  on:
+    repo: phildini/logtacts
