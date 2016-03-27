@@ -18,3 +18,4 @@ deploy:
   app: co-stage
   on:
     repo: phildini/logtacts
+    python: '3.5'
