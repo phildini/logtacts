@@ -19,7 +19,14 @@
     {{ form.password.errors }}
     <input id="id_password" class="form-control" name="password" type="password" />
 </div>
-<input type="submit" value="login" />
+<div class="checkbox">
+    {{ form.remember.help_text }}
+    <label for="id_remember">
+        <input type="checkbox" name="remember" id="id_remember">Remember me
+    </label>
+    {{ form.remember.errors }}
+</div>
+<input class="btn btn-success" type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
 <div>
     <a href="/password_reset/">Forgot password?</a>
