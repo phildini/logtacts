@@ -18,7 +18,7 @@
     margin-top: -7px;
 }
 
-.dropdown-menu>li>input {
+.dropdown-menu>li>* {
     text-align: left;
     border: none;
     width: 100%;
