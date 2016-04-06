@@ -1,6 +1,8 @@
+import json
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.crypto import get_random_string
+from channels import Channel
 from simple_history.models import HistoricalRecords
 from contacts.models import Book
 
@@ -48,4 +50,3 @@ class Invitation(models.Model):
         return "{} invited {} to {} ({})".format(
             self.sender, self.email, self.book, self.status
         )
-    

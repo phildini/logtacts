@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'floppyforms',
     'nexus',
     'gargoyle',
+    'channels',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -174,10 +175,10 @@ ADMINS = (
 MANAGERS = ADMINS
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mandrillapp.com'
+EMAIL_HOST = 'smtp.sparkpostmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'pjj@philipjohnjames.com'
-EMAIL_HOST_PASSWORD = get_env_variable('MANDRILL_KEY')
+EMAIL_HOST_USER = 'SMTP_Injection'
+EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_PASSWORD')
 DEFAULT_FROM_EMAIL = 'site@contactotter.com'
 SERVER_EMAIL = 'site@contactotter.com'
 
@@ -192,6 +193,16 @@ REST_FRAMEWORK = {
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED=True
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+        "ROUTING": "logtacts.routing.channel_routing",
+    },
+}
 
 LOGGING = {
     'version': 1,

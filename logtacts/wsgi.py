@@ -7,8 +7,9 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 """
 import os
+from asgiref.wsgi import WsgiToAsgiAdapter
+from channels.asgi import get_channel_layer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "logtacts.prod_settings")
-
-from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
+channel_layer = get_channel_layer()
+application = WsgiToAsgiAdapter(channel_layer)
