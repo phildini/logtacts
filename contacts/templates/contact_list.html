@@ -29,7 +29,6 @@
             <li><input class="btn btn-default" name="emails" id="emails-submit" type="submit" value="Export emails" /></li>
             <li><input class="btn btn-default" name="addresses" id="addresses-submit" type="submit" value="Export addresses" /></li>
             <li><input class="btn btn-default" name="merge" id="merge-submit" type="submit" value="Merge selected" /></li>
-            {% if tag %}<li><a class="btn btn-default" target="_blank" href="mailto:{% for contact in contact_list %}{{ contact.preferred_email }},{% endfor %}">Send mail to contacts</a></li>{% endif %}
         </ul>
     </h3>
     {% for contact in contact_list %}
