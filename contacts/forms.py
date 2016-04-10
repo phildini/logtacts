@@ -46,6 +46,13 @@ class ContactForm(forms.ModelForm):
                         self.fields[item] = forms.CharField()
 
     def clean(self):
+        self.has_changed_list = []
+        if self.cleaned_data.get('name') != self.instance.name:
+            self.has_changed_list.append('Name')
+        if self.cleaned_data.get('notes') != self.instance.notes:
+            self.has_changed_list.append('Notes')
+        if self.cleaned_data.get('should_surface') != self.instance.should_surface:
+            self.has_changed_list.append('Send Contact Reminders')
         for field_id in self.cleaned_data.get('deleted_fields', '').split(','):
             if field_id:
                 try:
@@ -89,9 +96,8 @@ class ContactForm(forms.ModelForm):
                 self.document_field_dicts[field_id] = field_dict
         return super(ContactForm, self).clean()
 
-    def save(self, commit=True):
-        response = super(ContactForm, self).save()
-        has_changed_list = []
+    def save(self, commit=True):        
+        response = super(ContactForm, self).save(commit=commit)
         for item in self.document_field_dicts:
             item_dict = self.document_field_dicts[item]
             if item.startswith('new') and item_dict.get('value') and item_dict.get('label'):
@@ -103,23 +109,28 @@ class ContactForm(forms.ModelForm):
                     label = item_dict['label'],
                 )
                 field_object.save()
-                has_changed_list.append(field_object.label)
+                self.has_changed_list.append(field_object.label)
 
             else:
+                if item_dict['type'] == contact_constants.FIELD_TYPE_DATE:
+                    item_dict['value'] = item_dict['value'].strftime('%Y-%m-%d')
                 field_object = ContactField.objects.get(
                     id=item,
                     contact=self.instance,
                     kind=item_dict['type'],
                 )
-                if not (field_object.value == item_dict['value'] and field_object.label == item_dict['label'] and field_object.preferred == item_dict.get('pref', False)):
+                if not (
+                    field_object.value == item_dict['value']
+                    and field_object.label == item_dict['label']
+                    and field_object.preferred == item_dict.get('pref', False)
+                ):
                     field_object.value = item_dict['value']
                     field_object.label = item_dict['label']
                     field_object.preferred = item_dict.get('pref', False)
-                    has_changed_list.append(field_object.label)
+                    self.has_changed_list.append(field_object.label)
                     field_object.save()
-
-        if has_changed_list:
-            note_str = 'Updated ' + ', '.join(has_changed_list)
+        if self.has_changed_list:
+            note_str = 'Updated ' + ', '.join(self.has_changed_list)
             LogEntry.objects.create(
                 contact = self.instance,
                 logged_by = self.user,
