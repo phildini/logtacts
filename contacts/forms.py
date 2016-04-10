@@ -10,7 +10,7 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        fields = ('name','notes','tags')
+        fields = ('name','notes','tags', 'should_surface')
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
             'notes': forms.Textarea(attrs={'rows':3}),
