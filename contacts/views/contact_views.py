@@ -1,5 +1,6 @@
 import csv
 import json
+from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -35,6 +36,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
     model = Contact
     template_name = 'contact_list.html'
     form_class = forms.MultiContactForm
+    paginate_by = settings.LIST_PAGINATE_BY
+    paginate_orphans = settings.LIST_PAGINATE_ORPHANS
 
     def get_success_url(self, *args, **kwargs):
         return reverse('contacts-list')
