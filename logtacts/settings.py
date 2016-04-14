@@ -100,7 +100,7 @@ INSTALLED_APPS = (
     'nexus',
     'gargoyle',
     'channels',
-    'debug_toolbar',
+    # 'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
