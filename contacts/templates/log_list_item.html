@@ -1,0 +1,8 @@
+{% if log.kind != 'edit' %}
+<a href="{% url "log-edit" pk=log.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+<a href="{% url "log-delete" pk=log.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+{% else %}
+<span class="text-faint glyphicon glyphicon-pencil"></span>
+<span class="text-faint glyphicon glyphicon-trash"></span>
+{% endif %}
+{% include "log_line.html" %}

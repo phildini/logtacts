@@ -47,11 +47,19 @@
     </div>
     <div class="col-md-4">
         <h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
-        <div class="col-md-12">
         {% for tag in tags %}
-            <div class="tag-list-tag" style="float: left; margin-right:10px;"><a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></div>
+            <a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
-        </div>
+        {% if logs %}
+        <h3>Activity Log</h3>
+        <ul class="list-group">
+            {% for log in logs %}
+            <li class="list-group-item">
+                {% include "log_list_item.html" %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

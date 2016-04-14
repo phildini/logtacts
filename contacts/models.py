@@ -249,6 +249,17 @@ class BookOwner(models.Model):
         return "{} is an owner of {}".format(self.user, self.book)
 
 
+class LogEntryManager(models.Manager):
+
+    def logs_for_user_book(self, user):
+        return self.filter(contact__book__bookowner__user=user)
+
+    def logs_for_user_and_tag(self, user, tag):
+        return self.filter(
+            contact__tags__id=tag.pk,contact__book__bookowner__user=user,
+        )
+
+
 class LogEntry(models.Model):
     KIND_CHOICES = (
         ('twitter', 'Twitter'),
@@ -276,6 +287,8 @@ class LogEntry(models.Model):
     logged_by = models.ForeignKey(User, blank=True, null=True, related_name='logged_by')
     notes = models.TextField(blank=True)
     history = HistoricalRecords()
+
+    objects = LogEntryManager()
 
     def __str__(self):
         return "Log on %s" % (self.contact,)

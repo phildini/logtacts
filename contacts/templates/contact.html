@@ -145,16 +145,9 @@
 <h3>Logs</h3>
 <ul class="list-group">
     {% for log in logs %}
-    <ul class="list-group-item">
-        {% if log.kind != 'edit' %}
-        <a href="{% url "log-edit" pk=log.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        <a href="{% url "log-delete" pk=log.id %}"><span class="glyphicon glyphicon-trash"></span></a>
-        {% else %}
-        <span class="text-faint glyphicon glyphicon-pencil"></span>
-        <span class="text-faint glyphicon glyphicon-trash"></span>
-        {% endif %}
-        {% include "log_line.html" %}
-    </ul>
+    <li> class="list-group-item">
+        {% include "log_list_item.html" %}
+    </li>
     {% endfor %}
 </ul>
 {% endif %}

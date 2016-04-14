@@ -78,9 +78,15 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
                 self._queryset = self._queryset.order_by('name')
         return self._queryset
 
+    def get_logs(self):
+        return LogEntry.objects.logs_for_user_book(
+            self.request.user,
+        )
+
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
         context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
+        context['logs'] = self.get_logs()[:10]
         context['editable'] = True
         return context
 
@@ -257,6 +263,12 @@ class TaggedContactListView(ContactListView):
             pk=self.kwargs.get('pk'),
         )
         return super(TaggedContactListView, self).dispatch(request, *args, **kwargs)
+
+    def get_logs(self):
+        return LogEntry.objects.logs_for_user_and_tag(
+            self.request.user,
+            self.tag,
+        )
 
     def get_queryset(self):
         return super(TaggedContactListView, self).get_queryset().filter(
