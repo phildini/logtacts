@@ -11,10 +11,11 @@
         {% endif %}
     </td>
     <td>
-        <a href="{{ contact.get_absolute_url }}">
+        <p><a href="{{ contact.get_absolute_url }}">
             <img class="img-circle"src="{% gravatar_url contact.preferred_email 25 %}">
             {{ contact.name }}
-        </a>
+        </a></p>
+        <p>{% if contact.last_contact %}Last contacted {{ contact.last_contact | localtime | naturaltime }}{% endif %}</p>
     </td>
     <td>
         <div style="margin: 5px 0;">
@@ -22,9 +23,6 @@
         <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
         </div>
-    </td>
-    <td>
-        <span class="text-faint">{% if contact.last_contact %}Last contacted {{ contact.last_contact | localtime | naturaltime }}{% endif %}</span>
     </td>
     <td>
         <div class="text-right">
