@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from simple_history.models import HistoricalRecords
 
 import contacts as contact_settings
@@ -300,15 +301,25 @@ class LogEntry(models.Model):
         else:
             return self.created
 
-    @property
-    def action_str(self):
+    def action_str(self, link_to_contact=False):
+        contact_str = str(self.contact)
+        if link_to_contact:
+            contact_str = '<a href="{}">{}</a>'.format(
+                self.contact.get_absolute_url(),
+                self.contact,
+            )
+        response = 'contacted {}'.format(contact_str)
         if self.kind in ('twitter', 'tumblr', 'facebook', 'email'):
-            return 'chatted with {} via {}'.format(self.contact, self.kind)
+            response =  'chatted with {} via {}'.format(contact_str, self.kind)
         if self.kind == 'in person':
-            return 'met with {}'.format(self.contact)
+            response = 'met with {}'.format(contact_str)
         if self.kind == 'edit':
-            return "edited {}'s contact info".format(self.contact)
-        return 'contacted {}'.format(self.contact)
+            response = "edited {}'s contact info".format(contact_str)
+        return mark_safe(response)
+
+    @property
+    def action_str_with_link(self):
+        return self.action_str(link_to_contact=True)
 
     def can_be_viewed_by(self, user):
         return bool(self.contact.book.bookowner_set.filter(user=user))
