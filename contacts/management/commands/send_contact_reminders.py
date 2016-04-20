@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
 from contacts.models import Contact
@@ -25,7 +26,7 @@ class Command(BaseCommand):
             contact = Contact.objects.get_contacts_for_user(
                 profile.user
             ).filter(
-                last_contact__lte=last_month,
+                Q(last_contact__lte=last_month) | Q(last_contact=None),
                 should_surface=True,
             ).order_by('?')[0]
             subject = '[Contact Otter] Contact reminder'
