@@ -151,37 +151,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="{% static 'js/contact_edit.js' %}?v=1"></script>
 <script id="js-blank-email-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="email" field_label="Email label" field_value="Email address" show_preferred=True form_field_type="email" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="email" field_label="Email" field_value="email@example.com" show_preferred=True form_field_type="email" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-twitter-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="twitter" field_label="Twitter label" field_value="Twitter" show_preferred=True form_field_type="text" is_new=True show_twitter=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="twitter" field_label="Twitter" field_value="username" show_preferred=True form_field_type="text" is_new=True show_twitter=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-url-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="url" field_label="Link label" field_value="Link URL" form_field_type="url" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="url" field_label="Link" field_value="http://example.com" form_field_type="url" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-phone-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="phone" field_label="Phone number label" field_value="Phone number" show_preferred=True form_field_type="tel" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="phone" field_label="Phone" field_value="(555) 555-5555" show_preferred=True form_field_type="tel" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-text-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="text" field_label="Field label" field_value="Field value" form_field_type="text" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="text" field_label="Other" field_value="Text" form_field_type="text" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-date-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="date" field_label="Date label" form_field_type="date" is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="date" field_label="Date" form_field_type="date" is_new=True %}
         {% include "edit_contact_form_field.html" %}
     {% endwith %}
 </script>
 <script id="js-blank-address-field" type="text/x-handlebars-template">
-    {% with field_id="new{{newItemNumber}}" field_kind="address" field_label="Address name" show_preferred=True is_new=True %}
+    {% with field_id="new{{newItemNumber}}" field_kind="address" field_label="Address" show_preferred=True is_new=True %}
         {% include "edit_contact_form_field_textarea.html" %}
     {% endwith %}
 </script>

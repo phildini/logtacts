@@ -1,5 +1,5 @@
 <div class="form-group" id="{{ field_id }}">
-    <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}_label" maxlength="255" name="document_{{ field_kind }}_{{ field_id }}_label" {% if is_new %}placeholder{% else %}value{% endif %}="{{ field_label }}">
+    <input class="form-control" id="id_document_{{ field_kind }}_{{ field_id }}_label" maxlength="255" name="document_{{ field_kind }}_{{ field_id }}_label" value="{{ field_label }}">
     {% if show_twitter %}
     <div class="input-group">
         <span class="input-group-addon">@</span>
