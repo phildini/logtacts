@@ -49,3 +49,7 @@ hr {
     display: inline;
     font-weight: inherit;
 }
+
+.tag-label {
+    line-height: 2;
+}

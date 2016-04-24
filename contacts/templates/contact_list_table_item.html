@@ -18,7 +18,7 @@
     </td>
     <td class="hidden-sm hidden-xs">
         {% for tag in contact.tags.all %}
-        <small><a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></small>
+        <small><a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></small>
         {% endfor %}
     </td>
     <td>

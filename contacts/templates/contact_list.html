@@ -48,7 +48,7 @@
     <div class="col-md-4">
         <h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
         {% for tag in tags %}
-            <a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+            <a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
         {% if logs %}
         <h3>Activity Log</h3>
