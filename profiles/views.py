@@ -1,12 +1,9 @@
 from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
-from django.utils.decorators import method_decorator
 from django.views.generic import (
     FormView,
     UpdateView,
@@ -58,7 +55,7 @@ class ReviewUserView(LoginRequiredMixin, StaffuserRequiredMixin, FormView):
     template_name = "review_users.html"
 
     def get_success_url(self):
-        return reverse('profile')
+        return '/admin/'
 
     def form_valid(self, form):
         users = User.objects.filter(id__in=form.cleaned_data.get('users'))
