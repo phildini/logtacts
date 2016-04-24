@@ -15,6 +15,7 @@ deploy:
   provider: heroku
   api_key:
     secure: Bl2keh8zLObWpXoK+ahd3X8Z+ITDvsfpM9jzCRHyycCM0sV07xlqNwUH+CJEYWN2hOgvBcnoL30eMMJ9aI9vWoo5NPR+0t9hM9Il4MJfjUVdD4leX7nMjvrXXew4GCNDi1elzHZXdyxai11D0iRpbt3oQgcdQZPv52Op26hNRNU=
+  strategy: git
   app: co-stage
   on:
     repo: phildini/logtacts
