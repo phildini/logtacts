@@ -2,7 +2,7 @@ import logging
 import requests
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils import timezone
 
@@ -21,29 +21,23 @@ def send_invite(message):
         return
     invite.status = Invitation.PROCESSING
     invite.save()
+    context = {
+        'invite': invite,
+        'domain': Site.objects.get_current().domain,
+    }
+    subject = "[ContactOtter] Invitation to join ContactOtter from %s" % (invite.sender)
     if invite.book:
         subject = "[ContactOtter] Invitation to share %s's contact book" % (invite.sender)
-        body = (
-                "%s has invited you to share their contact book on ContactOtter.\n"
-                "Go to https://%s/invites/accept/%s/ to join!"
-            ) % (
-                invite.sender,
-                Site.objects.get_current().domain,
-                invite.key,
-            )
-    else:
-        subject = "[ContactOtter] Invitation to join ContactOtter from %s" % (invite.sender)
-        body = "Go to https://%s/invites/accept/%s/ to join!" % (
-                Site.objects.get_current().domain,
-                invite.key,
-            )
+    txt = get_template('email/invitation.txt').render(context)
+    html = get_template('email/invitation.html').render(context)
     try:
-        message = EmailMessage(
+        message = EmailMultiAlternatives(
             subject=subject,
-            body=body,
+            body=txt,
             from_email="ContactOtter <invites@contactotter.com>",
             to=[invite.email,],
         )
+        message.attach_alternative(html, "text/html")
         message.send()
         invite.status = Invitation.SENT
         invite.sent = timezone.now()

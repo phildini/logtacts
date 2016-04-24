@@ -1,6 +1,6 @@
-"Hello!"
+Hello!
 
-"You haven't contacted {{ contact.name }} (https://{{ domain }}{{ contact.get_absolute_url }}) since {{ contact.last_contacted | date:"F j, o"}} - maybe send them a note?"
+You haven't contacted {{ contact.name }} (https://{{ domain }}{{ contact.get_absolute_url }}) since {{ contact.last_contacted | date:"F j, o"}} - maybe send them a note?
 
 Cheers,
 Contact Otter

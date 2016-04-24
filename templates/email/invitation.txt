@@ -1,0 +1,9 @@
+You've been invited to ContactOtter!
+
+{% if invite.book %}
+{{ invite.sender }} has invited you to share their contact book on ContactOtter.
+{% else %}
+{{ invite.sender }} has invited you to join ContactOtter.
+{% endif %}
+
+Go to https://{{ domain }}/invites/accept/{{ invite.key }} to accept the invitation.

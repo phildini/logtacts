@@ -1,0 +1,14 @@
+{% extends "email/email_base.html" %}
+
+{% block content %}
+<h1>You've been invited to ContactOtter!</h1>
+
+{% if invite.book %}
+<p>{{ invite.sender }} has invited you to share their contact book on ContactOtter.</p>
+{% else %}
+<p>{{ invite.sender }} has invited you to join ContactOtter.</p>
+{% endif %}
+<p><a href="https://{{ domain }}/invites/accept/{{ invite.key }}">Click here to accept the invitation.</a></p>
+{% endblock %}
+
+
