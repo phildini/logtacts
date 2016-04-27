@@ -1,61 +1,63 @@
 {
-  "name": "ContactOtter",
-  "scripts": {
-    "postdeploy": "python manage.py migrate --settings=logtacts.prod_settings"
-  },
-  "env": {
-    "BONSAI_URL": {
-      "required": true
+    "name": "ContactOtter",
+    "website": "https://www.contactotter.com",
+    "repository": "https://github.com/phildini/logtacts/",
+    "scripts": {
+        "postdeploy": "python manage.py migrate --settings=logtacts.prod_settings"
     },
-    "DISABLE_COLLECTSTATIC": {
-      "required": true
+    "env": {
+        "BONSAI_URL": {
+            "required": true
+        },
+        "DISABLE_COLLECTSTATIC": {
+            "required": true
+        },
+        "EMAIL_PASSWORD": {
+            "required": true
+        },
+        "LOGTACTS_DB_URL": {
+            "required": true
+        },
+        "LOGTACTS_SECRET_KEY": {
+            "required": true
+        },
+        "MANDRILL_KEY": {
+            "required": true
+        },
+        "OPBEAT_APP_ID": {
+            "required": true
+        },
+        "OPBEAT_ORG_ID": {
+            "required": true
+        },
+        "OPBEAT_SECRET_KEY": {
+            "required": true
+        },
+        "SEARCH_INDEX": {
+            "required": true
+        },
+        "SLACK_WEBHOOK_URL": {
+            "required": true
+        },
+        "STATIC_URL": {
+            "required": true
+        }
     },
-    "EMAIL_PASSWORD": {
-      "required": true
+    "formation": {
+        "worker": {
+            "quantity": 1
+        },
+        "web": {
+            "quantity": 1
+        }
     },
-    "LOGTACTS_DB_URL": {
-      "required": true
-    },
-    "LOGTACTS_SECRET_KEY": {
-      "required": true
-    },
-    "MANDRILL_KEY": {
-      "required": true
-    },
-    "OPBEAT_APP_ID": {
-      "required": true
-    },
-    "OPBEAT_ORG_ID": {
-      "required": true
-    },
-    "OPBEAT_SECRET_KEY": {
-      "required": true
-    },
-    "SEARCH_INDEX": {
-      "required": true
-    },
-    "SLACK_WEBHOOK_URL": {
-      "required": true
-    },
-    "STATIC_URL": {
-      "required": true
-    }
-  },
-  "formation": {
-    "worker": {
-      "quantity": 1
-    },
-    "web": {
-      "quantity": 1
-    }
-  },
-  "addons": [
-    "heroku-postgresql",
-    "heroku-redis"
-  ],
-  "buildpacks": [
-    {
-      "url": "heroku/python"
-    }
-  ]
+    "addons": [
+        "heroku-postgresql",
+        "heroku-redis"
+    ],
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ]
 }
