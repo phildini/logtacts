@@ -1,0 +1,12 @@
+Hello there!
+
+Here's a birthday reminder for:
+
+{% for contact in contacts %}
+{{ contact.name }} (https://{{ domain }}{{ contact.get_absolute_url }})
+{% endfor %}
+
+We hope they have a fantastic day!
+
+Cheers,
+ContactOtter

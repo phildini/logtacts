@@ -9,6 +9,7 @@ class Profile(models.Model):
     changed = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
     send_contact_reminders = models.BooleanField(default=False)
+    send_birthday_reminders = models.BooleanField(default=False)
     history = HistoricalRecords()
 
     def __str__(self):

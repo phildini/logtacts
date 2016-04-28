@@ -36,6 +36,13 @@
         </label>
         {{ form.send_contact_reminders.errors }}
     </div>
+    <div class="checkbox">
+        {{ form.send_birthday_reminders.help_text }}
+        <label for="id_send_birthday_reminders">
+            <input type="checkbox" {% if send_birthday_reminders %}checked="checked"{% endif %} name="send_birthday_reminders" id="id_send_birthday_reminders">Send birthday reminders
+        </label>
+        {{ form.send_birthday_reminders.errors }}
+    </div>
     <input id="add_log" type="submit" value="Save">
 </form>
 {% if tokens %}

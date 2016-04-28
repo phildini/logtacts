@@ -1,0 +1,15 @@
+{% extends "email/email_base.html" %}
+
+{% block content %}
+<h1>Hello there!</h1>
+
+<p>Here's a birthday reminder for:</p>
+<ul>
+    {% for contact in contacts %}
+    <li><a href="https://{{ domain }}{{ contact.get_absolute_url }}"</li>{{ contact.name }}</a></li>
+    {% endfor %}
+</ul>
+<p>We hope they have a fantastic day!</p>
+<p>Cheers,</p>
+<p>ContactOtter</p>
+{% endblock %}
