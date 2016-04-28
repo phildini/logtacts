@@ -61,6 +61,16 @@
 </div>
 <hr />
 {% endif %}
+{% if contact.dates %}
+<div class="row">
+    {% for field in contact.dates %}
+    <div class="col-md-6">
+        <span class="text-muted">{{ field.label }}:</span> {{ field.value }}
+    </div>
+    {% endfor %}
+</div>
+<hr />
+{% endif %}
 {% if contact.generics %}
 <div class="row">
     {% for field in contact.generics %}
