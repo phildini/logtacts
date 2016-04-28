@@ -32,6 +32,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context['tokens'] = Token.objects.filter(user=self.request.user)
         context['invitations'] = Invitation.objects.filter(sender=self.request.user)
         context['send_contact_reminders'] = self.profile.send_contact_reminders
+        context['send_birthday_reminders'] = self.profile.send_birthday_reminders
         return context
 
     def get_success_url(self):
@@ -41,6 +42,9 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         response = super(ProfileView, self).form_valid(form)
         self.profile.send_contact_reminders = form.cleaned_data.get(
             'send_contact_reminders'
+        )
+        self.profile.send_birthday_reminders = form.cleaned_data.get(
+            'send_birthday_reminders'
         )
         self.profile.save()
 

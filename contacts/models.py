@@ -54,8 +54,6 @@ class ContactManager(models.Manager):
 
 
 class Contact(models.Model):
-    
-
     FIELD_TYPES = (
         (contact_settings.FIELD_TYPE_EMAIL, 'Email'),
         (contact_settings.FIELD_TYPE_URL, 'URL'),
@@ -210,7 +208,7 @@ class ContactField(models.Model):
     changed = models.DateTimeField(auto_now=True)
     contact = models.ForeignKey(Contact)
     label = models.CharField(max_length=100)
-    kind = kind = models.CharField(
+    kind = models.CharField(
         max_length=100,
         choices=FIELD_TYPES,
     )

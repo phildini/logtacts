@@ -9,7 +9,11 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 from django.template.loader import get_template
 from django.utils import timezone
-from contacts.models import Contact
+import contacts as contact_constants
+from contacts.models import (
+    Contact,
+    ContactField,
+)
 from profiles.models import Profile
 
 logger = logging.getLogger('scripts')
@@ -63,3 +67,48 @@ class Command(BaseCommand):
                         )
                 except:
                     logger.exception("Error sending error to slack")
+
+        profiles_opted_in = Profile.objects.filter(send_birthday_reminders=True)
+        for profile in profiles_opted_in:
+            birthdays = ContactField.objects.filter(
+                Q(label='Birthday') | Q(label='birthday') | Q(label='BIRTHDAY'),
+                kind=contact_constants.FIELD_TYPE_DATE,
+                value=timezone.now().strftime("%Y-%m-%d")
+            )
+            contacts = None
+            if birthdays:
+                contacts = [birthday.contact for birthday in birthdays]
+            if contacts:
+                context = {
+                    'contacts': contacts,
+                    'domain': Site.objects.get_current().domain,
+                }
+                subject="[ContactOtter] Birthday reminder"
+                txt = get_template('email/birthday_reminder.txt').render(context)
+                html = get_template('email/birthday_reminder.html').render(context)
+                message = EmailMultiAlternatives(
+                    subject=subject,
+                    body=txt,
+                    from_email='ContactOtter <reminders@contactotter.com>',
+                    to=[profile.user.email],
+                )
+                message.attach_alternative(html, "text/html")
+                try:
+                    logger.debug("Trying to send message to {} about {}".format(
+                        profile.user, contact
+                    ))
+                    message.send()
+                    logger.debug("Sent message to {} successfuly".format(profile.user))
+                except:
+                    logger.exception('Problem sending reminder for %s' % (profile))
+                    try:
+                        if not settings.DEBUG:
+                            payload = {
+                                'text': 'Error in logtacts reminder: {}'.format(profile)
+                            }
+                            r = requests.post(
+                                settings.SLACK_WEBHOOK_URL,
+                                data=json.dumps(payload),
+                            )
+                    except:
+                        logger.exception("Error sending error to slack")
