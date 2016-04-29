@@ -96,7 +96,7 @@
 {% if contact.notes %}
 <div class="row">
     <div class="col-md-6">
-        <span class="text-muted">Notes:</span> {{ contact.notes }}
+        <span class="text-muted">Notes:</span> {{ contact.notes | linebreaks }}
     </div>
 </div>
 <hr />
