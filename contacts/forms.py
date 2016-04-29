@@ -194,7 +194,7 @@ class ContactSearchForm(ModelSearchForm):
         return sqs
 
 
-class MultiContactForm(forms.Form):
+class MultiContactForm(ContactSearchForm, forms.Form):
 
     def __init__(self, *args, **kwargs):
         contact_ids = kwargs.pop('contact_ids')

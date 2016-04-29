@@ -87,7 +87,6 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         context = super(ContactListView, self).get_context_data(**kwargs)
         context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
         context['logs'] = self.get_logs()[:10]
-        context['editable'] = True
         return context
 
 class ContactView(BookOwnerMixin, FormView):
@@ -253,33 +252,6 @@ class DeleteTagView(BookOwnerMixin, DeleteView):
             "Tag deleted",
         )
         return super(DeleteTagView, self).form_valid(form)
-
-
-class TaggedContactListView(ContactListView):
-
-    def dispatch(self, request, *args, **kwargs):
-        self.tag = get_object_or_404(
-            Tag.objects.get_tags_for_user(self.request.user),
-            pk=self.kwargs.get('pk'),
-        )
-        return super(TaggedContactListView, self).dispatch(request, *args, **kwargs)
-
-    def get_logs(self):
-        return LogEntry.objects.logs_for_user_and_tag(
-            self.request.user,
-            self.tag,
-        ).order_by('-created')
-
-    def get_queryset(self):
-        return super(TaggedContactListView, self).get_queryset().filter(
-            tags__id=self.kwargs.get('pk'),
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super(TaggedContactListView, self).get_context_data(**kwargs)
-        context['tag'] = self.tag
-
-        return context
 
 
 class ExportEmailView(BookOwnerMixin, TemplateView):

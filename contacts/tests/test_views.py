@@ -16,7 +16,7 @@ class ContactListViewTests(TestCase):
         request_factory = RequestFactory()
         request = request_factory.get(reverse('contacts-list'))
         request.user = UserFactory.create()
-        self.response = views.contact_views.ContactListView.as_view()(request)
+        self.response = views.contact_list_views.ContactListView.as_view()(request)
 
     def test_contact_list_view_response_200(self):
         self.assertEqual(self.response.status_code, 200)
@@ -36,7 +36,7 @@ class ContactListViewTests(TestCase):
         request_factory = RequestFactory()
         request = request_factory.get(reverse('contacts-list'))
         request.user = user
-        response = views.contact_views.ContactListView.as_view()(request)
+        response = views.contact_list_views.ContactListView.as_view()(request)
         self.assertEqual(len(response.context_data.get('tags')), 1)
         self.assertEqual(len(response.context_data.get('contact_list')), 1)
         self.assertEqual(response.context_data.get('tags')[0], good_tag)
@@ -237,7 +237,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
-        response = views.contact_views.TaggedContactListView.as_view()(
+        response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
         )
@@ -249,7 +249,7 @@ class TagViewTests(TestCase):
         )
         request.user = UserFactory.create()
         with self.assertRaises(Http404):
-            views.contact_views.TaggedContactListView.as_view()(
+            views.contact_list_views.TaggedContactListView.as_view()(
                 request,
                 pk=self.tag.pk,
             )
@@ -259,7 +259,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
-        response = views.contact_views.TaggedContactListView.as_view()(
+        response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
         )
@@ -272,7 +272,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
-        response = views.contact_views.TaggedContactListView.as_view()(
+        response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
         )

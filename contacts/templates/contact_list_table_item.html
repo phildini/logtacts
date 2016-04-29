@@ -4,11 +4,9 @@
 {% load gargoyle_tags %}
 <tr>
     <td>
-        {% if editable %}
         <label for="id_contact_{{ contact.id }}">
             <input id="id_contact_{{ contact.id }}" name="contact_{{ contact.id }}" class="input" type="checkbox">
         </label>
-        {% endif %}
     </td>
     <td>
         <a href="{{ contact.get_absolute_url }}">
@@ -26,7 +24,7 @@
     </td>
     <td>
         <div class="text-right">
-        {% ifnotswitch read_only_mode %}<a class="btn btn-default btn-sm" href="{% url "contacts-edit" pk=contact.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>{% endifnotswitch %}
+        {% ifnotswitch read_only_mode %}<a class="btn btn-default btn-sm" href="{% url "contacts-edit" pk=contact.pk %}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>{% endifnotswitch %}
         </div>
     </td>
 </tr>

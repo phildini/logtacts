@@ -2,16 +2,16 @@ from django.conf.urls import patterns, include, url
 
 from .views import (
     contact_views,
+    contact_list_views,
     log_views,
-    search_views,
 )
 
 from .api import views as contact_api_views
 
 contact_urls = [
     url(
-        r'^list/$',
-        contact_views.ContactListView.as_view(),
+        r'^contacts/$',
+        contact_list_views.ContactListView.as_view(),
         name='contacts-list',
     ),
     url(
@@ -36,12 +36,12 @@ contact_urls = [
     ),
     url(
         r'^tagged/(?P<pk>\d+)/$',
-        contact_views.TaggedContactListView.as_view(),
+        contact_list_views.TaggedContactListView.as_view(),
         name='contacts-tagged',
     ),
     url(
         r'^search/',
-        search_views.ContactSearchView.as_view(),
+        contact_list_views.ContactListView.as_view(),
         name="search",
     ),
     url(

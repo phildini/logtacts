@@ -39,7 +39,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 {% if user.is_authenticated %}
-                <form class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
+                <form id="id_ search_form" name="search_form" class="navbar-form navbar-left" method="get" action="{% url "search" %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
                         <div class="input-group">
                             <input type="search" class="form-control" name="q" id="id_q" {% if query_raw %}value="{{ query_raw }}"{% endif %}>
