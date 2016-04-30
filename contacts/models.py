@@ -1,6 +1,7 @@
 import collections
 from six.moves.urllib.parse import quote_plus
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -94,6 +95,12 @@ class Contact(models.Model):
 
     def get_absolute_url(self):
         return reverse('contacts-view', kwargs={'pk': self.id})
+
+    def get_complete_url(self):
+        return "https://{}{}".format(
+            Site.objects.get_current().domain,
+            self.get_absolute_url(),
+        )
 
     def last_contacted(self):
         if self.last_contact:

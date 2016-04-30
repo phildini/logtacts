@@ -9,9 +9,15 @@
     {% gravatar contact.preferred_email 60 %} {{ contact.name }}
     <div class="btn-group" role="group">
         <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-        {% if not SANDSTORM %}
-        <a href="javascript:void(0)" class="btn btn-default js-add-trello"><span class="glyphicon glyphicon-list-alt"></span> Add Trello Reminder</a>
-        {% endif %}
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add reminder <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li>{% if not SANDSTORM %}
+                <a href="javascript:void(0)" class="js-add-trello"><span class="glyphicon glyphicon-list-alt"></span> Trello</a>
+                {% endif %}</li>
+                <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Contact+{{ contact.name | urlencode }}&amp;details={{ contact.get_complete_url }}" target="_blank"><span class="glyphicon glyphicon-calendar"></span> Google Calendar</a></li>
+            </ul>
+        </div>
     </div>
 </h1>
 <div class="row">
