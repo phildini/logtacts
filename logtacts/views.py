@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
-from contacts.views.contact_views import ContactListView
+from contacts.views.contact_list_views import ContactListView
 
 
 class HomeView(TemplateView):

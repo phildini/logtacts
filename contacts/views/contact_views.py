@@ -33,63 +33,6 @@ from contacts import forms
 from contacts.views import BookOwnerMixin
 from contacts import common
 
-class ContactListView(BookOwnerMixin, FormView, ListView):
-
-    model = Contact
-    template_name = 'contact_list.html'
-    form_class = forms.MultiContactForm
-    paginate_by = settings.LIST_PAGINATE_BY
-    paginate_orphans = settings.LIST_PAGINATE_ORPHANS
-
-    def get_success_url(self, *args, **kwargs):
-        return reverse('contacts-list')
-
-    def get_form_kwargs(self):
-        kwargs = super(ContactListView, self).get_form_kwargs()
-        kwargs['contact_ids'] = [contact.id for contact in self.get_queryset()]
-        return kwargs
-
-    def form_valid(self, form, *args, **kwargs):
-        contact_ids = []
-        for contact in form.cleaned_data:
-            if form.cleaned_data[contact]:
-                contact_ids.append(contact.split('_')[1])
-        self.request.session['selected_contacts'] = json.dumps(contact_ids)
-        if not contact_ids:
-            messages.info(self.request, "No contacts selected.")
-            return HttpResponseRedirect(reverse('contacts-list'))
-        if self.request.POST.get('emails'):
-            return HttpResponseRedirect(reverse('contact_emails'))
-        if self.request.POST.get('addresses'):
-            return HttpResponseRedirect(reverse('contact_addresses'))
-        if self.request.POST.get('merge'):
-            return HttpResponseRedirect(reverse('contacts_merge'))
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_queryset(self):
-        if not (hasattr(self, '_queryset') and self._queryset):
-            self._queryset = super(ContactListView, self).get_queryset().prefetch_related('tags')
-            sort = self.request.GET.get('s')
-            if sort == 'oldnew':
-                self._queryset = self._queryset.order_by('last_contact')
-            if sort == 'newold':
-                self._queryset = self._queryset.order_by('-last_contact')
-            if sort == 'za':
-                self._queryset = self._queryset.order_by('-name')
-            else:
-                self._queryset = self._queryset.order_by('name')
-        return self._queryset
-
-    def get_logs(self):
-        return LogEntry.objects.logs_for_user_book(
-            self.request.user,
-        ).order_by('-created')
-
-    def get_context_data(self, **kwargs):
-        context = super(ContactListView, self).get_context_data(**kwargs)
-        context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
-        context['logs'] = self.get_logs()[:10]
-        return context
 
 class ContactView(BookOwnerMixin, FormView):
 
