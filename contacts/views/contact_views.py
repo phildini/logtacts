@@ -391,12 +391,11 @@ class AddTagView(LoginRequiredMixin, FormView):
         return form_kwargs
 
     def form_valid(self, form):
-        contact_ids = common.get_selected_contacts_from_request(self.request)
+        contacts = common.get_selected_contacts_from_request(self.request)
         tag_ids = []
         for tag in form.cleaned_data:
             if form.cleaned_data[tag]:
                 tag_ids.append(tag.split('_')[1])
-        contacts = Contact.objects.get_contacts_for_user(self.request.user).filter(id__in=contact_ids)
         for contact in contacts:
             # Django's many-to-many add can take just ids, which saves us having
             # to pull the Tag objects from the DB.

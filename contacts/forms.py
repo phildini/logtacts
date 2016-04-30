@@ -180,21 +180,7 @@ class TagForm(forms.ModelForm):
         return self.cleaned_data
 
 
-class ContactSearchForm(ModelSearchForm):
-
-    def search(self):
-        if not self.is_valid():
-            return self.no_query_found()
-
-        sqs = self.searchqueryset.auto_query(self.cleaned_data['q'])
-
-        if self.load_all:
-            sqs = sqs.load_all()
-
-        return sqs
-
-
-class MultiContactForm(ContactSearchForm, forms.Form):
+class MultiContactForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         contact_ids = kwargs.pop('contact_ids')
