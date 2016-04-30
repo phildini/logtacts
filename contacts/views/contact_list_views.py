@@ -82,7 +82,6 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             if form.cleaned_data[contact]:
                 contact_ids.append(contact.split('_')[1])
         self.request.session['selected_contacts'] = json.dumps(contact_ids)
-        import pdb; pdb.set_trace()
         if not contact_ids:
             messages.info(self.request, "No contacts selected.")
             return HttpResponseRedirect(reverse('contacts-list'))
