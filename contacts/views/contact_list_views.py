@@ -82,6 +82,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             if form.cleaned_data[contact]:
                 contact_ids.append(contact.split('_')[1])
         self.request.session['selected_contacts'] = json.dumps(contact_ids)
+        import pdb; pdb.set_trace()
         if not contact_ids:
             messages.info(self.request, "No contacts selected.")
             return HttpResponseRedirect(reverse('contacts-list'))
@@ -91,6 +92,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             return HttpResponseRedirect(reverse('contact_addresses'))
         if self.request.POST.get('merge'):
             return HttpResponseRedirect(reverse('contacts_merge'))
+        if self.request.POST.get('addtag'):
+            return HttpResponseRedirect(reverse('contacts_add_tag'))
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):

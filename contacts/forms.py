@@ -201,5 +201,15 @@ class MultiContactForm(ContactSearchForm, forms.Form):
         super(MultiContactForm, self).__init__(*args, **kwargs)
         for contact_id in contact_ids:
             self.fields['contact_%s' % (contact_id,)] = forms.BooleanField(
-                required=False
+                required=False,
+            )
+
+class MultiTagForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        tag_ids = kwargs.pop('tag_ids')
+        super(MultiTagForm, self).__init__(*args, **kwargs)
+        for tag_id in tag_ids:
+            self.fields['tag_%s' % (tag_id,)] = forms.BooleanField(
+                required=False,
             )

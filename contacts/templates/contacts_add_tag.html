@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="{{ action }}" method="POST">
+{% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>For contacts...</h2>
+            <ul>
+                {% for contact in contacts %}
+                <li>{{ contact.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h2>Add tags...</h2>
+            <ul>
+                {% for tag in tags %}
+                <li>
+                    <label for="id_tag_{{ tag.id }}">
+                        <input id="id_tag_{{ tag.id }}" name="tag_{{ tag.id }}" class="input" type="checkbox">
+                        <span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span>
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <input id="add_tag" type="submit" value="Add tags" />
+    </div>
+</form>
+{% endblock %}

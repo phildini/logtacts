@@ -74,6 +74,11 @@ contact_urls = [
         contact_views.MergeContactsView.as_view(),
         name="contacts_merge",
     ),
+    url(
+        r'addtag/',
+        contact_views.AddTagView.as_view(),
+        name="contacts_add_tag",
+    ),
 ]
 
 tag_urls = [

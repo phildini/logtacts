@@ -1,8 +1,10 @@
 import csv
 import json
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import (
     get_object_or_404,
@@ -361,3 +363,59 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
             ))
         return redirect(reverse('contacts-list'))
 
+
+class AddTagView(LoginRequiredMixin, FormView):
+
+    template_name = "contacts_add_tag.html"
+    form_class = forms.MultiTagForm
+
+    def get_success_url(self):
+        return reverse('contacts-list')
+
+    def get_tags(self):
+        if not hasattr(self, '_tags'):
+            self._tags = Tag.objects.get_tags_for_user(self.request.user)
+        return self._tags
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AddTagView, self).get_context_data(*args, **kwargs)
+        context['contacts'] = common.get_selected_contacts_from_request(
+            self.request,
+        )
+        context['tags'] = self.get_tags()
+        return context
+
+    def get_form_kwargs(self):
+        form_kwargs = super(AddTagView, self).get_form_kwargs()
+        form_kwargs['tag_ids'] = [tag.id for tag in self.get_tags()]
+        return form_kwargs
+
+    def form_valid(self, form):
+        contact_ids = common.get_selected_contacts_from_request(self.request)
+        tag_ids = []
+        for tag in form.cleaned_data:
+            if form.cleaned_data[tag]:
+                tag_ids.append(tag.split('_')[1])
+        contacts = Contact.objects.get_contacts_for_user(self.request.user).filter(id__in=contact_ids)
+        for contact in contacts:
+            # Django's many-to-many add can take just ids, which saves us having
+            # to pull the Tag objects from the DB.
+            try:
+                contact.tags.add(*tag_ids)
+                contact.save()
+            except IntegrityError:
+                # If that contact already had the tag, step through tags to add
+                # the missing ones
+                for tag_id in tag_ids:
+                    try:
+                        contact.tags.add(tag_id)
+                    except IntegrityError:
+                        pass
+            LogEntry.objects.create(
+                contact=contact,
+                kind='edit',
+                notes='Added tags',
+                logged_by=self.request.user,
+            )
+        self.request.session['selected_contacts'] = None
+        return super(AddTagView, self).form_valid(form)
