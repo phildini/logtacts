@@ -128,12 +128,13 @@ class ContactDetailEditAPIView(RestrictedRendererMixin, generics.RetrieveUpdateD
             for item in orig_data:
                 if orig_data[item] != serializer.data[item]:
                     changed.append(item)
-            models.LogEntry.objects.create(
+            log = models.LogEntry.objects.create(
                 contact = instance,
                 kind = 'edit',
                 logged_by = request.user,
                 notes = "Updated: " + ', '.join(changed),
             )
+            instance.update_last_contact_from_log(log)
         return Response(serializer.data)
 
 

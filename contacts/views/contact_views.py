@@ -122,6 +122,7 @@ class ContactView(BookOwnerMixin, FormView):
         if not form.cleaned_data.get('time'):
             form.cleaned_data['time'] = timezone.now()
         form.save()
+        self.contact.update_last_contact_from_log(new_log)
         messages.success(
             self.request,
             "Log added",
@@ -346,12 +347,13 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
                     log.save()
                 note_list.append(contact.name)
                 contact.delete()
-            LogEntry.objects.create(
+            log = LogEntry.objects.create(
                 contact = primary_contact,
                 logged_by = self.request.user,
                 kind = 'edit',
                 notes = "Merged with {}".format(", ".join(note_list)),
             )
+            primary_contact.update_last_contact_from_log(log)
             messages.success(
                 self.request,
                 "Successfully merged contacts.",
@@ -410,11 +412,12 @@ class AddTagView(LoginRequiredMixin, FormView):
                         contact.tags.add(tag_id)
                     except IntegrityError:
                         pass
-            LogEntry.objects.create(
+            log = LogEntry.objects.create(
                 contact=contact,
                 kind='edit',
                 notes='Added tags',
                 logged_by=self.request.user,
             )
+            contact.update_last_contact_from_log(log)
         self.request.session['selected_contacts'] = None
         return super(AddTagView, self).form_valid(form)

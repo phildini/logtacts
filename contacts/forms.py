@@ -47,21 +47,37 @@ class ContactForm(forms.ModelForm):
 
     def clean(self):
         self.has_changed_list = []
+
+        # Start by taking care of the contact object fields
         if self.cleaned_data.get('name') != self.instance.name:
             self.has_changed_list.append('Name')
         if self.cleaned_data.get('notes') != self.instance.notes:
             self.has_changed_list.append('Notes')
         if self.cleaned_data.get('should_surface') != self.instance.should_surface:
             self.has_changed_list.append('Send Contact Reminders')
+
+        # Deal with deleted fields
+        has_changed_list = []
         for field_id in self.cleaned_data.get('deleted_fields', '').split(','):
             if field_id:
                 try:
-                    ContactField.objects.get(
+                    field = ContactField.objects.get(
                         contact=self.instance,
                         id=field_id,
-                    ).delete()
+                    )
+                    has_changed_list.append(field.label)
+                    field.delete()
                 except ContactField.DoesNotExist:
                     pass
+        # note_str = 'Deleted ' + ', '.join(has_changed_list)
+        # LogEntry.objects.create(
+        #     contact = self.instance,
+        #     logged_by = self.user,
+        #     kind = 'edit',
+        #     notes = note_str,
+        # )
+
+        # Prep the contact fields for saving
         self.instance.book = self.book
         document_items = None
         document_items = dict((key, value) for key, value in self.cleaned_data.items() if key.startswith('document'))

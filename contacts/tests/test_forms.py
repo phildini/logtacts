@@ -290,3 +290,16 @@ class TagFormTests(TestCase):
             'color':'1234567',
         })
         self.assertFalse(form.is_valid())
+
+
+class MultiTagFormTests(TestCase):
+
+    def setUp(self):
+        self.book = factories.BookFactory.create()
+
+    def test_create_form(self):
+        contacts = factories.ContactFactory.create_batch(size=3)
+        form = forms.MultiTagForm(
+            tag_ids=[contact.id for contact in contacts],
+        )
+        self.assertEqual(len(form.fields), 3)

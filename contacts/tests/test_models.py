@@ -25,6 +25,7 @@ class ContactModelTests(TestCase):
 
     def test_contact_last_contacted(self):
         log = factories.LogFactory.create(contact=self.contact)
+        self.contact.update_last_contact_from_log(log)
 
         self.assertEqual(self.contact.last_contacted(), log.created)
 
@@ -181,6 +182,7 @@ class LogEntryModelTests(TestCase):
             book=self.book,
         )
         self.log = factories.LogFactory.create(contact=self.contact)
+        self.contact.update_last_contact_from_log(self.log)
 
     def test_tag_repr(self):
         expected = "Log on %s" % (self.contact)
@@ -206,8 +208,5 @@ class LogEntryModelTests(TestCase):
 
     def test_creating_log_updates_contact(self):
         self.assertTrue(self.contact.last_contact)
-        self.assertEqual(self.log.created, self.contact.last_contact)
-
-    def test_creating_edit_log_no_contact_update(self):
-        edit_log = factories.LogFactory.create(kind='edit', contact=self.contact)
+        self.contact.update_last_contact_from_log(self.log)
         self.assertEqual(self.log.created, self.contact.last_contact)

@@ -190,6 +190,17 @@ class Contact(models.Model):
             )
         return self._generics
 
+    def update_last_contact_from_log(self, log):
+        time = log.created
+        if log.time:
+            time = log.time
+        if self.last_contact and time > self.last_contact:
+            self.last_contact = time
+            self.save()
+        if not self.last_contact:
+            self.last_contact = time
+            self.save()
+
 
 class ContactField(models.Model):
 

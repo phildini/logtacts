@@ -5,21 +5,6 @@ from django.dispatch import receiver
 from .models import Book, BookOwner, LogEntry
 
 
-@receiver(post_save, sender=LogEntry)
-def log_last_contact(sender, **kwargs):
-    instance = kwargs.get('instance')
-    if not kwargs.get('raw') and instance and instance.kind != 'edit':
-        time = instance.created
-        if instance.time:
-            time = instance.time
-        if instance.contact.last_contact and time > instance.contact.last_contact:
-            instance.contact.last_contact = time
-            instance.contact.save()
-        if not instance.contact.last_contact:
-            instance.contact.last_contact = time
-            instance.contact.save()
-
-
 @receiver(post_save, sender=User)
 def create_book_for_sandstorm_user(sender, instance=None, created=False, **kwargs):
     if not kwargs.get('raw') and instance and created:
