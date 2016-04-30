@@ -1,3 +1,8 @@
+0.0.5
+=====
+- Interface overhaul
+- Add tags to multiple contacts
+
 0.0.4
 =====
 

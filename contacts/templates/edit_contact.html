@@ -36,11 +36,13 @@
             <div id="id_name_errors">
                 {{ form.name.errors }}
             </div>
+            {% if not SANDSTORM %}
             <label for="id_should_surface">
                 <small>Should send contact reminders?</small>
                 {{ form.should_surface }}
             </label>
             <p><small>(Contact reminders need to be enabled in <a href="/u/">your settings</a>)</small></p>
+            {% endif %}
         </div>
     </div>
     <hr class="hidden-xs hidden-sm">
