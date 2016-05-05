@@ -15,8 +15,12 @@
         </a>
     </td>
     <td class="hidden-sm hidden-xs">
-        {% for tag in contact.tags.all %}
+        {% for tag in contact.tags.all|slice:":4" %}
+        {% if forloop.counter0 < 3 %}
         <small><a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a></small>
+        {% else %}
+        <a href="{{ contact.get_absolute_url }}">...</a>
+        {% endif %}
         {% endfor %}
     </td>
     <td>
