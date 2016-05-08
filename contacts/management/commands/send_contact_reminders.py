@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 try:
                     if not settings.DEBUG:
                         payload = {
-                            'text': 'Error in logtacts reminder: {}'.format(profile)
+                            'text': 'Error in contactotter reminder: {}'.format(profile)
                         }
                         r = requests.post(
                             settings.SLACK_WEBHOOK_URL,
