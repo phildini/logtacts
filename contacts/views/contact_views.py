@@ -140,6 +140,7 @@ class CopyContactView(BookOwnerMixin, UpdateView):
     def dispatch(self, request, *args, **kwargs):
         contact = self.get_object()
         contact_fields = contact.contactfields.all()
+        tags = contact.tags.all()
         contact.pk = None
         contact.save()
         # TODO: This is a hack. We should make a better copy method soon.
@@ -151,6 +152,8 @@ class CopyContactView(BookOwnerMixin, UpdateView):
                 preferred=field.preferred,
                 value=field.value,
             )
+        for tag in tags:
+            contact.tags.add(tag)
         messages.success(self.request, "Contact copied")
         return HttpResponseRedirect(
             reverse('contacts-edit', kwargs={'pk': contact.pk})
