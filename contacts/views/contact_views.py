@@ -133,6 +133,30 @@ class EditContactView(BookOwnerMixin, UpdateView):
         return super(EditContactView, self).form_valid(form)
 
 
+class CopyContactView(BookOwnerMixin, UpdateView):
+
+    model = Contact
+
+    def dispatch(self, request, *args, **kwargs):
+        contact = self.get_object()
+        contact_fields = contact.contactfields.all()
+        contact.pk = None
+        contact.save()
+        # TODO: This is a hack. We should make a better copy method soon.
+        for field in contact_fields:
+            contact.contactfield_set.create(
+                contact=contact,
+                label=field.label,
+                kind=field.kind,
+                preferred=field.preferred,
+                value=field.value,
+            )
+        messages.success(self.request, "Contact copied")
+        return HttpResponseRedirect(
+            reverse('contacts-edit', kwargs={'pk': contact.pk})
+        )
+
+
 class DeleteContactView(BookOwnerMixin, DeleteView):
 
     model = Contact

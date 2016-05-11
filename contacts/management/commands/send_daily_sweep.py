@@ -1,19 +1,11 @@
 import json
 import logging
 import requests
-from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.db.models import Q
 from django.template.loader import get_template
-from django.utils import timezone
-import contacts as contact_constants
-from contacts.models import (
-    Contact,
-    ContactField,
-)
 from profiles.models import Profile
 
 logger = logging.getLogger('scripts')

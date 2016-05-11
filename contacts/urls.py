@@ -30,6 +30,11 @@ contact_urls = [
         name='contacts-edit',
     ),
     url(
+        r'^(?P<pk>\d+)/copy/$',
+        contact_views.CopyContactView.as_view(),
+        name='contacts-copy',
+    ),
+    url(
         r'^delete/(?P<pk>\d+)/$',
         contact_views.DeleteContactView.as_view(),
         name='contacts-delete',
