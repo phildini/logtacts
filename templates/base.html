@@ -3,7 +3,7 @@
 
 <html>
     <head>
-        <title>ContactOtter</title>
+        <title>{% block title %}{% endblock %}ContactOtter</title>
         <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
         {% include "favicon.html" %}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -21,6 +21,8 @@
         </script>
         {% endif %}
         {% endif %}
+        {% block css %}
+        {% endblock %}
     </head>
 
 <body>
@@ -81,6 +83,7 @@
             </div>
         </div>
     </nav>
+    {% block container %}
     <div class="container">
     {% ifswitch read_only_mode %}
     <div class="alert alert-warning">ContactOtter is currently in read-only mode while we perform some maintenance. All your data is still safe and accessible, but you cannot make edits at this time. </div>
@@ -93,8 +96,9 @@
     {% block content %}
     {% endblock %}
     </div>
+    {% endblock %}
     <footer class="well">
-        {% if user.is_authenticated and not SANDSTORM %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a> | &copy; ContactOtter {% now "Y" %} | <a href="/policies">Policies</a>
+        {% if user.is_authenticated and not SANDSTORM %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a> | &copy; ContactOtter {% now "Y" %} | <a href="/policies">Policies</a> | <a href="/docs/">API</a>
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

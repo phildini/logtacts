@@ -28,6 +28,7 @@ gargoyle.autodiscover()
 
 urlpatterns = [
     url(r'^api/', include(api_urls)),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^tags/', include(tag_urls)),
     url(r'^log/', include(log_urls)),
     url(r'^allauth_login/', allauth_views.login, name='account_login'),

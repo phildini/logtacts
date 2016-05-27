@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'nexus',
     'gargoyle',
     'channels',
+    'rest_framework_swagger',
     # 'debug_toolbar',
 )
 
@@ -203,6 +204,17 @@ CHANNEL_LAYERS = {
         },
         "ROUTING": "logtacts.routing.channel_routing",
     },
+}
+
+SWAGGER_SETTINGS = {
+    'api_version': '0.1',
+    'api_path': '/',
+    'enabled_methods': [
+        'get',
+        'post',
+        'put',
+        'delete',
+    ],
 }
 
 LOGGING = {

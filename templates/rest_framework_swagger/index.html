@@ -1,0 +1,22 @@
+{% extends 'rest_framework_swagger/base.html' %}
+
+{% block title %}ContactOtter API Docs{% endblock %}
+
+{% block branding %}
+    <a id="logo" href="/docs/">ContactOtter API</a>
+{% endblock %}
+{% block api_selector %}
+    <form id="api_selector">
+        <div class="input"><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
+        <div class="input"><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+        <div class="input"><a id="explore" href="#">Explore</a></div>
+    </form>
+{% endblock %}
+
+{% block django_rest_swagger %}
+    <div id="django-rest-swagger">
+        <div class="swagger-ui-wrap">
+            <a href="https://github.com/marcgibbons/django-rest-swagger/">Powered by Django REST Swagger</a>
+        </div>
+    </div>
+{% endblock %}
