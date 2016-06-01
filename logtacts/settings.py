@@ -48,7 +48,7 @@ SITE_ID=1
 PROJECT_ROOT = Path(BASE_DIR)
 
 MEDIA_ROOT = PROJECT_ROOT.child('media')
-STATIC_ROOT = ''
+STATIC_ROOT = PROJECT_ROOT.child('static').child('dist')
 STATICFILES_DIRS = (
     PROJECT_ROOT.child('static'),
 )

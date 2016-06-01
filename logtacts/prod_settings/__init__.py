@@ -50,3 +50,5 @@ OPBEAT = {
     'APP_ID': get_env_variable("OPBEAT_APP_ID"),
     'SECRET_TOKEN': get_env_variable("OPBEAT_SECRET_KEY"),
 }
+
+SWAGGER_SETTINGS['base_path'] = 'https://www.contactotter.com/'
