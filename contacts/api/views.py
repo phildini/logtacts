@@ -22,34 +22,6 @@ class RestrictedRendererMixin(object):
         return [renderer() for renderer in renderers]
 
 
-class ContactSearchAPIView(RestrictedRendererMixin, APIView):
-
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        search_string = request.query_params.get('q')
-        if not search_string:
-            return Response(
-                "No search string",
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        try:
-            book = models.Book.objects.get(bookowner__user=self.request.user)
-        except models.Book.DoesNotExist:
-            # rethink the logic here - how could a user not have a book?
-            return Response(
-                "No contacts for user",
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        results = SearchQuerySet().filter(
-            book=book.id,
-            content=AutoQuery(search_string),
-        )
-        results = [result.object for result in results]
-        serializer = serializers.ContactSerializer(results, many=True)
-        return Response(serializer.data)
-
-
 class TagListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
 
     permission_classes = (IsAuthenticated,)
@@ -82,10 +54,26 @@ class ContactListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIVi
 
 
     def list(self, request):
-        queryset = models.Contact.objects.get_contacts_for_user(
-            self.request.user,
-        )
-        serializer = serializers.ContactSerializer(queryset, many=True)
+        search_string = request.query_params.get('q')
+        if search_string:
+            try:
+                book = models.Book.objects.get(bookowner__user=self.request.user)
+            except models.Book.DoesNotExist:
+                # rethink the logic here - how could a user not have a book?
+                return Response(
+                    "No contacts for user",
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            results = SearchQuerySet().filter(
+                book=book.id,
+                content=AutoQuery(search_string),
+            )
+            results = [result.object for result in results]
+        else:
+            results = models.Contact.objects.get_contacts_for_user(
+                self.request.user,
+            )
+        serializer = serializers.ContactSerializer(results, many=True)
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):

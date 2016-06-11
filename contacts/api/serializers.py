@@ -17,13 +17,10 @@ class ContactFieldSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
-    logentry_set = LogSerializer(many=True, read_only=True)
-    contactfield_set = ContactFieldSerializer(many=True)
 
     class Meta:
         model = models.Contact
-        fields = ('id', 'book', 'name', 'notes', 'tags', 'created', 'changed',
-            'logentry_set', 'contactfield_set')
+        fields = ('id', 'book', 'name', 'notes', 'tags', 'created', 'changed')
 
 
 class TagSerializer(serializers.ModelSerializer):

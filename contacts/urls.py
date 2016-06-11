@@ -118,7 +118,6 @@ log_urls = [
 ]
 
 api_urls = [
-    url(r'^search/$', contact_api_views.ContactSearchAPIView.as_view()),
     url(
         r'^contacts/$',
         contact_api_views.ContactListCreateAPIView.as_view(),
