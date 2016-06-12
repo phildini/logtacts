@@ -146,3 +146,25 @@ class LogListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
             pk=self.kwargs.get('pk'),
         )
         return super(LogListCreateAPIView, self).create(request, *args, **kwargs)
+
+
+class FieldListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ContactFieldSerializer
+    queryset = models.ContactField.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        contact = get_object_or_404(
+            models.Contact.objects.get_contacts_for_user(self.request.user),
+            pk=self.kwargs.get('pk'),
+        )
+        queryset = models.ContactField.objects.filter(contact=contact)
+        serializer = serializers.ContactFieldSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        contact = get_object_or_404(
+            models.Contact.objects.get_contacts_for_user(self.request.user),
+            pk=self.kwargs.get('pk'),
+        )
+        return super(FieldListCreateAPIView, self).create(request, *args, **kwargs)

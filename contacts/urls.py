@@ -130,5 +130,9 @@ api_urls = [
         r'^contacts/(?P<pk>\d+)/logs/$',
         contact_api_views.LogListCreateAPIView.as_view(),
     ),
+    url(
+        r'^contacts/(?P<pk>\d+)/fields/$',
+        contact_api_views.FieldListCreateAPIView.as_view(),
+    ),
     url(r'^tags/$', contact_api_views.TagListCreateAPIView.as_view()),
 ]
