@@ -8,25 +8,6 @@ from contacts.api import views
 from contacts.models import LogEntry
 
 
-class ContactSearchAPIViewTests(TestCase):
-
-    def setUp(self):
-        self.factory = APIRequestFactory()
-        self.book = factories.BookFactory.create()
-        self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(
-            book=self.book,
-            user=self.user,
-        )
-
-    def test_contact_search_no_search_string(self):
-        request = self.factory.get('/api/search/', format='json')
-        force_authenticate(request, user=self.user)
-        response = views.ContactSearchAPIView.as_view()(request)
-        response.render()
-        self.assertEqual(response.status_code, 400)
-
-
 class TagListAPIViewTests(TestCase):
 
     def setUp(self):
