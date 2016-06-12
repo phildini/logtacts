@@ -40,10 +40,11 @@ class ContactView(BookOwnerMixin, FormView):
     form_class = forms.LogEntryForm
 
     def dispatch(self, request, **kwargs):
-        self.contact = get_object_or_404(
-            Contact.objects.get_contacts_for_user(self.request.user),
-            pk=self.kwargs.get('pk'),
-        )
+        if self.request.user.is_authenticated():
+            self.contact = get_object_or_404(
+                Contact.objects.get_contacts_for_user(self.request.user),
+                pk=self.kwargs.get('pk'),
+            )
         return super(ContactView, self).dispatch(request, **kwargs)
 
     def get_success_url(self):

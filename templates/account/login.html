@@ -3,6 +3,7 @@
 {% block content %}
 
 <div class="row">
+<div class="col-md-6">
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -27,10 +28,13 @@
     {{ form.remember.errors }}
 </div>
 <input class="btn btn-success" type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
+{% if redirect_field_value %}
+<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+{% endif %}
 <div>
     <a href="/password_reset/">Forgot password?</a>
 </div>
 </form>
+</div>
 </div>
 {% endblock %}

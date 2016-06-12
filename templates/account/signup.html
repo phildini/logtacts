@@ -2,6 +2,8 @@
 {% load i18n %}
 
 {% block content %}
+<div class="row">
+<div class="col-md-6">
 <h2>Sign up</h2>
 <p class="lead">ContactOtter is in open alpha and accepting signups! After you signup here, we'll finish setting up your account, and send you an email when we're ready.</p>
 <form id="signup_form" method="post" action="/signup/">
@@ -40,4 +42,6 @@
     <button class="btn btn-success" type="submit">Sign Up &raquo;</button>
 </form>
 <p class="small">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+</div>
+</div>
 {% endblock %}
