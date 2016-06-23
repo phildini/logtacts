@@ -13,11 +13,9 @@ import os
 import warnings
 from django.core.exceptions import ImproperlyConfigured
 from unipath import Path
-from dotenv import load_dotenv
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(BASE_DIR, '.env'))
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
     try:
