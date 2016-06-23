@@ -77,6 +77,7 @@ TEMPLATES = [
 # Application definition
 
 INSTALLED_APPS = (
+    # Django first-party apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,27 +86,29 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    # Third-party apps
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'django_gravatar',
     'djangosecure',
     'haystack',
-    'contacts.apps.ContactConfig',
-    'invitations.apps.InvitationConfig',
     'rest_framework',
     'rest_framework.authtoken',
-    'profiles.apps.ProfilesConfig',
     'simple_history',
     'floppyforms',
     'nexus',
     'gargoyle',
     'channels',
     'rest_framework_swagger',
-    # 'debug_toolbar',
+    # ContactOtter Apps
+    'contacts.apps.ContactConfig',
+    'invitations.apps.InvitationConfig',
+    'profiles.apps.ProfilesConfig',
 )
 
 MIDDLEWARE_CLASSES = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+    # 'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
