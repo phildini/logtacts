@@ -232,6 +232,7 @@ class ContactField(models.Model):
     )
     preferred = models.BooleanField(default=False)
     value = models.TextField()
+    check_for_logs = models.BooleanField(default=True)
     history = HistoricalRecords()
 
     def url_quoted(self):

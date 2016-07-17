@@ -30,9 +30,11 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, *args, **kwargs):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
         context['tokens'] = Token.objects.filter(user=self.request.user)
+        context['social_accounts'] = self.request.user.socialaccount_set.all()
         context['invitations'] = Invitation.objects.filter(sender=self.request.user)
         context['send_contact_reminders'] = self.profile.send_contact_reminders
         context['send_birthday_reminders'] = self.profile.send_birthday_reminders
+        context['check_twitter_dms'] = self.profile.check_twitter_dms
         return context
 
     def get_success_url(self):
@@ -45,6 +47,9 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         )
         self.profile.send_birthday_reminders = form.cleaned_data.get(
             'send_birthday_reminders'
+        )
+        self.profile.check_twitter_dms = form.cleaned_data.get(
+            'check_twitter_dms'
         )
         self.profile.save()
 

@@ -7,6 +7,7 @@ class ProfileForm(forms.ModelForm):
 
     send_contact_reminders = forms.BooleanField(required=False)
     send_birthday_reminders = forms.BooleanField(required=False)
+    check_twitter_dms = forms.BooleanField(required=False)
 
     class Meta:
         model = User

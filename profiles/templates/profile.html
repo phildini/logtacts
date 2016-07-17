@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
 {% block content %}
 <h3>User Settings</h3>
 <form action="{{ action }}" method="POST">
@@ -44,8 +48,27 @@
         {{ form.send_birthday_reminders.errors }}
     </div>
     <input id="add_log" type="submit" value="Save">
+    <hr>
+    <h4>Social Settings</h4>
+    {% if social_accounts %}
+    <div>
+        <a class="btn btn-default btn-sm" href="/accounts/social/connections/">Social accounts</a>
+    </div>
+    {% endif %}
+    <div class="checkbox">
+        {{ form.check_twitter_dms.help_text }}
+        <label for="id_check_twitter_dms">
+            <input type="checkbox" {% if check_twitter_dms %}checked="checked"{% endif %} name="check_twitter_dms" id="id_check_twitter_dms">Log DMs on Twitter
+        </label>
+        {% if not social_accounts %}
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process=process scope=scope auth_params=auth_params next="/u/"" %}">Connect to Twitter</a>
+        {% endif %}
+        {{ form.check_twitter_dms.errors }}
+    </div>
+    <input id="add_log" type="submit" value="Save">
 </form>
 {% if tokens %}
+<hr>
 <div class="row">
     <div class="col-md-12">
         <h4>Tokens</h4>
