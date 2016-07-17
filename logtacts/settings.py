@@ -162,6 +162,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -196,6 +197,8 @@ REST_FRAMEWORK = {
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_SESSION_REMEMBER=True
+ACCOUNT_LOGOUT_REDIRECT_URL='/'
 
 CHANNEL_LAYERS = {
     "default": {
