@@ -9,9 +9,7 @@
 
 <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
 
-{% if request.user and request.user.is_authenticated %}
 Code: {{ auth_error.code }}
 
 {{ auth_error }}
-{% endif %}
 {% endblock %}
