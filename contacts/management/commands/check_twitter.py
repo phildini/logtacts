@@ -81,7 +81,10 @@ class Command(BaseCommand):
                 except LogEntry.DoesNotExist:
                     last_log = None
                 if last_log:
-                    days_since_last = (created - last_log.time).days
+                    if last_log.time:
+                        days_since_last = (created - last_log.time).days
+                    elif last_log.created:
+                        days_since_last = (created - last_log.created).days
                 if not days_since_last or days_since_last >= 0:
                     LogEntry.objects.get_or_create(
                         contact=field.contact,
