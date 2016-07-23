@@ -72,11 +72,14 @@ class Command(BaseCommand):
         if fields:
             for field in fields:
                 days_since_last = None
-                last_log = LogEntry.objects.filter(
-                    contact=field.contact,
-                    logged_by=self.user,
-                    kind='twitter',
-                ).latest('time')
+                try:
+                    last_log = LogEntry.objects.filter(
+                        contact=field.contact,
+                        logged_by=self.user,
+                        kind='twitter',
+                    ).latest('time')
+                except LogEntry.DoesNotExist:
+                    last_log = None
                 if last_log:
                     days_since_last = (created - last_log.time).days
                 if not days_since_last or days_since_last >= 0:
