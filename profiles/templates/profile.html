@@ -61,7 +61,7 @@
             <input type="checkbox" {% if check_twitter_dms %}checked="checked"{% endif %} name="check_twitter_dms" id="id_check_twitter_dms">Log DMs on Twitter
         </label>
         {% if not social_accounts %}
-        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process=process scope=scope auth_params=auth_params next="/u/"" %}">Connect to Twitter</a>
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process=connect scope=scope auth_params=auth_params next="/u/"" %}">Connect to Twitter</a>
         {% endif %}
         {{ form.check_twitter_dms.errors }}
     </div>
