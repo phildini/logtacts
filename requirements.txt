@@ -26,3 +26,4 @@ channels==0.12.0
 asgi-redis==0.10.0
 django-rest-swagger==0.3.7
 tweepy==3.5.0
+foursquare==1!2015.5.26
