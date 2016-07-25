@@ -14,7 +14,7 @@ def get_selected_contacts_from_request(request):
             request.user
         ).filter(
             id__in=selected_contacts
-        )
+        ).order_by('-created')
     except TypeError:
         pass
     return contacts

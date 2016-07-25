@@ -316,6 +316,8 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
                 for log in LogEntry.objects.filter(contact=contact):
                     log.contact = primary_contact
                     log.save()
+                for tag in contact.tags.all():
+                    primary_contact.tags.add(tag)
                 note_list.append(contact.name)
                 contact.delete()
             log = LogEntry.objects.create(
