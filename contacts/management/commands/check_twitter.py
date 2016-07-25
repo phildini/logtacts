@@ -12,6 +12,7 @@ from profiles.models import Profile
 
 logger = logging.getLogger('scripts')
 
+
 class Command(BaseCommand):
 
     help = "Check twitter and update contacts"

@@ -116,7 +116,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
     def get_logs(self):
         return LogEntry.objects.logs_for_user_book(
             self.request.user,
-        ).order_by('-created')
+        ).order_by('-time', '-created')
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)

@@ -65,6 +65,16 @@
         {% endif %}
         {{ form.check_twitter_dms.errors }}
     </div>
+    <div class="checkbox">
+        {{ form.check_foursquare.help_text }}
+        <label for="id_check_foursquare">
+            <input type="checkbox" {% if check_foursquare %}checked="checked"{% endif %} name="check_foursquare" id="id_check_foursquare">Log Foursquare and Swarm checkins
+        </label>
+        {% if not social_accounts %}
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "foursquare" process="connect" scope=scope auth_params=auth_params next="/u/"" %}">Connect to Foursquare</a>
+        {% endif %}
+        {{ form.check_foursquare.errors }}
+    </div>
     <input id="add_log" type="submit" value="Save">
 </form>
 {% if tokens %}

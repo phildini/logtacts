@@ -285,6 +285,7 @@ class LogEntry(models.Model):
         ('facebook', 'Facebook'),
         ('email', 'Email'),
         ('in person', 'In Person'),
+        ('foursquare', 'Foursquare'),
         ('website', 'Website'),
         ('other', 'Other'),
         ('edit', 'Edit')
@@ -301,7 +302,11 @@ class LogEntry(models.Model):
     )
     link = models.URLField(blank=True, null=True)
     time = models.DateTimeField(blank=True, null=True)
+    external_id = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.CharField(max_length=100, blank=True, null=True)
+    longitude = models.CharField(max_length=100, blank=True, null=True)
+    external_location_id = models.CharField(max_length=100, blank=True, null=True)
     logged_by = models.ForeignKey(User, blank=True, null=True, related_name='logged_by')
     notes = models.TextField(blank=True)
     history = HistoricalRecords()
@@ -328,7 +333,7 @@ class LogEntry(models.Model):
         response = 'contacted {}'.format(contact_str)
         if self.kind in ('twitter', 'tumblr', 'facebook', 'email'):
             response =  'chatted with {} via {}'.format(contact_str, self.kind)
-        if self.kind == 'in person':
+        if self.kind == 'in person' or self.kind == 'foursquare':
             response = 'met with {}'.format(contact_str)
         if self.kind == 'edit':
             response = "edited {}'s contact info".format(contact_str)
