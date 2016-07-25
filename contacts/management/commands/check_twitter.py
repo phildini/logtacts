@@ -87,12 +87,13 @@ class Command(BaseCommand):
                     elif last_log.created:
                         days_since_last = (created - last_log.created).days
                 if not days_since_last or days_since_last >= 0:
-                    LogEntry.objects.get_or_create(
+                    log, created = LogEntry.objects.get_or_create(
                         contact=field.contact,
                         logged_by=self.user,
                         time=created,
                         kind='twitter',
                     )
+                    field.contact.update_last_contact_from_log(log)
         else:
             contact = Contact.objects.create(
                 book=self.book,
@@ -104,12 +105,13 @@ class Command(BaseCommand):
                 value=message.sender.screen_name,
                 label="Twitter",
             )
-            LogEntry.objects.create(
+            log = LogEntry.objects.create(
                 contact=contact,
                 logged_by=self.user,
                 time=created,
                 kind='twitter',
             )
+            contact.update_last_contact_from_log(log)
 
     def handle(self, *args, **options):
         logger.info("Starting twitter job")
