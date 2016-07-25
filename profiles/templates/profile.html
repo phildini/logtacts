@@ -2,10 +2,14 @@
 
 {% load socialaccount %}
 
-{% get_providers as socialaccount_providers %}
+{% block css %}
+<script src="https://use.fontawesome.com/bd76377166.js"></script>
+{% endblock %}
 
 {% block content %}
-<h3>User Settings</h3>
+<ol class="breadcrumb">
+    <li class="active">Settings</li>
+</ol>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -62,7 +66,7 @@
             <input type="checkbox" {% if check_twitter_dms %}checked="checked"{% endif %} name="check_twitter_dms" id="id_check_twitter_dms">Log DMs on Twitter
         </label>
         {% if not has_twitter %}
-        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process="connect" scope=scope auth_params=auth_params next="/u/"" %}">Connect to Twitter</a>
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process="connect" scope=scope auth_params=auth_params next="/u/"" %}"><span class="fa fa-twitter"></span> Connect to Twitter</a>
         {% endif %}
         {{ form.check_twitter_dms.errors }}
     </div>
@@ -72,7 +76,7 @@
             <input type="checkbox" {% if check_foursquare %}checked="checked"{% endif %} name="check_foursquare" id="id_check_foursquare">Log Foursquare and Swarm checkins
         </label>
         {% if not has_foursquare %}
-        <a class="btn btn-info btn-sm" href="{% provider_login_url "foursquare" process="connect" scope=scope auth_params=auth_params next="/u/"" %}">Connect to Foursquare</a>
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "foursquare" process="connect" scope=scope auth_params=auth_params next="/u/"" %}"><span class="fa fa-foursquare"></span> Connect to Foursquare</a>
         {% endif %}
         {{ form.check_foursquare.errors }}
     </div>
