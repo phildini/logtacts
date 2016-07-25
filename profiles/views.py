@@ -31,6 +31,12 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context = super(ProfileView, self).get_context_data(*args, **kwargs)
         context['tokens'] = Token.objects.filter(user=self.request.user)
         context['social_accounts'] = self.request.user.socialaccount_set.all()
+        context['has_twitter'] = context['social_accounts'].filter(
+            provider='twitter',
+        )
+        context['has_foursquare'] = context['social_accounts'].filter(
+            provider='foursquare',
+        )
         context['invitations'] = Invitation.objects.filter(sender=self.request.user)
         context['send_contact_reminders'] = self.profile.send_contact_reminders
         context['send_birthday_reminders'] = self.profile.send_birthday_reminders
