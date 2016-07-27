@@ -90,11 +90,12 @@ allauth_urls = [
 
 urlpatterns = [
     url(r'^api/', include(api_urls)),
+    url(r"^signup/$", allauth_views.signup, name="signup"),
+    url(r"^login/$", allauth_views.login, name="login"),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^tags/', include(tag_urls)),
     url(r'^log/', include(log_urls)),
     url(r'^accounts/', include(allauth_urls)),
-    url(r'^login/', allauth_views.login, name='login'),
     url(
         r'^hold/',
         TemplateView.as_view(template_name='signup_success.html'),

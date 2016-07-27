@@ -2,6 +2,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
+from captcha.fields import ReCaptchaField
+
 
 class ProfileForm(forms.ModelForm):
 
@@ -36,3 +38,11 @@ class ReviewUserForm(forms.Form):
             choices=choices,
             widget=forms.CheckboxSelectMultiple()
         )
+
+
+class ReCaptchaSignupForm(forms.Form):
+
+    captcha = ReCaptchaField()
+
+    def signup(self, request, user):
+        pass

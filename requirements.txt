@@ -27,3 +27,4 @@ asgi-redis==0.10.0
 django-rest-swagger==0.3.7
 tweepy==3.5.0
 git+https://github.com/mLewisLogic/foursquare.git#egg=foursquare
+django-recaptcha==1.0.5

@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     'gargoyle',
     'channels',
     'rest_framework_swagger',
+    'captcha',
     # ContactOtter Apps
     'contacts.apps.ContactConfig',
     'invitations.apps.InvitationConfig',
@@ -201,6 +202,11 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED=True
 ACCOUNT_SESSION_REMEMBER=True
 ACCOUNT_LOGOUT_REDIRECT_URL='/'
+ACCOUNT_SIGNUP_FORM_CLASS='profiles.forms.ReCaptchaSignupForm'
+
+RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
+NOCAPTCHA = True
 
 CHANNEL_LAYERS = {
     "default": {

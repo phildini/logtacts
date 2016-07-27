@@ -19,13 +19,13 @@
         <label for="id_username">Username</label>
         {{ form.username.help_text }}
         {{ form.username.errors }}
-        <input class="form-control" autofocus="autofocus" id="id_username" maxlength="30" name="username" type="text" />
+        <input class="form-control" autofocus="autofocus" id="id_username" maxlength="30" name="username" type="text" {% if form.username.value %}value="{{ form.username.value }}"{% endif %}/>
     </div>
     <div class="form-group">
         <label for="id_email">Email</label>
         {{ form.email.help_text }}
         {{ form.email.errors }}
-        <input class="form-control" autofocus="autofocus" id="id_email" maxlength="30" name="email" type="email" />
+        <input class="form-control" autofocus="autofocus" id="id_email" maxlength="30" name="email" type="email" {% if form.username.email %}value="{{ form.username.email }}"{% endif %}/>
     </div>
     <div class="form-group">
         <label for="id_password1">Password</label>
@@ -39,9 +39,15 @@
         {{ form.password2.errors }}
         <input class="form-control" autofocus="autofocus" id="id_password2" maxlength="30" name="password2" type="password" />
     </div>
+    {{ form.captcha.errors }}
+    {{ form.captcha }}
     <button class="btn btn-success" type="submit">Sign Up &raquo;</button>
 </form>
 <p class="small">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
 {% endblock %}
