@@ -33,11 +33,21 @@ class ContactFieldAdmin(SimpleHistoryAdmin):
         'contact',
         'created',
         'changed',
+        'preferred',
+    )
+
+
+class LogAdmin(SimpleHistoryAdmin):
+    list_display = (
+        'contact',
+        'kind',
+        'created',
+        'time',
     )
 
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Book, SimpleHistoryAdmin)
 admin.site.register(BookOwner, SimpleHistoryAdmin)
-admin.site.register(LogEntry, SimpleHistoryAdmin)
+admin.site.register(LogEntry, LogAdmin)
 admin.site.register(ContactField, ContactFieldAdmin)
