@@ -5,7 +5,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -73,6 +78,7 @@ class ContactView(BookOwnerMixin, FormView):
         )
         return super(ContactView, self).form_valid(form)
 
+
 class CreateContactView(BookOwnerMixin, CreateView):
 
     model = Contact
@@ -99,6 +105,7 @@ class CreateContactView(BookOwnerMixin, CreateView):
             "Contact added",
         )
         return super(CreateContactView, self).form_valid(form)
+
 
 class EditContactView(BookOwnerMixin, UpdateView):
     model = Contact
@@ -176,6 +183,7 @@ class DeleteContactView(BookOwnerMixin, DeleteView):
         )
         return super(DeleteContactView, self).form_valid(form)
 
+
 class CreateTagView(BookOwnerMixin, CreateView):
     model = Tag
     template_name = 'edit_tag.html'
@@ -251,42 +259,48 @@ class ExportAddressView(BookOwnerMixin, TemplateView):
 
 
 def email_csv_view(request):
-    contacts = common.get_selected_contacts_from_request(request)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="contact_emails.csv"'
-    writer = csv.writer(response)
-    writer.writerow(['Name', 'Email'])
-    for contact in contacts:
-        writer.writerow([contact.name, contact.preferred_email])
-    request.session['selected_contacts'] = None
-    return response
+    if request.user.is_authenticated():
+        contacts = common.get_selected_contacts_from_request(request)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="contact_emails.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Name', 'Email'])
+        for contact in contacts:
+            writer.writerow([contact.name, contact.preferred_email])
+        request.session['selected_contacts'] = None
+        return response
+    raise Http404()
 
 
 def address_csv_view(request):
-    contacts = common.get_selected_contacts_from_request(request)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="contact_addresses.csv"'
-    writer = csv.writer(response)
-    writer.writerow(['Name', 'Address'])
-    for contact in contacts:
-        writer.writerow([contact.name, contact.preferred_address])
-    request.session['selected_contacts'] = None
-    return response
+    if request.user.is_authenticated():
+        contacts = common.get_selected_contacts_from_request(request)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="contact_addresses.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Name', 'Address'])
+        for contact in contacts:
+            writer.writerow([contact.name, contact.preferred_address])
+        request.session['selected_contacts'] = None
+        return response
+    raise Http404()
 
 
 def export_full_contact_book_json_view(request):
-    contacts = Contact.objects.get_contacts_for_user(request.user)
-    contact_serializer = serializers.ContactSerializer(contacts, many=True)
-    tags = Tag.objects.get_tags_for_user(request.user)
-    tag_serializer = serializers.TagSerializer(tags, many=True)
-    export = {
-        'version': 2,
-        'contacts': contact_serializer.data,
-        'tags': tag_serializer.data,
-    }
-    response = JsonResponse(export)
-    response['Content-Disposition'] = 'attachment; filename="full_export.json"'
-    return response
+    if request.user.is_authenticated():
+        contacts = Contact.objects.get_contacts_for_user(request.user)
+        contact_serializer = serializers.ContactSerializer(contacts, many=True)
+        tags = Tag.objects.get_tags_for_user(request.user)
+        tag_serializer = serializers.TagSerializer(tags, many=True)
+        export = {
+            'version': 2,
+            'contacts': contact_serializer.data,
+            'tags': tag_serializer.data,
+        }
+        response = JsonResponse(export)
+        response['Content-Disposition'] = 'attachment; filename="full_export.json"'
+        return response
+    raise Http404()
 
 
 class MergeContactsView(BookOwnerMixin, TemplateView):
