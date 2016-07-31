@@ -8,10 +8,7 @@ from contacts.models import BookOwner
 class BookOwnerMixin(LoginRequiredMixin):
 
     def get_queryset(self):
-        queryset = super(BookOwnerMixin, self).get_queryset()
-        queryset = queryset.filter(
-            book__bookowner__user=self.request.user,
-        )
+        queryset = self.model.objects.for_user(self.request.user)
         return queryset
 
     def get_object(self, queryset=None):

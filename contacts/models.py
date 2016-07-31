@@ -13,9 +13,10 @@ import contacts as contact_settings
 class TagManager(models.Manager):
 
     def get_tags_for_user(self, user):
-        return self.filter(
-            book__bookowner__user=user,
-        )
+        return self.filter(book__bookowner__user=user)
+
+    def for_user(self, user):
+        return self.filter(book__bookowner__user=user)
 
 
 class Tag(models.Model):
@@ -49,9 +50,10 @@ class Tag(models.Model):
 class ContactManager(models.Manager):
 
     def get_contacts_for_user(self, user):
-        return self.filter(
-            book__bookowner__user=user,
-        )
+        return self.filter(book__bookowner__user=user)
+
+    def for_user(self, user):
+        return self.filter(book__bookowner__user=user)
 
 
 class Contact(models.Model):
@@ -209,6 +211,12 @@ class Contact(models.Model):
             self.save()
 
 
+class ContactFieldManager(models.Manager):
+
+    def for_user(self, user):
+        return self.filter(contact__book__bookowner__user=user)
+
+
 class ContactField(models.Model):
 
     FIELD_TYPES = (
@@ -235,10 +243,18 @@ class ContactField(models.Model):
     check_for_logs = models.BooleanField(default=True)
     history = HistoricalRecords()
 
+    objects = ContactFieldManager()
+
     def url_quoted(self):
         return quote_plus(
             self.value.replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ')
         )
+
+
+class BookManager(models.Manager):
+
+    def get_for_user(self, user):
+        return self.get(bookowner__user=user)
 
 
 class Book(models.Model):
@@ -246,6 +262,7 @@ class Book(models.Model):
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     history = HistoricalRecords()
+    objects = BookManager()
 
     def __str__(self):
         return self.name
@@ -276,6 +293,9 @@ class LogEntryManager(models.Manager):
         return self.filter(
             contact__tags__id=tag.pk,contact__book__bookowner__user=user,
         )
+
+    def for_user(self, user):
+        return self.filter(contact__book__bookowner__user=user)
 
 
 class LogEntry(models.Model):

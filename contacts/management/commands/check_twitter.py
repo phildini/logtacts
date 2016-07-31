@@ -64,11 +64,10 @@ class Command(BaseCommand):
 
     def create_log_or_contact_for_message(self, message):
         created = pytz.utc.localize(message.created_at)
-        fields = ContactField.objects.filter(
+        fields = ContactField.objects.for_user(self.user).filter(
             kind=contact_settings.FIELD_TYPE_TWITTER,
             value=message.sender.screen_name,
             check_for_logs=True,
-            contact__book__bookowner__user=self.user,
         )
         if fields:
             for field in fields:

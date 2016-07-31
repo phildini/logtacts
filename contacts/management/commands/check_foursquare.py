@@ -51,11 +51,10 @@ class Command(BaseCommand):
             friend = self.get_foursquare_user_details(friend_dict['id'])
             email = friend.get('contact', {}).get('email')
             if email:
-                fields = ContactField.objects.filter(
+                fields = ContactField.objects.for_user(self.user).filter(
                     kind=contact_settings.FIELD_TYPE_EMAIL,
                     value=email,
                     check_for_logs=True,
-                    contact__book__bookowner__user=self.user,
                 )
                 if fields:
                     for field in fields:

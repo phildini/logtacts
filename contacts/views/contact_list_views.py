@@ -38,7 +38,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
     def get_search_contacts(self):
         try:
-            book = Book.objects.get(bookowner__user=self.request.user)
+            book = Book.objects.get_for_user(self.request.user)
         except Book.DoesNotExist:
             raise Http404()
         self.query = self.request.GET.get('q')

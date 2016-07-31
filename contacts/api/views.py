@@ -57,7 +57,7 @@ class ContactListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIVi
         search_string = request.query_params.get('q')
         if search_string:
             try:
-                book = models.Book.objects.get(bookowner__user=self.request.user)
+                book = models.Book.objects.get_for_user(self.request.user)
             except models.Book.DoesNotExist:
                 # rethink the logic here - how could a user not have a book?
                 return Response(
