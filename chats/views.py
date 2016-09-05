@@ -63,7 +63,7 @@ def sms(request):
                 time=timezone.now(),
                 kind='in person'
             )
-
+            r = Response()
             r.message(
                 "Updated {} ({})".format(contact.name, contact.get_complete_url())
             )
@@ -86,6 +86,7 @@ def sms(request):
                     Site.objects.get_current().domain,
                     name,
                 )
+            r = Response()
             r.message("Here's what I found for {}:\n{}".format(name, response_string))
             return HttpResponse(r.toxml(), content_type='text/xml')
 
