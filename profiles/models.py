@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from simple_history.models import HistoricalRecords
 
+from phonenumber_field.modelfields import PhoneNumberField
 
 class Profile(models.Model):
 
@@ -13,6 +14,7 @@ class Profile(models.Model):
     check_twitter_dms = models.BooleanField(default=True)
     check_twitter_mentions = models.BooleanField(default=True)
     check_foursquare = models.BooleanField(default=True)
+    phone_number = PhoneNumberField(blank=True)
     history = HistoricalRecords()
 
     def __str__(self):

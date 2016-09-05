@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'contacts.apps.ContactConfig',
     'invitations.apps.InvitationConfig',
     'profiles.apps.ProfilesConfig',
+    'chats.apps.ChatsConfig',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from captcha.fields import ReCaptchaField
 
+from phonenumber_field.formfields import PhoneNumberField
+
 
 class ProfileForm(forms.ModelForm):
 
@@ -11,6 +13,7 @@ class ProfileForm(forms.ModelForm):
     send_birthday_reminders = forms.BooleanField(required=False)
     check_twitter_dms = forms.BooleanField(required=False)
     check_foursquare = forms.BooleanField(required=False)
+    phone_number = PhoneNumberField(required=False)
 
     class Meta:
         model = User

@@ -37,6 +37,12 @@
         {{ form.email.errors }}
         <input id="id_email" class="form-control" maxlength="30" name="email" type="text" {% if user.email %}value="{{ user.email }}"{% endif %}/>
     </div>
+    <div class="form-group">
+        <label for="id_phone_number">Phone Number</label>
+        Must be in the form "+12345678910"
+        {{ form.phone_number.errors }}
+        <input id="id_phone_number" class="form-control" maxlength="30" name="phone_number" type="tel" {% if phone_number %}value="{{ phone_number }}"{% endif %}/>
+    </div>
     <div class="checkbox">
         {{ form.send_contact_reminders.help_text }}
         <label for="id_send_contact_reminders">

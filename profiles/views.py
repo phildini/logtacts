@@ -42,6 +42,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context['send_birthday_reminders'] = self.profile.send_birthday_reminders
         context['check_twitter_dms'] = self.profile.check_twitter_dms
         context['check_foursquare'] = self.profile.check_foursquare
+        context['phone_number'] = self.profile.phone_number
         return context
 
     def get_success_url(self):
@@ -61,6 +62,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         self.profile.check_foursquare = form.cleaned_data.get(
             'check_foursquare'
         )
+        self.profile.phone_number = form.cleaned_data.get('phone_number')
         self.profile.save()
 
         messages.success(self.request, "Profile saved")

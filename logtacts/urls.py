@@ -29,6 +29,8 @@ from logtacts.views import HomeView
 
 from profiles.views import ReviewUserView
 
+from chats.views import sms
+
 admin.autodiscover()
 gargoyle.autodiscover()
 
@@ -89,6 +91,7 @@ allauth_urls = [
 
 
 urlpatterns = [
+    url(r'^sms/$', sms),
     url(r'^api/', include(api_urls)),
     url(r"^signup/$", allauth_views.signup, name="signup"),
     url(r"^login/$", allauth_views.login, name="login"),
