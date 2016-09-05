@@ -28,7 +28,6 @@ def sms(request):
     if request.method == 'GET':
         return HttpResponseRedirect('/')
     if request.method == 'POST':
-        import pdb; pdb.set_trace()
         user, book = get_user_objects_from_message(request.POST)
         if not user or not book:
             r = Response()
