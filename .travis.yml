@@ -9,8 +9,7 @@ before_install:
 after_success:
 - codecov
 install: pip install -r requirements.txt
-script: coverage run manage.py test contacts profiles invitations && coverage report
-  --include='./*'
+script: coverage run manage.py test contacts profiles invitations --settings=logtacts.test_settings && coverage report --include='./*'
 deploy:
   provider: heroku
   api_key:
