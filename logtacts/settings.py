@@ -204,16 +204,19 @@ ACCOUNT_EMAIL_REQUIRED=True
 ACCOUNT_SESSION_REMEMBER=True
 ACCOUNT_LOGOUT_REDIRECT_URL='/'
 ACCOUNT_SIGNUP_FORM_CLASS='profiles.forms.ReCaptchaSignupForm'
+ACCOUNT_UNIQUE_EMAIL=True
 
 RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
 NOCAPTCHA = True
 
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [REDIS_URL],
         },
         "ROUTING": "logtacts.routing.channel_routing",
     },
@@ -228,6 +231,16 @@ SWAGGER_SETTINGS = {
         'put',
         'delete',
     ],
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 LOGGING = {

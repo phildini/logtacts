@@ -8,6 +8,7 @@ django-floppyforms==1.7.0
 django-gravatar2==1.4.0
 django-phonenumber-field==1.1.0
 django-recaptcha==1.0.5
+django-redis==4.4.4
 django-rest-swagger==0.3.7
 django-sandstorm==0.0.2
 django-secure==1.0.1
