@@ -65,7 +65,10 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
         query = ' '.join(parts)
         sqs = searchqueryset.auto_query(query.strip())
-        contact_ids = [result.object.id for result in sqs]
+        try:
+            contact_ids = [result.object.id for result in sqs]
+        except:
+            contact_ids = []
         return contact_ids
 
     def get_success_url(self, *args, **kwargs):

@@ -92,6 +92,17 @@ def sms(request):
                 contact = contacts[index].object
                 cache.delete(cache_key)
                 return log_contact(contact, user)
+            if flow_state.startswith('find'):
+                name = ':'.join(flow_state.split(':')[1:])
+                contacts = SearchQuerySet().filter(
+                    book=book.id,
+                ).auto_query(name)
+                index = ascii_lowercase.index(message.lower())
+                contact = contacts[index].object
+                cache.delete(cache_key)
+                r = Response()
+                r.message(get_contact_string(contact))
+                return HttpResponse(r.toxml(), content_type='text/xml')
 
         tokens = message.split(' ')
         if len(tokens) < 2:
@@ -104,7 +115,6 @@ def sms(request):
             contacts = SearchQuerySet().filter(
                 book=book.id,
             ).auto_query(name)
-
             if len(contacts) > 1:
                 cache.set(cache_key, "log:{}".format(name), CACHE_TIMEOUT)
                 response_string = "Which {} did you mean?\n".format(name)
@@ -128,14 +138,22 @@ def sms(request):
             name = ' '.join(tokens[1:])
             contacts = SearchQuerySet().filter(
                 book=book.id,
-                content=AutoQuery(name),
-            )
+            ).auto_query(name)
+            if len(contacts) == 0:
+                r = Response()
+                r.message("Hmm... I didn't find any contacts.")
+                return HttpResponse(r.toxml(), content_type='text/xml')
+            if len(contacts) == 1:
+                r = Response()
+                r.message(get_contact_string(contacts[0].object))
+                return HttpResponse(r.toxml(), content_type='text/xml')
             response_string = get_string_from_search_contacts(contacts)
             if len(contacts) > 3:
                 response_string += "More: https://{}/search/?q={}".format(
                     Site.objects.get_current().domain,
                     name,
                 )
+            cache.set(cache_key, "find:{}".format(name), CACHE_TIMEOUT)
             r = Response()
             r.message("Here's what I found for {}:\n{}".format(name, response_string))
             return HttpResponse(r.toxml(), content_type='text/xml')
@@ -165,6 +183,18 @@ def get_string_from_search_contacts(contacts):
         response_string += "{}: {} ({})\n".format(
             letter.upper(), contact.name, contact.get_complete_url(),
         )
+    return response_string
+
+
+def get_contact_string(contact):
+    response_string = "{}\n".format(contact.name)
+    if contact.preferred_phone:
+        response_string += "{}\n".format(contact.preferred_phone)
+    if contact.preferred_email:
+        response_string += "{}\n".format(contact.preferred_email)
+    if contact.preferred_address:
+        response_string += "{}\n".format(contact.preferred_address)
+    response_string += "{}\n".format(contact.get_complete_url())
     return response_string
 
 

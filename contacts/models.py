@@ -145,6 +145,21 @@ class Contact(models.Model):
         return self._preferred_address
 
     @property
+    def preferred_phone(self):
+        if not (hasattr(self, '_preferred_phone') and self._preferred_phone):
+            self._preferred_phone = ''
+            phones = self.phones().values_list('preferred', 'value')
+            if phones:
+                preferred_phones = [
+                    phone for phone in phones if phone[0] == True
+                ]
+                if len(preferred_phones) > 0:
+                    self._preferred_phone = preferred_phone[0][1]
+                else:
+                    self._preferred_phone = phones[0][1]
+        return self._preferred_phone
+
+    @property
     def contactfields(self):
         if not (hasattr(self, '_contactfields') and self._contactfields):
             self._contactfields = ContactField.objects.filter(contact=self)
