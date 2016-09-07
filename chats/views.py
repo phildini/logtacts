@@ -33,8 +33,6 @@ QUERY_ACCOUNT = 'query_account'
 GET_EMAIL = 'get_email'
 NEW_ACCOUNT = 'new_account'
 
-logger = logging.getLogger('loggly_logs')
-
 
 @csrf_exempt
 def sms(request):
@@ -43,8 +41,8 @@ def sms(request):
     if request.method == 'POST':
         overall_start = time.time()
         cache_key = request.POST.get('From')
+        co_number = request.POST.get('To')
         message = request.POST.get('Body').strip()
-
         if not cache_key:
             raise Http404()
         parse_flow_start = time.time()
@@ -56,14 +54,16 @@ def sms(request):
             if flow_state == QUERY_ACCOUNT:
                 if message.lower() in ('yes', 'yep'):
                     cache.set(cache_key, GET_EMAIL, CACHE_TIMEOUT)
-                    r = Response()
-                    r.message("Ok, what's the email address on your account?")
-                    return HttpResponse(r.toxml(), content_type='text/xml')
+                    return create_message(
+                        "Ok, what's the email address on your account?",
+                        to=cache_key, sender=co_number,
+                    )
                 else:
                     cache.delete(cache_key)
-                    r = Response()
-                    r.message("Ok! Please go to https://www.contactotter.com to create an account.")
-                    return HttpResponse(r.toxml(), content_type='text/xml')
+                    return create_message(
+                        "Ok! Please go to https://www.contactotter.com to create an account.",
+                        to=cache_key, sender=co_number,
+                    )
             if flow_state == GET_EMAIL:
                 try:
                     # TODO: Send a confirmation email for connecting phone
@@ -72,23 +72,23 @@ def sms(request):
                     profile.phone_number = cache_key
                     profile.save()
                     cache.delete(cache_key)
-                    r = Response()
-                    r.message("Ok! Your phone is connected to your account.")
-                    return HttpResponse(r.toxml(), content_type='text/xml')
+                    return create_message(
+                        "Ok! Your phone is connected to your account.",
+                        to=cache_key, sender=co_number,
+                    )
                 except User.DoesNotExist:
                     cache.delete(cache_key)
-                    r = Response()
-                    r.message("We couldn't find an account for that email. Please go to https://www.contactotter.com to create one")
-                    return HttpResponse(r.toxml(), content_type='text/xml')
-        logger.info("Time in flow parse: {}".format(time.time() - parse_flow_start))
-        fetch_data_start = time.time()
+                    return create_message(
+                        "We couldn't find an account for that email. Please go to https://www.contactotter.com to create one",
+                        to=cache_key, sender=co_number,
+                    )
         user, book = get_user_objects_from_message(request.POST)
-        logger.info("Time in user fetch: {}".format(time.time() - fetch_data_start))
         if not user or not book:
             cache.set(cache_key, QUERY_ACCOUNT, CACHE_TIMEOUT)
-            r = Response()
-            r.message("Hmm... I can't find an account with this number. Do you have a ContactOtter account?")
-            return HttpResponse(r.toxml(), content_type='text/xml')
+            return create_message(
+                "Hmm... I can't find an account with this number. Do you have a ContactOtter account?",
+                to=cache_key, sender=co_number,
+            )
 
         parse_flow_start = time.time()
         if flow_state:
@@ -100,7 +100,6 @@ def sms(request):
                 index = ascii_lowercase.index(message.lower())
                 contact = contacts[index].object
                 cache.delete(cache_key)
-                logger.info("Time in second flow: {}".format(time.time() - parse_flow_start))
                 return log_contact(contact, user)
             if flow_state.startswith('find'):
                 name = ':'.join(flow_state.split(':')[1:])
@@ -110,10 +109,9 @@ def sms(request):
                 index = ascii_lowercase.index(message.lower())
                 contact = contacts[index].object
                 cache.delete(cache_key)
-                r = Response()
-                r.message(get_contact_string(contact))
-                logger.info("Time in second flow: {}".format(time.time() - parse_flow_start))
-                return HttpResponse(r.toxml(), content_type='text/xml')
+                return create_message(
+                    get_contact_string(contact), to=cache_key, sender=co_number,
+                )
 
 
         tokens = message.split(' ')
@@ -133,10 +131,9 @@ def sms(request):
                 response_string = "Which {} did you mean?\n".format(name)
                 response_string += get_string_from_search_contacts(contacts)
                 response_string += "(DONE to exit)"
-                r = Response()
-                r.message(response_string)
-                logger.info("Time in search: {}".format(time.time() - search_start))
-                return HttpResponse(r.toxml(), content_type='text/xml')
+                return create_message(
+                    response_string, to=cache_key, sender=co_number,
+                )
             if len(contacts) == 1:
                 contact = contacts[0].object
             else:
@@ -154,15 +151,15 @@ def sms(request):
                 book=book.id,
             ).auto_query(name)
             if len(contacts) == 0:
-                r = Response()
-                r.message("Hmm... I didn't find any contacts.")
-                logger.info("Time in search: {}".format(time.time() - search_start))
-                return HttpResponse(r.toxml(), content_type='text/xml')
+                return create_message(
+                    "Hmm... I didn't find any contacts.",
+                    to=cache_key, sender=co_number,
+                )
             if len(contacts) == 1:
-                r = Response()
-                r.message(get_contact_string(contacts[0].object))
-                logger.info("Time in search: {}".format(time.time() - search_start))
-                return HttpResponse(r.toxml(), content_type='text/xml')
+                return create_message(
+                    get_contact_string(contacts[0].object),
+                    to=cache_key, sender=co_number,
+                )
             response_string = get_string_from_search_contacts(contacts)
             if len(contacts) > 3:
                 response_string += "More: https://{}/search/?q={}".format(
@@ -170,12 +167,17 @@ def sms(request):
                     name,
                 )
             cache.set(cache_key, "find:{}".format(name), CACHE_TIMEOUT)
-            r = Response()
-            r.message("Here's what I found for {}:\n{}".format(name, response_string))
-            logger.info("Time in search: {}".format(time.time() - search_start))
-            return HttpResponse(r.toxml(), content_type='text/xml')
-        logger.info("Total time: {}".format(time.time() - overall_start))
+            return create_message(
+                "Here's what I found for {}:\n{}".format(name, response_string),
+                to=cache_key, sender=co_number,
+            )
         return help_message()
+
+
+def create_message(message, to, sender):
+    r = Response()
+    r.message(message, to=to, sender=sender)
+    return HttpResponse(r.toxml(), content_type='text/xml')
 
 
 def log_contact(contact, user):
