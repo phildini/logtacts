@@ -45,7 +45,6 @@ def sms(request):
         message = request.POST.get('Body').strip()
         if not cache_key:
             raise Http404()
-        parse_flow_start = time.time()
         flow_state = cache.get(cache_key)
         if flow_state:
             if message.lower() == 'done':
@@ -90,27 +89,38 @@ def sms(request):
                 to=cache_key, sender=co_number,
             )
 
-        parse_flow_start = time.time()
         if flow_state:
             if flow_state.startswith('log'):
                 name = ':'.join(flow_state.split(':')[1:])
                 contacts = SearchQuerySet().filter(
                     book=book.id,
                 ).auto_query(name)
-                index = ascii_lowercase.index(message.lower())
-                contact = contacts[index].object
+                if len(message) == 1 and len(contacts) > 0:
+                    index = ascii_lowercase.index(message.lower())
+                    contact = contacts[index].object
+                    cache.delete(cache_key)
+                    return log_contact(contact, user)
                 cache.delete(cache_key)
-                return log_contact(contact, user)
+                return create_message(
+                    "Sorry, I didn't understand that.",
+                    to=cache_key, sender=co_number,
+                )
             if flow_state.startswith('find'):
                 name = ':'.join(flow_state.split(':')[1:])
                 contacts = SearchQuerySet().filter(
                     book=book.id,
                 ).auto_query(name)
-                index = ascii_lowercase.index(message.lower())
-                contact = contacts[index].object
+                if len(message) == 1 and len(contacts) > 0:
+                    index = ascii_lowercase.index(message.lower())
+                    contact = contacts[index].object
+                    cache.delete(cache_key)
+                    return create_message(
+                        get_contact_string(contact), to=cache_key, sender=co_number,
+                    )
                 cache.delete(cache_key)
                 return create_message(
-                    get_contact_string(contact), to=cache_key, sender=co_number,
+                    "Sorry, I didn't understand that.",
+                    to=cache_key, sender=co_number,
                 )
 
 
