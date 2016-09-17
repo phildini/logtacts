@@ -191,12 +191,15 @@ def create_message(message, to, sender):
 
 
 def log_contact(contact, user):
+    time =timezone.now()
     LogEntry.objects.create(
         contact=contact,
         logged_by=user,
         time=timezone.now(),
         kind='in person'
     )
+    contact.last_contact = time
+    contact.save()
     r = Response()
     r.message(
         "Updated {} ({})".format(contact.name, contact.get_complete_url())
