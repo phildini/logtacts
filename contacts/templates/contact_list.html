@@ -25,10 +25,8 @@
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=oldnew">Old to New</a></li>
-                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=newold">New to Old</a></li>
+                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=oldnew">Last contacted</a></li>
                 <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=az">A to z</a></li>
-                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=za">z to A</a></li>
             </ul>
         </div>
         <div class="btn-group">
