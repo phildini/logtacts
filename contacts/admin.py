@@ -13,6 +13,7 @@ class ContactAdmin(SimpleHistoryAdmin):
     list_display = (
         'name',
         'book',
+        'last_contact',
         'created',
         'changed'
     )
