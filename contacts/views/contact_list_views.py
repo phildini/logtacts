@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
@@ -103,18 +104,18 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
             base_queryset = super(ContactListView, self).get_queryset()
             if self.request.GET.get('q'):
                 base_queryset = base_queryset.filter(id__in=self.get_search_contacts())
-            self._queryset = base_queryset
+            self._queryset = base_queryset.annotate(has_last_contact=Count('last_contact'))
             sort = self.request.GET.get('s')
             if sort == 'oldnew':
-                self._queryset = self._queryset.order_by('last_contact')
+                self._queryset = self._queryset.order_by('-has_last_contact','last_contact')
             if sort == 'newold':
-                self._queryset = self._queryset.order_by('-last_contact')
+                self._queryset = self._queryset.order_by('-has_last_contact','-last_contact')
             if sort == 'za':
                 self._queryset = self._queryset.order_by('-name')
             if sort == 'az':
                 self._queryset = self._queryset.order_by('name')
             else:
-                self._queryset = self._queryset.order_by('-last_contact')
+                self._queryset = self._queryset.order_by('-has_last_contact','-last_contact')
             self._queryset = self._queryset.prefetch_related('tags')
         return self._queryset
 
