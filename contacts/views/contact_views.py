@@ -89,7 +89,7 @@ class CreateContactView(BookOwnerMixin, CreateView):
         return reverse('contacts-view', kwargs={'pk': self.object.id})
 
     def get_form_kwargs(self):
-        kwargs = super(EditContactView, self).get_form_kwargs()
+        kwargs = super(CreateContactView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
         try:
             book = BookOwner.objects.get(user=self.request.user).book
