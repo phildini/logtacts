@@ -89,9 +89,16 @@ class CreateContactView(BookOwnerMixin, CreateView):
         return reverse('contacts-view', kwargs={'pk': self.object.id})
 
     def get_form_kwargs(self):
-        kwargs = super(CreateContactView, self).get_form_kwargs()
+        kwargs = super(EditContactView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
-        kwargs['book'] = BookOwner.objects.get(user=self.request.user).book
+        try:
+            book = BookOwner.objects.get(user=self.request.user).book
+        except BookOwner.DoesNotExist:
+            book = book = contact_models.Book.objects.create(
+                name="{}'s Contacts".format(self.request.user),
+            )
+            BookOwner.objects.create(book=book, user=self.request.user)
+        kwargs['book'] = book
         return kwargs
 
     def get_context_data(self, **kwargs):
