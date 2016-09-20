@@ -28,6 +28,7 @@ from django.utils import timezone
 from contacts.api import serializers
 from contacts.models import (
     Contact,
+    Book,
     BookOwner,
     Tag,
     LogEntry,
@@ -94,7 +95,7 @@ class CreateContactView(BookOwnerMixin, CreateView):
         try:
             book = BookOwner.objects.get(user=self.request.user).book
         except BookOwner.DoesNotExist:
-            book = book = contact_models.Book.objects.create(
+            book = Book.objects.create(
                 name="{}'s Contacts".format(self.request.user),
             )
             BookOwner.objects.create(book=book, user=self.request.user)
@@ -131,7 +132,7 @@ class EditContactView(BookOwnerMixin, UpdateView):
         try:
             book = BookOwner.objects.get(user=self.request.user).book
         except BookOwner.DoesNotExist:
-            book = book = contact_models.Book.objects.create(
+            book = Book.objects.create(
                 name="{}'s Contacts".format(self.request.user),
             )
             BookOwner.objects.create(book=book, user=self.request.user)
