@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-from django.db.models import Count
+from django.db.models import Case, Count, When
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
@@ -66,7 +66,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
         query = ' '.join(parts).strip()
         sqs = searchqueryset.filter(
-            SQ(content=AutoQuery(query)) | SQ(name=AutoQuery(query))
+            SQ(name=AutoQuery(query)) | SQ(content=AutoQuery(query))
         )
         try:
             contact_ids = [result.object.id for result in sqs]
@@ -105,7 +105,11 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         if not (hasattr(self, '_queryset') and self._queryset):
             base_queryset = super(ContactListView, self).get_queryset()
             if self.request.GET.get('q'):
-                base_queryset = base_queryset.filter(id__in=self.get_search_contacts())
+                search_contacts = self.get_search_contacts()
+                preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(search_contacts)])
+                base_queryset = base_queryset.filter(
+                    id__in=search_contacts
+                ).order_by(preserved)
             self._queryset = base_queryset.annotate(has_last_contact=Count('last_contact'))
             sort = self.request.GET.get('s')
             if sort == 'oldnew':
@@ -116,7 +120,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
                 self._queryset = self._queryset.order_by('-name')
             if sort == 'az':
                 self._queryset = self._queryset.order_by('name')
-            else:
+            if not self.request.GET.get('q'):
                 self._queryset = self._queryset.order_by('-has_last_contact','-last_contact')
             self._queryset = self._queryset.prefetch_related('tags')
         return self._queryset
