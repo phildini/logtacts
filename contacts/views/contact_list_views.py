@@ -17,7 +17,7 @@ from django.views.generic import (
 )
 from haystack.generic_views import SearchView
 from haystack.inputs import AutoQuery
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, SQ
 
 from contacts.models import (
     Book,
@@ -64,8 +64,10 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
                 tags_ids__in=[tag.id for tag in self.search_tags],
             )
 
-        query = ' '.join(parts)
-        sqs = searchqueryset.auto_query(query.strip())
+        query = ' '.join(parts).strip()
+        sqs = searchqueryset.filter(
+            SQ(content=AutoQuery(query)) | SQ(name=AutoQuery(query))
+        )
         try:
             contact_ids = [result.object.id for result in sqs]
         except:
