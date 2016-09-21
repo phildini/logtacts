@@ -238,8 +238,12 @@ SWAGGER_SETTINGS = {
 
 RAVEN_CONFIG = {
     'dsn': get_env_variable('SENTRY_URL'),
-    'release': raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
 }
+
+try:
+    RAVEN_CONFIG['release'] = raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__)))
+except:
+    pass
 
 CACHES = {
     "default": {
