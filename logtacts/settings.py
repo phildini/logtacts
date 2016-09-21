@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import warnings
 from django.core.exceptions import ImproperlyConfigured
+import raven
 from unipath import Path
 
 
@@ -102,6 +103,7 @@ INSTALLED_APPS = (
     'channels',
     'rest_framework_swagger',
     'captcha',
+    'raven.contrib.django.raven_compat',
     # ContactOtter Apps
     'contacts.apps.ContactConfig',
     'invitations.apps.InvitationConfig',
@@ -111,6 +113,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
+    'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -233,6 +236,11 @@ SWAGGER_SETTINGS = {
     ],
 }
 
+RAVEN_CONFIG = {
+    'dsn': get_env_variable('SENTRY_URL'),
+    'release': raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+}
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -272,6 +280,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'loggly',
         },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'tags': {'custom-tag': 'x'},
+        }
     },
     'loggers': {
         'django.request': {
@@ -288,6 +301,16 @@ LOGGING = {
             'handlers': ['console', 'loggly-handler'],
             'propagate': True,
             'level': 'DEBUG',
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
         },
     },
 }

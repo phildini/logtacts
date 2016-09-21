@@ -28,6 +28,7 @@ opbeat==3.4.0
 psycopg2==2.6.2
 python-json-logger==0.0.6
 pytz==2016.6.1
+raven==5.27.1
 tweepy==3.5.0
 twilio==5.5.0
 Unipath==1.1

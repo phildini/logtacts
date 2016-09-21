@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load gargoyle_tags %}
+{% load raven %}
 
 <html>
     <head>
@@ -100,6 +101,8 @@
     <footer class="well">
         {% if user.is_authenticated and not SANDSTORM %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a> | &copy; ContactOtter {% now "Y" %} | <a href="/policies">Policies</a> | <a href="/docs/">API</a>
     </footer>
+    <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
+    <script>Raven.config('{% sentry_public_dsn 'https' %}').install()</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     {% block js %}
