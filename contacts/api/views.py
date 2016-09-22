@@ -2,7 +2,7 @@ from django.shortcuts import (
     get_object_or_404,
 )
 from haystack.inputs import AutoQuery
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, SQ
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -64,9 +64,8 @@ class ContactListCreateAPIView(RestrictedRendererMixin, generics.ListCreateAPIVi
                     "No contacts for user",
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            results = SearchQuerySet().filter(
-                book=book.id,
-                content=AutoQuery(search_string),
+            results = SearchQuerySet().filter(book=book.id).filter(
+                SQ(name=AutoQuery(search_string)) | SQ(content=AutoQuery(search_string))
             )
             results = [result.object for result in results]
         else:

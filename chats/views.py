@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from haystack.inputs import AutoQuery
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, SQ
 
 from contacts.models import (
     Book,
@@ -92,9 +92,9 @@ def sms(request):
         if flow_state:
             if flow_state.startswith('log'):
                 name = ':'.join(flow_state.split(':')[1:])
-                contacts = SearchQuerySet().filter(
-                    book=book.id,
-                ).auto_query(name)
+                contacts = SearchQuerySet().filter(book=book.id).filter(
+                    SQ(name=AutoQuery(name)) | SQ(content=AutoQuery(name))
+                )
                 if len(message) == 1 and len(contacts) > 0:
                     index = ascii_lowercase.index(message.lower())
                     contact = contacts[index].object
@@ -107,9 +107,9 @@ def sms(request):
                 )
             if flow_state.startswith('find'):
                 name = ':'.join(flow_state.split(':')[1:])
-                contacts = SearchQuerySet().filter(
-                    book=book.id,
-                ).auto_query(name)
+                contacts = SearchQuerySet().filter(book=book.id).filter(
+                    SQ(name=AutoQuery(name)) | SQ(content=AutoQuery(name))
+                )
                 if len(message) == 1 and len(contacts) > 0:
                     index = ascii_lowercase.index(message.lower())
                     contact = contacts[index].object
@@ -133,9 +133,9 @@ def sms(request):
             if tokens[1].lower() == 'with':
                 del tokens[1]
             name = ' '.join(tokens[1:])
-            contacts = SearchQuerySet().filter(
-                book=book.id,
-            ).auto_query(name)
+            contacts = SearchQuerySet().filter(book=book.id).filter(
+                SQ(name=AutoQuery(name)) | SQ(content=AutoQuery(name))
+            )
             if len(contacts) > 1:
                 cache.set(cache_key, "log:{}".format(name), CACHE_TIMEOUT)
                 response_string = "Which {} did you mean?\n".format(name)
@@ -157,9 +157,9 @@ def sms(request):
 
         if tokens[0].lower() == 'find':
             name = ' '.join(tokens[1:])
-            contacts = SearchQuerySet().filter(
-                book=book.id,
-            ).auto_query(name)
+            contacts = SearchQuerySet().filter(book=book.id).filter(
+                SQ(name=AutoQuery(name)) | SQ(content=AutoQuery(name))
+            )
             if len(contacts) == 0:
                 return create_message(
                     "Hmm... I didn't find any contacts.",
