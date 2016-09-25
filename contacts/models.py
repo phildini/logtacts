@@ -12,11 +12,15 @@ import contacts as contact_settings
 
 class TagManager(models.Manager):
 
-    def get_tags_for_user(self, user):
-        return self.filter(book__bookowner__user=user)
+    def get_tags_for_user(self, user, book=None):
+        if not book:
+            owners = BookOwner.objects.filter(user=user)
+            if owners:
+                book = owners[0].book
+        return self.filter(book=book, book__bookowner__user=user)
 
-    def for_user(self, user):
-        return self.filter(book__bookowner__user=user)
+    def for_user(self, user, book=None):
+        return self.get_tags_for_user(user, book)
 
 
 class Tag(models.Model):
@@ -49,11 +53,15 @@ class Tag(models.Model):
 
 class ContactManager(models.Manager):
 
-    def get_contacts_for_user(self, user):
-        return self.filter(book__bookowner__user=user)
+    def get_contacts_for_user(self, user, book=None):
+        if not book:
+            owners = BookOwner.objects.filter(user=user)
+            if owners:
+                book = owners[0].book
+        return self.filter(book=book, book__bookowner__user=user)
 
     def for_user(self, user):
-        return self.filter(book__bookowner__user=user)
+        return self.get_contacts_for_user(user, book=None)
 
 
 class Contact(models.Model):
@@ -228,8 +236,12 @@ class Contact(models.Model):
 
 class ContactFieldManager(models.Manager):
 
-    def for_user(self, user):
-        return self.filter(contact__book__bookowner__user=user)
+    def for_user(self, user, book=None):
+        if not book:
+            owners = BookOwner.objects.filter(user=user)
+            if owners:
+                book = owners[0].book
+        return self.filter(book=book, book__bookowner__user=user)
 
 
 class ContactField(models.Model):
@@ -301,16 +313,29 @@ class BookOwner(models.Model):
 
 class LogEntryManager(models.Manager):
 
-    def logs_for_user_book(self, user):
-        return self.filter(contact__book__bookowner__user=user)
-
-    def logs_for_user_and_tag(self, user, tag):
+    def logs_for_user_book(self, user, book=None):
+        if not book:
+            owners = BookOwner.objects.filter(user=user)
+            if owners:
+                book = owners[0].book
         return self.filter(
-            contact__tags__id=tag.pk,contact__book__bookowner__user=user,
+            contact__book=book,
+            contact__book__bookowner__user=user,
         )
 
-    def for_user(self, user):
-        return self.filter(contact__book__bookowner__user=user)
+    def logs_for_user_and_tag(self, user, tag, book=None):
+        if not book:
+            owners = BookOwner.objects.filter(user=user)
+            if owners:
+                book = owners[0].book
+        return self.filter(
+            contact__tags__id=tag.pk,
+            contact__book=book,
+            contact__book__bookowner__user=user,
+        )
+
+    def for_user(self, user, book=None):
+        return self.logs_for_user_book(user, book)
 
 
 class LogEntry(models.Model):
