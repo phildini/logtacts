@@ -56,18 +56,31 @@
                     <a href="{% url "contacts-new" %}" class="btn btn-success navbar-btn" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Add Contact</a>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
+                    {% ifswitch multi_book %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if request.current_book %}{{ request.current_book }}{% else %}Books{% endif %}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% for book in request.books %}
+                            <li><a href="#">{{ book.name }}</a></li>
+                            {% endfor %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/books/new/">New</a></li>
+                        </ul>
+                    </li>
+                    {% endifswitch %}
                     <li class="dropdown hidden-xs hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            {% if user.is_staff %}
-                            <li><a href="/admin/">Admin</a></li>
-                            {% endif %}
                             {% if not SANDSTORM %}
                             <li><a href="/u/">Settings</a></li>
                             <li><a href="/accounts/logout/">Logout</a></li>
                             <li><a href="{% url "create-invite" %}">Invite others</a></li>
                             {% endif %}
                             <li><a href="http://goo.gl/forms/npAgYliQM8" target="_blank">Give Feedback</a><li>
+                            {% if user.is_staff %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/admin/">Admin</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                     {% if user.is_staff %}

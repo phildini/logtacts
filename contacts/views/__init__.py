@@ -13,14 +13,6 @@ from contacts.models import (
 
 class BookOwnerMixin(LoginRequiredMixin):
 
-    def dispatch(self, request, *args, **kwargs):
-        # TODO: Finish this.
-        # book_id = kwargs.get('book')
-        # self.bookowner = get_object_or_404(
-        #     BookOwner, book_id=book_id, user=self.request.user,
-        # )
-        return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
-
     def get_queryset(self):
         if self.kwargs.get('book'):
             try:

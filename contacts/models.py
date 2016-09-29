@@ -283,6 +283,9 @@ class BookManager(models.Manager):
     def get_for_user(self, user):
         return self.get(bookowner__user=user)
 
+    def filter_for_user(self, user):
+        return self.filter(bookowner__user=user)
+
 
 class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)

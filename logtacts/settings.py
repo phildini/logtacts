@@ -126,6 +126,7 @@ MIDDLEWARE_CLASSES = (
     'simple_history.middleware.HistoryRequestMiddleware',
     'logtacts.middleware.TimezoneMiddleware',
     'logtacts.middleware.DoNotTrackMiddleware',
+    'contacts.middleware.ContactBookMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -324,5 +325,10 @@ GARGOYLE_SWITCH_DEFAULTS = {
         'is_active': False,
         'label': 'Read-only mode',
         'description': 'Put the site into read-only mode, minus admin panel',
-    }
+    },
+    'multi_book': {
+        'is_active': False,
+        'label': 'Allow one user to be part of multiple books',
+        'description': 'Users can have and manage multiple books',
+    },
 }

@@ -15,10 +15,10 @@ contact_urls = [
         name='contacts-list',
     ),
     # TODO: Make this pattern universal
-    # url(
-    #     r'^(?P<book>\d+)/contacts/$',
-    #     contact_list_views.ContactListView.as_view(),
-    # ),
+    url(
+        r'^(?P<book>\d+)/contacts/$',
+        contact_list_views.ContactListView.as_view(),
+    ),
     url(
         r'^(?P<pk>\d+)/$',
         contact_views.ContactView.as_view(),
