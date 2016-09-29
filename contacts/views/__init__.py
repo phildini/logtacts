@@ -1,15 +1,39 @@
 from braces.views import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import (
+    get_object_or_404,
+    redirect
+)
 
-from contacts.models import BookOwner
+from contacts.models import (
+    Book,
+    BookOwner,
+)
 
 
 class BookOwnerMixin(LoginRequiredMixin):
 
+    def dispatch(self, request, *args, **kwargs):
+        # TODO: Finish this.
+        # book_id = kwargs.get('book')
+        # self.bookowner = get_object_or_404(
+        #     BookOwner, book_id=book_id, user=self.request.user,
+        # )
+        return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        queryset = self.model.objects.for_user(self.request.user)
-        return queryset
+        if self.kwargs.get('book'):
+            try:
+                bookowner = BookOwner.objects.get(
+                    user=self.request.user,
+                    book_id=self.kwargs.get('book'),
+                )
+                return self.model.objects.for_user(
+                    self.request.user, book=bookowner.book,
+                )
+            except BookOwner.DoesNotExist:
+                pass
+        return self.model.objects.for_user(self.request.user)
 
     def get_object(self, queryset=None):
         instance = super(BookOwnerMixin, self).get_object(queryset)

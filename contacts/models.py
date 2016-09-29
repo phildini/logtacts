@@ -60,8 +60,8 @@ class ContactManager(models.Manager):
                 book = owners[0].book
         return self.filter(book=book, book__bookowner__user=user)
 
-    def for_user(self, user):
-        return self.get_contacts_for_user(user, book=None)
+    def for_user(self, user, book=None):
+        return self.get_contacts_for_user(user, book=book)
 
 
 class Contact(models.Model):

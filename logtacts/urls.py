@@ -96,8 +96,8 @@ urlpatterns = [
     url(r"^signup/$", allauth_views.signup, name="signup"),
     url(r"^login/$", allauth_views.login, name="login"),
     url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^tags/', include(tag_urls)),
-    url(r'^log/', include(log_urls)),
+    url(r'^tags/', include(tag_urls)), # needs to be multi-booked
+    url(r'^log/', include(log_urls)), # needs to be multi-booked
     url(r'^accounts/', include(allauth_urls)),
     url(
         r'^hold/',
@@ -120,6 +120,6 @@ urlpatterns = [
         TemplateView.as_view(template_name='policies.html'),
         name='policies',
     ),
-    url(r'^', include(contact_urls)),
+    url(r'^', include(contact_urls)), # needs to be multi-booked
     url(r'^', include('django.contrib.auth.urls')),
 ]
