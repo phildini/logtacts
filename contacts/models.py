@@ -162,7 +162,7 @@ class Contact(models.Model):
                     phone for phone in phones if phone[0] == True
                 ]
                 if len(preferred_phones) > 0:
-                    self._preferred_phone = preferred_phone[0][1]
+                    self._preferred_phone = preferred_phones[0][1]
                 else:
                     self._preferred_phone = phones[0][1]
         return self._preferred_phone
