@@ -80,18 +80,21 @@
                             {% if user.is_staff %}
                             <li role="separator" class="divider"></li>
                             <li><a href="/admin/">Admin</a></li>
+                            <li><a href="/nexus/gargoyle/">Switches</a></li>
                             {% endif %}
                         </ul>
                     </li>
-                    {% if user.is_staff %}
-                    <li class="visible-sm visible-xs"><a href="/admin/">Admin</a></li>
-                    {% endif %}
                     {% if not SANDSTORM %}
                     <li class="visible-sm visible-xs"><a href="/u/">Settings</a></li>
                     <li class="visible-sm visible-xs"><a href="/logout/">Logout</a></li>
                     <li class="visible-sm visible-xs"><a href="{% url "create-invite" %}">Invite others</a></li>
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>
+                    <li role="separator" class="divider"></li>
+                    {% if user.is_staff %}
+                    <li class="visible-sm visible-xs"><a href="/admin/">Admin</a></li>
+                    <li class="visible-sm visible-xs"><a href="/nexus/gargoyle/">Switches</a></li>
+                    {% endif %}
                 </ul>
                 {% endif %}
             </div>
