@@ -10,13 +10,14 @@ from simple_history.models import HistoricalRecords
 
 import contacts as contact_settings
 
+
 class TagManager(models.Manager):
 
     def get_tags_for_user(self, user, book=None):
         if not book:
-            owners = BookOwner.objects.filter(user=user)
-            if owners:
-                book = owners[0].book
+            owner = BookOwner.objects.filter(user=user).first()
+            if owner:
+                book = owner.book
         return self.filter(book=book, book__bookowner__user=user)
 
     def for_user(self, user, book=None):
@@ -55,9 +56,9 @@ class ContactManager(models.Manager):
 
     def get_contacts_for_user(self, user, book=None):
         if not book:
-            owners = BookOwner.objects.filter(user=user)
-            if owners:
-                book = owners[0].book
+            owner = BookOwner.objects.filter(user=user).first()
+            if owner:
+                book = owner.book
         return self.filter(book=book, book__bookowner__user=user)
 
     def for_user(self, user, book=None):
