@@ -30,14 +30,12 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                {% if user.is_authenticated %}
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                {% endif %}
                 <a class="navbar-brand" href="/">
                 <img src="{% static "img/contactotter.svg" %}" width="20"> ContactOtter
                 </a>
@@ -95,6 +93,10 @@
                     <li class="visible-sm visible-xs"><a href="/admin/">Admin</a></li>
                     <li class="visible-sm visible-xs"><a href="/nexus/gargoyle/">Switches</a></li>
                     {% endif %}
+                </ul>
+                {% else %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/benefits">Benefits</a></li>
                 </ul>
                 {% endif %}
             </div>

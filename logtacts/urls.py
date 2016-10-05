@@ -117,9 +117,15 @@ urlpatterns = [
     url(r'^u/', include('profiles.urls')),
     url(
         r'^policies$', 
-        TemplateView.as_view(template_name='policies.html'),
+        TemplateView.as_view(template_name='pages/policies.html'),
         name='policies',
     ),
+    url(
+        r'^benefits$',
+        TemplateView.as_view(template_name='pages/benefits.html'),
+        name='benefits',
+    ),
+    url(r'^l/', include('django.contrib.flatpages.urls')),
     url(r'^', include(contact_urls)), # needs to be multi-booked
     url(r'^', include('django.contrib.auth.urls')),
 ]
