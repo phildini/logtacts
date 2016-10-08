@@ -62,7 +62,7 @@ class ContactView(BookOwnerMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ContactView, self).get_context_data(**kwargs)
         context['contact'] = self.contact
-        context['logs'] = self.contact.logentry_set.all().order_by('-time', '-created')
+        context['logs'] = self.contact.logentry_set.all().order_by('-time')
         return context
 
     def form_valid(self, form):

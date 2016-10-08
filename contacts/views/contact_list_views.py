@@ -126,10 +126,9 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return self._queryset
 
     def get_logs(self):
-        # Needs to be '-created' because most time fields empty
         return LogEntry.objects.logs_for_user_book(
             self.request.user,
-        ).order_by('-created')
+        ).order_by('-time')
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
@@ -152,11 +151,10 @@ class TaggedContactListView(ContactListView):
         return super(TaggedContactListView, self).dispatch(request, *args, **kwargs)
 
     def get_logs(self):
-        # Needs to be '-created', '-time' because most time fields empty
         return LogEntry.objects.logs_for_user_and_tag(
             self.request.user,
             self.tag,
-        ).order_by('-created')
+        ).order_by('-time')
 
     def get_queryset(self):
         return super(TaggedContactListView, self).get_queryset().filter(

@@ -1,6 +1,7 @@
 from django.shortcuts import (
     get_object_or_404,
 )
+from django.utils import timezone
 from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet, SQ
 from rest_framework.permissions import IsAuthenticated
@@ -120,6 +121,7 @@ class ContactDetailEditAPIView(RestrictedRendererMixin, generics.RetrieveUpdateD
                 kind = 'edit',
                 logged_by = request.user,
                 notes = "Updated: " + ', '.join(changed),
+                time = timezone.now()
             )
             instance.update_last_contact_from_log(log)
         return Response(serializer.data)

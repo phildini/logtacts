@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from haystack.forms import ModelSearchForm
 from floppyforms import widgets
 
@@ -152,6 +153,7 @@ class ContactForm(forms.ModelForm):
                 logged_by = self.user,
                 kind = 'edit',
                 notes = note_str,
+                time = timezone.now(),
             )
 
         return response
