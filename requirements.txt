@@ -17,7 +17,7 @@ Django==1.9.9
 djangorestframework==3.3.3
 elasticsearch==2.4.0
 factory-boy==2.7.0
-fake-factory==0.5.7
+Faker==0.7.3
 fakeredis==0.8.1
 gargoyle-yplan==1.2.6
 git+https://github.com/django-haystack/django-haystack.git#egg=django-haystack
