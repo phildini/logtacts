@@ -6,6 +6,8 @@ env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
 before_install:
 - pip install codecov
+before_script:
+- python manage.py collecstatic --noinput --settings=logtacts.test_settings
 after_success:
 - codecov
 install: pip install -r requirements.txt
