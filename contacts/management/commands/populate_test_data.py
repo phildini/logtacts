@@ -101,7 +101,7 @@ class Command(BaseCommand):
                         tzinfo=timezone.get_current_timezone(),
                     ),
                     kind=random.choice(LogEntry.KIND_CHOICES),
-                    notes=fake.text(max_nb_chars=100),
+                    notes=fake.text(max_nb_chars=42),
                     link=fake.url(),
                     logged_by=user,
                 )
