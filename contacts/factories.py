@@ -18,7 +18,6 @@ class ContactFactory(factory.django.DjangoModelFactory):
     name = "Philip James"
     book = factory.SubFactory(BookFactory)
     email = "philip+test@inkpebble.com"
-    twitter = "@phildini"
 
 
 class ContactFieldFactory(factory.django.DjangoModelFactory):
