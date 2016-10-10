@@ -7,10 +7,31 @@
         <h1>Better contact management.</h1>
         <p>ContactOtter is a work-in-progress for better contact management. ContactOtter is an address books for friends, families and small teams, a friendly CRM.</p>
         <p>ContactOtter is <a href="/policies">alpha software</a>, and we're continually <a href="https://github.com/phildini/logtacts/">making it better</a>.</p>
-        <p><a class="btn btn-success" href="/signup/">Signup</a> <a class="btn btn-info" href="{% url "login" %}">Login</a></p>
+        <p><a class="btn btn-success js-signup" href="/signup/">Signup</a> <a class="btn btn-info js-login" href="{% url "login" %}">Login</a></p>
     </div>
 </div>
 <div class="col-md-6">
     <img src="{% static "img/contactotter.svg" %}?v=1" alt="Contacts just got otterly better">
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('.js-signup').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Signup',
+            'eventAction': 'home-signup-click',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-login').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Login',
+            'eventAction': 'home-login-click',
+            'useBeacon': true
+        });
+    });
+});
+</script>
 {% endblock %}

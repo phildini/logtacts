@@ -10,7 +10,7 @@
 </div>
 <div class="row marketing-row">
     <p class="text-center">
-        <a href="/signup/" class="btn btn-lg btn-success">Get Started!</a>
+        <a href="/signup/" class="btn btn-lg btn-success js-signup">Get Started!</a>
     </p>
 </div>
 <div class="row marketing-row">
@@ -42,7 +42,26 @@
 </div>
 <div class="row marketing-row">
     <p class="text-center">
-        <a href="/signup/" class="btn btn-lg btn-success">Get Started!</a>
+        <a href="/signup/" class="btn btn-lg btn-success js-signup">Get Started!</a>
     </p>
 </div>
 {% endblock %}
+
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('.js-signup').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Signup',
+            'eventAction': 'benefits-signup-click',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-login').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Login',
+            'eventAction': 'benefits-login-click',
+            'useBeacon': true
+        });
+    });
+});
+</script>
