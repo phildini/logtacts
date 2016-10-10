@@ -25,9 +25,6 @@ SECURE_BROWSER_XSS_FILTER = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
 
-STATIC_URL = '//logtacts.s3.amazonaws.com/assets/'
-STATIC_URL = get_env_variable("STATIC_URL")
-
 INSTALLED_APPS += (
     'gunicorn',
     'opbeat.contrib.django',

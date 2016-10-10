@@ -46,8 +46,10 @@ SITE_ID=1
 
 PROJECT_ROOT = Path(BASE_DIR)
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_ROOT = PROJECT_ROOT.child('media')
-STATIC_ROOT = PROJECT_ROOT.child('static').child('dist')
+STATIC_ROOT = PROJECT_ROOT.child('dist')
 STATICFILES_DIRS = (
     PROJECT_ROOT.child('static'),
 )
@@ -113,6 +115,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     'djangosecure.middleware.SecurityMiddleware',
@@ -172,11 +175,6 @@ USE_L10N = True
 USE_TZ = True
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'

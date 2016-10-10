@@ -60,3 +60,6 @@ docs/_build/
 
 .sandstorm/.vagrant/
 *.spk
+
+# Complied assets
+dist/
