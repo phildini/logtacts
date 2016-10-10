@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
+import contacts as contact_settings
+
 
 def convert_to_field(apps, schema_editor):
     Contact = apps.get_model("contacts", "Contact")
