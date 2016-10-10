@@ -7,7 +7,8 @@
             [
                 "htmlcov",
                 ".coverage",
-                "env"
+                "env",
+                "dist"
             ],
             "file_exclude_patters":
             [

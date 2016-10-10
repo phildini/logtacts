@@ -125,6 +125,11 @@ urlpatterns = [
         TemplateView.as_view(template_name='pages/benefits.html'),
         name='benefits',
     ),
+    url(
+        r'^pricing$',
+        TemplateView.as_view(template_name='pages/pricing.html'),
+        name='pricing',
+    ),
     url(r'^l/', include('django.contrib.flatpages.urls')),
     url(r'^', include(contact_urls)), # needs to be multi-booked
     url(r'^', include('django.contrib.auth.urls')),
