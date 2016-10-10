@@ -7,6 +7,7 @@ from django.db import migrations, models
 
 def convert_to_field(apps, schema_editor):
     Contact = apps.get_model("contacts", "Contact")
+    ContactField = apps.get_model("contacts", "ContactField")
     for contact in Contact.objects.all():
         if contact.email:
             ContactField.objects.get_or_create(
