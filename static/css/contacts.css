@@ -57,3 +57,7 @@ hr {
 .marketing-row {
     padding-bottom: 20px;
 }
+
+footer.well {
+    margin-bottom: 0;
+}
