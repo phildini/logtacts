@@ -36,9 +36,13 @@ class BookOwnerMixin(LoginRequiredMixin):
         return instance
 
     def form_valid(self, form):
-        form.instance.book = BookOwner.objects.get(
-            user=self.request.user
-        ).book
-        response = super(BookOwnerMixin, self).form_valid(form)
-
-        return response
+        try:
+            form.instance.book = BookOwner.objects.get(
+                user=self.request.user
+            ).book
+        except BookOwner.DoesNotExist:
+            form.instance.book = Book.objects.create(
+                name="{}'s Contacts".format(self.request.user),
+            )
+            BookOwner.objects.create(book=form.instance.book, user=self.request.user)
+        return super(BookOwnerMixin, self).form_valid(form)
