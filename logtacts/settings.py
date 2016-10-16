@@ -7,16 +7,19 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import warnings
-from django.core.exceptions import ImproperlyConfigured
 import raven
+import warnings
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 from unipath import Path
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
     try:
@@ -112,6 +115,7 @@ INSTALLED_APPS = (
     'invitations.apps.InvitationConfig',
     'profiles.apps.ProfilesConfig',
     'chats.apps.ChatsConfig',
+    'payments.apps.PaymentsConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -213,6 +217,9 @@ RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
 NOCAPTCHA = True
 
+STRIPE_PUBLIC_KEY = get_env_variable('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = get_env_variable('STRIPE_SECRET_KEY')
+
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
 CHANNEL_LAYERS = {
@@ -236,9 +243,10 @@ SWAGGER_SETTINGS = {
     ],
 }
 
-RAVEN_CONFIG = {
-    'dsn': get_env_variable('SENTRY_URL'),
-}
+if not DEBUG:
+    RAVEN_CONFIG = {
+        'dsn': get_env_variable('SENTRY_URL'),
+    }
 
 try:
     RAVEN_CONFIG['release'] = raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__)))
@@ -330,4 +338,9 @@ GARGOYLE_SWITCH_DEFAULTS = {
         'label': 'Allow one user to be part of multiple books',
         'description': 'Users can have and manage multiple books',
     },
+    'enable_payments': {
+        'is_active': False,
+        'label': 'Enable payments',
+        'description': 'Turn on Stripe payments',
+    }
 }

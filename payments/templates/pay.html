@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+    <h3 class="text-center">Basic</h3>
+        <ul class="list-group">
+            <li class="list-group-item">1 collaborator</li>
+            <li class="list-group-item">Unlimited contacts</li>
+            <li class="list-group-item">Social account tracking</li>
+            <li class="list-group-item">Contact reminders</li>
+        </ul>
+        <h4 class="text-center">$5/month</h4>
+    </div>
+    <div class="col-md-4 col-md-offset-4 text-center">
+    <form action="{{ action }}" method="POST">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% if books|length > 1 %}
+        <div id="id_books_container">
+            <div class="form-group">
+                <label for="id_books">Book:</label>
+                <select class="form-control" id="id_books" name="books">
+                    {% for book in books %}
+                    <option value="{{ book.id }}" {% if book.id == selected_book.id %}selected="selected"{% endif %}>{{ book.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endif %}
+        <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ stripe_public_key }}"
+            data-amount="{{ plan_amount }}"
+            data-name="Inkpebble, LLC"
+            data-description="{{ plan_name }}"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto">
+        </script>
+    </form>
+    </div>
+</div>
+{% endblock %}

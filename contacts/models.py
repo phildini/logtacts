@@ -282,6 +282,8 @@ class Book(models.Model):
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, blank=True, null=True)
+    plan = models.CharField(max_length=100, blank=True)
+    paid_until = models.DateTimeField(blank=True, null=True)
     history = HistoricalRecords()
     objects = BookManager()
 
