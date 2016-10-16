@@ -6,6 +6,8 @@ from captcha.fields import ReCaptchaField
 
 from phonenumber_field.formfields import PhoneNumberField
 
+from contacts.models import Book, BookOwner
+
 
 class ProfileForm(forms.ModelForm):
 
@@ -48,4 +50,12 @@ class ReCaptchaSignupForm(forms.Form):
     captcha = ReCaptchaField()
 
     def signup(self, request, user):
-        pass
+        try:
+            book = BookOwner.objects.get(user=user)
+        except BookOwner.DoesNotExist:
+            book = Book.objects.create(
+                name="{}'s book".format(user.username),
+                owner=user,
+            )
+            BookOwner.objects.create(user=user, book=book)
+

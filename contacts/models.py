@@ -281,6 +281,7 @@ class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, blank=True, null=True)
     history = HistoricalRecords()
     objects = BookManager()
 
