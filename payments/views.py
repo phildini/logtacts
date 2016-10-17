@@ -40,21 +40,20 @@ class PaymentView(LoginRequiredMixin, FormView):
                 url = "{}?book={}".format(url, book_id)
             return HttpResponseRedirect(reverse("pricing"))
         try:
-            self.book = BookOwner.objects.get(book=book_id, user=self.request.user)
-        except BookOwner.DoesNotExist:
+            self.book = Book.objects.get(id=book_id, owner=self.request.user)
+        except Book.DoesNotExist:
             self.book = None
         return super(PaymentView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(PaymentView, self).get_context_data(*args, **kwargs)
         context['selected_book'] = self.book
-        context['plan_name'] = payment_constants.PLANS[self.plan]['name']
-        context['plan_amount'] = payment_constants.PLANS[self.plan]['stripe_cost']
+        context['plan'] = payment_constants.PLANS[self.plan]
         context['stripe_public_key'] = settings.STRIPE_PUBLIC_KEY
         return context
 
     def form_valid(self, form):
-        books = Book.objects.filter_for_user(self.request.user)
+        books = Book.objects.filter(owner=self.request.user)
         book_ids = books.values('id')
         if self.request.POST.get('book') and self.request.POST.get('book') in book_ids:
             # User has submitted a book to pay for
