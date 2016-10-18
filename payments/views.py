@@ -1,12 +1,17 @@
 import datetime
+import json
 import stripe
 from braces.views import LoginRequiredMixin
+from channels import Channel
 from django.conf import settings
 from django.contrib import messages
+
 from django.core.urlresolvers import reverse
 from django.http import (
+    HttpResponse,
     HttpResponseRedirect,
 )
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     ListView,
     FormView,
@@ -116,3 +121,15 @@ class PaymentView(LoginRequiredMixin, FormView):
             self.request,
             "Thanks for your payment. Your book is now active!",
         )
+
+@csrf_exempt
+def stripe_webhook_view(request):
+    body_unicode = request.body.decode('utf-8')
+    event_json = json.loads(body_unicode)
+    message = {
+        'id': event_json['id'],
+        'event': event_json,
+    }
+    Channel('process-stripe-webhook').send(message)
+    return HttpResponse(status=200)
+

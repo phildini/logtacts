@@ -26,7 +26,10 @@ from invitations.views import (
 )
 
 from logtacts.views import HomeView
-from payments.views import PaymentView
+from payments.views import (
+    PaymentView,
+    stripe_webhook_view,
+)
 from profiles.views import ReviewUserView
 from chats.views import sms
 
@@ -130,6 +133,7 @@ urlpatterns = [
         name='pricing',
     ),
     url(r'^pay/$', PaymentView.as_view(), name='pay-view'),
+    url(r'^stripe/$', stripe_webhook_view),
     url(r'^l/', include('django.contrib.flatpages.urls')),
     url(r'^', include(contact_urls)), # needs to be multi-booked
     url(r'^', include('django.contrib.auth.urls')),
