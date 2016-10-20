@@ -18,24 +18,24 @@
             <li class="list-group-item">Contact reminders</li>
         </ul>
         <p class="text-center">
-            <a href="/pay/?plan=basic_monthly" class="btn btn-info">$5/month</a>
-            <a href="/pay/?plan=basic_yearly" class="btn btn-info">$50/year</a>
+            <a href="/pay/?plan=basic_monthly" class="btn btn-info js-buy-basic-monthly">$5/month</a>
+            <a href="/pay/?plan=basic_yearly" class="btn btn-info js-buy-basic-yearly">$50/year</a>
         </p>
     </div>
     <div class="col-md-4 bg-info">
         <h3 class="text-center">Family</h3>
         {% include "shared/family_plan_features.html" %}
         <p class="text-center">
-            <a href="/pay/?plan=family_monthly" class="btn btn-success">$10/month</a>
-            <a href="/pay/?plan=family_yearly" class="btn btn-success">$100/year</a>
+            <a href="/pay/?plan=family_monthly" class="btn btn-success js-buy-family-monthly">$10/month</a>
+            <a href="/pay/?plan=family_yearly" class="btn btn-success js-buy-family-yearly">$100/year</a>
         </p>
     </div>
     <div class="col-md-4">
         <h3 class="text-center">Team</h3>
         {% include "shared/team_plan_features.html" %}
         <p class="text-center">
-            <a href="/pay/?plan=team_monthly" class="btn btn-info">$20/month</a>
-            <a href="/pay/?plan=team_yearly" class="btn btn-info">$200/year</a>
+            <a href="/pay/?plan=team_monthly" class="btn btn-info js-buy-team-monthly">$20/month</a>
+            <a href="/pay/?plan=team_yearly" class="btn btn-info js-buy-team-yearly">$200/year</a>
         </p>
     </div>
 </div>
@@ -50,4 +50,59 @@
         <p class="text-center lead marketing-lead">All ContactOtter plans come with our money-back guarantee: If you're not satisfied, we'll refund your last two months and send you all your contact data.</p>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    jQuery('.js-buy-basic-monthly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'basic monthly',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-buy-basic-yearly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'basic yearly',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-buy-family-monthly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'family monthly',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-buy-family-yearly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'family yearly',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-buy-team-monthly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'team monthly',
+            'useBeacon': true
+        });
+    });
+    jQuery('.js-buy-team-yearly').on('click', function(){
+        ga('send', 'event', {
+            'eventCategory': 'Purchase',
+            'eventAction': 'plan-button-click',
+            'label': 'team yearly',
+            'useBeacon': true
+        });
+    });
+});
+</script>
 {% endblock %}
