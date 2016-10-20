@@ -1,17 +1,34 @@
 from braces.views import LoginRequiredMixin
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.http import (
+    HttpResponseRedirect,
+)
 from django.shortcuts import (
     get_object_or_404,
     redirect
 )
+from django.utils import timezone
 
 from contacts.models import (
     Book,
     BookOwner,
 )
 
+from gargoyle import gargoyle
 
 class BookOwnerMixin(LoginRequiredMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        if gargoyle.is_active('enable_payments'):
+            if hasattr(request, 'current_book'):
+                book = request.current_book
+            else:
+                book = Book.objects.get_for_user(self.request.user)
+            if book.paid_until < timezone.now():
+                messages.error(request, "Your subscription has expired. Please re-subscribe, or contact help@contactotter.com")
+                return HttpResponseRedirect('/pricing')
+        return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         if self.kwargs.get('book'):

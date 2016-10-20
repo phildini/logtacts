@@ -1,3 +1,4 @@
+import logging
 from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -12,9 +13,13 @@ from rest_framework.authtoken.models import Token
 
 from contacts import models as contact_models
 from invitations.models import Invitation
+import payments as payment_constants
 
 from . import forms
 from . import models
+
+
+logger = logging.getLogger('sentry')
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -43,6 +48,20 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context['check_twitter_dms'] = self.profile.check_twitter_dms
         context['check_foursquare'] = self.profile.check_foursquare
         context['phone_number'] = self.profile.phone_number
+        try:
+            book = contact_models.Book.objects.get_for_user(self.request.user)
+            context['book'] = book
+            if book.plan:
+                context['plan'] = payment_constants.PLANS.get(book.plan)
+                context['plan_cost_string'] = "{:.2f}".format(
+                    context['plan']['stripe_cost'] / 100
+                )
+        except contact_models.Book.DoesNotExist:
+            logger.error(
+                "Couldn't find book for user: {}".format(self.request.user),
+                exc_info=True,
+            )
+
         return context
 
     def get_success_url(self):

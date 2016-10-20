@@ -102,16 +102,26 @@
     </div>
 </div>
 {% endif %}
-{% if invitations %}
+{% if book %}
+<hr>
 <div class="row">
     <div class="col-md-12">
-        <h4>Invitations</h4>
+        <h4>Book</h4>
+        <p>Your subscription is paid until {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
+        {% if plan %}
+        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }}</p>
+        {% endif %}
+    </div>
+    {% if invitations %}
+    <div class="col-md-12">
+        <h5>Invitations</h5>
         <ul class="list-group">
             {% for invitation in invitations %}
             <li class="list-group-item">You invited {{ invitation.email }}{% if invitation.book %} to your contact book {% else %} to ContactOtter{% endif %}</li>
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
 </div>
 {% endif %}
 <div class="row">

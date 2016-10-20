@@ -16,9 +16,22 @@
         <h3 class="text-center">Team</h3>
         {% include "shared/team_plan_features.html" %}
         <h4 class="text-center">$20/month</h4>
+    {% elif plan.stripe_id == 'basic_yearly' %}
+        <h3 class="text-center">Basic</h3>
+        {% include "shared/basic_plan_features.html" %}
+        <h4 class="text-center">$50/year</h4>
+    {% elif plan.stripe_id == 'family_yearly' %}
+        <h3 class="text-center">Family</h3>
+        {% include "shared/family_plan_features.html" %}
+        <h4 class="text-center">$100/year</h4>
+    {% elif plan.stripe_id == 'team_yearly' %}
+        <h3 class="text-center">Team</h3>
+        {% include "shared/team_plan_features.html" %}
+        <h4 class="text-center">$200/year</h4>
     {% endif %}
     </div>
     <div class="col-md-4 col-md-offset-4 text-center">
+    {% if owns_book %}
     <form action="{{ action }}" method="POST">
         {% csrf_token %}
         {% if form.non_field_errors %}
@@ -50,6 +63,7 @@
             data-locale="auto">
         </script>
     </form>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -36,23 +36,27 @@ class PaymentView(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         if not gargoyle.is_active('enable_payments'):
             return HttpResponseRedirect('/')
-        book_id = request.GET.get('book')
         self.plan = request.GET.get('plan')
-        if not self.plan:
+        plan = payment_constants.PLANS[self.plan]
+        if not self.plan or not plan['is_active']:
             messages.warning(self.request, "Please select a plan")
             url = reverse("pricing")
-            if book_id:
-                url = "{}?book={}".format(url, book_id)
-            return HttpResponseRedirect(reverse("pricing"))
+            return HttpResponseRedirect(url)
         try:
-            self.book = Book.objects.get(id=book_id, owner=self.request.user)
+            self.book = Book.objects.get_for_user(user=self.request.user)
         except Book.DoesNotExist:
             self.book = None
         return super(PaymentView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(PaymentView, self).get_context_data(*args, **kwargs)
-        context['selected_book'] = self.book
+        if not self.book or self.book.owner != self.request.user:
+            messages.info(
+                self.request,
+                "Sorry, only the contact book owner can add a subscription. Please contact them, or email help@contactotter.com",
+                )
+        context['owns_book'] = self.book and self.book.owner == self.request.user
+        context['selected_book'] = self.book 
         context['plan'] = payment_constants.PLANS[self.plan]
         context['stripe_public_key'] = settings.STRIPE_PUBLIC_KEY
         return context
