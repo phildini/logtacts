@@ -18,5 +18,8 @@
         {
             "path": "../django-sandstorm"
         }
-	]
+	],
+    "settings": {
+        "rulers": [80, 120]
+    }
 }

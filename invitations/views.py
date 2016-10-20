@@ -22,6 +22,10 @@ from contacts.models import (
     BookOwner,
 )
 
+from gargoyle import gargoyle
+
+import payments as payment_constants
+
 from .models import Invitation
 from .forms import InvitationForm
 
@@ -35,12 +39,38 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse('contacts-list')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(CreateInviteView, self).get_context_data(*args, **kwargs)
+        if self.request.current_book:
+            book = self.request.current_book
+        else:
+            book = BookOwner.objects.get(user=self.request.user).book
+        invitations = Invitation.objects.filter(book=book)
+        if gargoyle.is_active('enable_payments'):
+            has_more_invites = (
+                book.plan and
+                len(invitations) < payment_constants.PLANS[book.plan]['collaborators']
+            )
+            if not has_more_invites:
+                messages.warning(
+                    self.request,
+                    "You are out of invites for this book. You can still invite people to ContactOtter, but need to upgrade your plan to share this book with other collaborators."
+                )
+        context['invitations'] = invitations
+
+
     def form_valid(self, form):
         form.instance.sender = self.request.user
         if form.cleaned_data.get('share_book'):
-            form.instance.book = BookOwner.objects.get(
+            book = BookOwner.objects.get(
                 user=self.request.user,
             ).book
+            if gargoyle.is_active('enable_payments'):
+                invitations = Invitation.objects.filter(book=book)
+                if book.plan and len(invitations) >= payment_constants.PLANS[book.plan]['collaborators']:
+                    form.add_error(field=None, error="You don't have any invites left on this plan.")
+                    return self.form_invalid(form)
+            form.instance.book = book
         messages.success(
             self.request,
             "Invited {}".format(form.cleaned_data.get('email')),

@@ -25,7 +25,7 @@ class BookOwnerMixin(LoginRequiredMixin):
                 book = request.current_book
             else:
                 book = Book.objects.get_for_user(self.request.user)
-            if book.paid_until < timezone.now():
+            if book and book.paid_until < timezone.now():
                 messages.error(request, "Your subscription has expired. Please re-subscribe, or contact help@contactotter.com")
                 return HttpResponseRedirect('/pricing')
         return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
