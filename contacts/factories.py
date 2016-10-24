@@ -1,7 +1,7 @@
 import factory
 
 from django.utils import timezone
-from utils.factories import UserFactory
+from common.factories import UserFactory
 import contacts as contacts_constants
 from . import models
 

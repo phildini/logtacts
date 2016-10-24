@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse 
-from utils.factories import UserFactory
+from common.factories import UserFactory
 import contacts as contact_constants
 from contacts import factories
 from contacts import models

@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from utils.factories import UserFactory
+from common.factories import UserFactory
 
 from profiles.views import (
     ProfileView,

@@ -4,7 +4,7 @@ from django.http.response import Http404
 from django.test import TestCase
 from django.test.client import RequestFactory
 
-from utils.factories import UserFactory
+from common.factories import UserFactory
 
 from contacts import factories
 from contacts import views
