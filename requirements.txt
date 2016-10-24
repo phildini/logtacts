@@ -22,6 +22,7 @@ fakeredis==0.8.1
 gargoyle-yplan==1.2.6
 git+https://github.com/django-haystack/django-haystack.git#egg=django-haystack
 git+https://github.com/mLewisLogic/foursquare.git#egg=foursquare
+google-api-python-client==1.5.4
 gunicorn==19.6.0
 nexus-yplan==1.4.0
 opbeat==3.4.0

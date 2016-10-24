@@ -3,6 +3,7 @@ from simple_history.admin import SimpleHistoryAdmin
 from .models import (
     Contact,
     ContactField,
+    RemoteContact,
     Tag,
     Book,
     BookOwner,
@@ -52,3 +53,4 @@ admin.site.register(Book, SimpleHistoryAdmin)
 admin.site.register(BookOwner, SimpleHistoryAdmin)
 admin.site.register(LogEntry, LogAdmin)
 admin.site.register(ContactField, ContactFieldAdmin)
+admin.site.register(RemoteContact)

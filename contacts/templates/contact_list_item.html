@@ -14,7 +14,7 @@
         </div>
         <div class="media media-body">
             <a class="pull-left" href="{{ contact.get_absolute_url }}">
-                <img class="media-object img-circle"src="{% gravatar_url contact.preferred_email 50 %}">
+                <img width="50" height="50" class="media-object img-circle" src="{% if contact.photo_url %}{{ contact.photo_url }}{% else %}{% gravatar_url contact.preferred_email 50 %}{% endif %}">
             </a>
             <div class="media-body">
                 <div class="contact-list-contact-info">

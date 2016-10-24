@@ -10,7 +10,7 @@
     </td>
     <td>
         <a href="{{ contact.get_absolute_url }}">
-            <img class="img-circle"src="{% gravatar_url contact.preferred_email 25 %}">
+            <img width="25" height="25" class="img-circle"src="{% if contact.photo_url %}{{ contact.photo_url }}{% else %}{% gravatar_url contact.preferred_email 25 %}{% endif %}">
             {{ contact.name }}
         </a>
     </td>

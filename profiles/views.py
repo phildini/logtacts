@@ -3,6 +3,7 @@ from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.views.generic import (
@@ -61,6 +62,8 @@ class ProfileView(LoginRequiredMixin, UpdateView):
                 "Couldn't find book for user: {}".format(self.request.user),
                 exc_info=True,
             )
+        context["google_import_state"] = cache.get("{}::google-import".format(self.request.user))
+
 
         return context
 

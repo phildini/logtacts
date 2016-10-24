@@ -347,12 +347,16 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
                     log.save()
                 for tag in contact.tags.all():
                     primary_contact.tags.add(tag)
+                if not primary_contact.photo_url and contact.photo_url:
+                    primary_contact.photo_url = contact.photo_url
+                    primary_contact.save()
                 note_list.append(contact.name)
                 contact.delete()
             log = LogEntry.objects.create(
                 contact = primary_contact,
                 logged_by = self.request.user,
                 kind = 'edit',
+                time = timezone.now(),
                 notes = "Merged with {}".format(", ".join(note_list)),
             )
             primary_contact.update_last_contact_from_log(log)

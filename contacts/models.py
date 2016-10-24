@@ -85,6 +85,7 @@ class Contact(models.Model):
     email = models.EmailField(blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     should_surface = models.BooleanField(blank=True, default=True)
+    photo_url = models.URLField(blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     history = HistoricalRecords()
 
@@ -266,6 +267,26 @@ class ContactField(models.Model):
         return quote_plus(
             self.value.replace('\r\n', ' ').replace('\r', ' ').replace('\n', ' ')
         )
+
+
+class RemoteContact(models.Model):
+
+    SERVICE_CHOICES = (
+        ('Google', 'google'),
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    changed = models.DateTimeField(auto_now=True)
+    contact = models.ForeignKey(Contact, blank=True, null=True)
+    book = models.ForeignKey('Book', blank=True, null=True)
+    remote_id = models.CharField(max_length=255, blank=True, null=True)
+    remote_service = models.CharField(max_length=100, choices=SERVICE_CHOICES, blank=True, null=True,
+    )
+    sync_token = models.CharField(max_length=255, blank=True, null=True)
+    etag = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return "{} contact for: {}".format(self.remote_service, self.contact)
 
 
 class BookManager(models.Manager):

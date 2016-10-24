@@ -34,6 +34,8 @@
     <span class="fa fa-twitter socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}"></span>
     {% elif account.get_brand.name.lower == 'foursquare' %}
     <span class="fa fa-foursquare socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}"></span>
+    {% elif account.get_brand.name.lower == 'google' %}
+    <span class="fa fa-google socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}"></span>
     {% endif %}
     {{ account }}
     </label>

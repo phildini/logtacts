@@ -97,6 +97,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.foursquare',
+    'allauth.socialaccount.providers.google',
     'django_gravatar',
     'djangosecure',
     'haystack',
@@ -212,6 +213,13 @@ ACCOUNT_SESSION_REMEMBER=True
 ACCOUNT_LOGOUT_REDIRECT_URL='/'
 ACCOUNT_SIGNUP_FORM_CLASS='profiles.forms.ReCaptchaSignupForm'
 ACCOUNT_UNIQUE_EMAIL=True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'https://www.googleapis.com/auth/contacts.readonly'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
 
 RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
@@ -342,5 +350,10 @@ GARGOYLE_SWITCH_DEFAULTS = {
         'is_active': False,
         'label': 'Enable payments',
         'description': 'Turn on Stripe payments',
-    }
+    },
+    'import_from_google': {
+        'is_active': False,
+        'label': "Import from Google",
+        'description': 'Enable importing contacts from Google',
+    },
 }

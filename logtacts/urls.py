@@ -9,6 +9,7 @@ from allauth.account import views as allauth_views
 from allauth.socialaccount import views as social_views
 from allauth.socialaccount.providers.twitter import views as twitter_views
 from allauth.socialaccount.providers.foursquare import views as foursquare_views
+from allauth.socialaccount.providers.google import views as google_views
 
 import nexus
 import gargoyle
@@ -19,6 +20,8 @@ from contacts.urls import (
     log_urls,
     tag_urls,
 )
+
+from contacts.views.import_views import GoogleImportView
 
 from invitations.views import (
     CreateInviteView,
@@ -56,6 +59,15 @@ twitter_urls = [
     ),
 ]
 
+google_urls = [
+    url('^login/$', google_views.oauth2_login, name="google_login"),
+    url(
+        '^login/callback/$',
+        google_views.oauth2_callback,
+        name="google_callback",
+    ),
+]
+
 
 social_urls = [
     url('^login/cancelled/$', social_views.login_cancelled,
@@ -89,52 +101,33 @@ allauth_urls = [
     url('^social/', include(social_urls)),
     url('^twitter/', include(twitter_urls)),
     url('^foursquare/', include(foursquare_urls)),
+    url('^google/', include(google_urls)),
 ]
 
 
 urlpatterns = [
-    url(r'^sms/$', sms),
-    url(r'^api/', include(api_urls)),
-    url(r"^signup/$", allauth_views.signup, name="signup"),
-    url(r"^login/$", allauth_views.login, name="login"),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^tags/', include(tag_urls)), # needs to be multi-booked
-    url(r'^log/', include(log_urls)), # needs to be multi-booked
     url(r'^accounts/', include(allauth_urls)),
-    url(
-        r'^hold/',
-        TemplateView.as_view(template_name='signup_success.html'),
-        name='account_inactive',
-    ),
     url(r'^admin/dashboard', ReviewUserView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^nexus/', include(nexus.site.urls)),
-    url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^api/', include(api_urls)),
+    url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^import/google/', GoogleImportView.as_view()),
     url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
-    url(
-        r'^invites/accept/(?P<key>[\w-]+)/$',
-        AcceptInviteView.as_view(),
-        name='accept-invite',
-    ),
-    url(r'^u/', include('profiles.urls')),
-    url(
-        r'^policies$', 
-        TemplateView.as_view(template_name='pages/policies.html'),
-        name='policies',
-    ),
-    url(
-        r'^benefits$',
-        TemplateView.as_view(template_name='pages/benefits.html'),
-        name='benefits',
-    ),
-    url(
-        r'^pricing$',
-        TemplateView.as_view(template_name='pages/pricing.html'),
-        name='pricing',
-    ),
-    url(r'^pay/$', PaymentView.as_view(), name='pay-view'),
-    url(r'^stripe/$', stripe_webhook_view),
+    url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),
     url(r'^l/', include('django.contrib.flatpages.urls')),
+    url(r"^login/$", allauth_views.login, name="login"),
+    url(r'^log/', include(log_urls)), # needs to be multi-booked
+    url(r'^nexus/', include(nexus.site.urls)),
+    url(r'^policies$', TemplateView.as_view(template_name='pages/policies.html'), name='policies'),
+    url(r'^pricing$', TemplateView.as_view(template_name='pages/pricing.html'), name='pricing'),
+    url(r'^pay/$', PaymentView.as_view(), name='pay-view'),
+    url(r"^signup/$", allauth_views.signup, name="signup"),
+    url(r'^sms/$', sms),
+    url(r'^stripe/$', stripe_webhook_view),
+    url(r'^tags/', include(tag_urls)), # needs to be multi-booked
+    url(r'^u/', include('profiles.urls')),
+    url(r'^$', HomeView.as_view(), name='home'),
     url(r'^', include(contact_urls)), # needs to be multi-booked
     url(r'^', include('django.contrib.auth.urls')),
 ]
