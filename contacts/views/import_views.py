@@ -25,7 +25,7 @@ from contacts.models import Book
 class GoogleImportView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
-        if not gargoyle.is_active('import_from_google'):
+        if not gargoyle.is_active('import_from_google', request):
             return HttpResponseRedirect('/')
         app = SocialApp.objects.filter(provider='google')[0]
         url = "{}?process=connect&next=/import/google/".format(reverse("google_login"))
