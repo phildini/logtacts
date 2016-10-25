@@ -61,8 +61,6 @@
     <input id="add_log" type="submit" value="Save">
     <hr>
     <h4>Social Settings</h4>
-    {% if social_accounts %}
-
     <div>
         <a class="btn btn-default btn-sm" href="/accounts/social/connections/">Social accounts</a>
         {% ifswitch import_from_google %}
@@ -74,7 +72,6 @@
         <small>We're currently processing your contacts. Check back soon!</small>
         {% endif %}
     </div>
-    {% endif %}
     <div class="checkbox">
         {{ form.check_twitter_dms.help_text }}
         <label for="id_check_twitter_dms">
