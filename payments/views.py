@@ -34,7 +34,7 @@ class PaymentView(LoginRequiredMixin, FormView):
     form_class = PaymentForm
 
     def dispatch(self, request, *args, **kwargs):
-        if not gargoyle.is_active('enable_payments'):
+        if not gargoyle.is_active('enable_payments', request):
             return HttpResponseRedirect('/')
         self.plan = request.GET.get('plan')
         plan = payment_constants.PLANS[self.plan]

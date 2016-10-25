@@ -46,7 +46,7 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
         else:
             book = BookOwner.objects.get(user=self.request.user).book
         invitations = Invitation.objects.filter(book=book)
-        if gargoyle.is_active('enable_payments'):
+        if gargoyle.is_active('enable_payments', self.request):
             has_more_invites = (
                 book.plan and
                 len(invitations) < payment_constants.PLANS[book.plan]['collaborators']
@@ -65,7 +65,7 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
             book = BookOwner.objects.get(
                 user=self.request.user,
             ).book
-            if gargoyle.is_active('enable_payments'):
+            if gargoyle.is_active('enable_payments', self.request):
                 invitations = Invitation.objects.filter(book=book)
                 if book.plan and len(invitations) >= payment_constants.PLANS[book.plan]['collaborators']:
                     form.add_error(field=None, error="You don't have any invites left on this plan.")

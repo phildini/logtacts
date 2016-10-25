@@ -20,7 +20,7 @@ from gargoyle import gargoyle
 class BookOwnerMixin(LoginRequiredMixin):
 
     def dispatch(self, request, *args, **kwargs):
-        if gargoyle.is_active('enable_payments'):
+        if gargoyle.is_active('enable_payments', request):
             if hasattr(request, 'current_book'):
                 book = request.current_book
             else:
