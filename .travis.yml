@@ -1,6 +1,5 @@
 language: python
 python:
-- '2.7'
 - '3.5'
 env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
