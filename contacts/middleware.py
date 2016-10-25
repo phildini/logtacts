@@ -10,7 +10,7 @@ class ContactBookMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
 
         if hasattr(request, 'user'):
-            if request.user.is_authenticated:
+            if request.user.is_authenticated():
                 books = Book.objects.filter_for_user(request.user)
                 request.current_book = None
                 if gargoyle.is_active('multi_book', request):
