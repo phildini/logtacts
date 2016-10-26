@@ -4,7 +4,7 @@ import dj_database_url
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-DATABASES['default'] = dj_database_url.parse(get_env_variable('LOGTACTS_DB_URL'))
+DATABASES['default'] = dj_database_url.parse(get_env_variable('DATABASE_URL'))
 
 SECRET_KEY = get_env_variable("LOGTACTS_SECRET_KEY")
 
