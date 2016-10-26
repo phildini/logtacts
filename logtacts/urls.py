@@ -121,6 +121,7 @@ urlpatterns = [
     url(r'^nexus/', include(nexus.site.urls)),
     url(r'^policies$', TemplateView.as_view(template_name='pages/policies.html'), name='policies'),
     url(r'^pricing$', TemplateView.as_view(template_name='pages/pricing.html'), name='pricing'),
+    url(r'^privacy/$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
     url(r'^pay/$', PaymentView.as_view(), name='pay-view'),
     url(r"^signup/$", allauth_views.signup, name="signup"),
     url(r'^sms/$', sms),

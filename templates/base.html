@@ -120,7 +120,7 @@
     </div>
     {% endblock %}
     <footer class="well">
-        {% if user.is_authenticated and not SANDSTORM and request.can_invite %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="mailto:support@contactotter.com" target="_blank">Give Feedback</a> | &copy; ContactOtter {% now "Y" %} | <a href="/policies">Policies</a>
+        {% if user.is_authenticated and not SANDSTORM and request.can_invite %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="mailto:support@contactotter.com" target="_blank">Give Feedback</a> | &copy; Inkpebble, LLC {% now "Y" %} | <a href="/policies">Terms of Service</a> | <a href="/privacy/">Privacy Policy</a>
     </footer>
     <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
     <script>Raven.config('{% sentry_public_dsn 'https' %}').install()</script>

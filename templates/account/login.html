@@ -27,6 +27,7 @@
     </label>
     {{ form.remember.errors }}
 </div>
+<p class="small">By logging in I agree that I will abide by the <a href="/policies">Terms of Service</a> and have read the <a href="/privacy/">Privacy Policy</a>.</p>
 <input class="btn btn-success" type="submit" value="login" />
 {% if redirect_field_value %}
 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

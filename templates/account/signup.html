@@ -41,6 +41,7 @@
     </div>
     {{ form.captcha.errors }}
     {{ form.captcha }}
+    <p class="small">By submitting this form I agree that I will abide by the <a href="/policies">Terms of Service</a> and have read the <a href="/privacy/">Privacy Policy</a>.</p>
     <button class="btn btn-success" type="submit">Sign Up &raquo;</button>
 </form>
 <p class="small">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
