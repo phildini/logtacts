@@ -9,19 +9,17 @@
         "BONSAI_URL": {
             "required": true
         },
-        "DISABLE_COLLECTSTATIC": {
-            "required": true
-        },
         "EMAIL_PASSWORD": {
             "required": true
         },
-        "LOGTACTS_DB_URL": {
-            "required": true
-        },
         "LOGTACTS_SECRET_KEY": {
+            "required": true,
+            "generator": "secret"
+        },
+        "RECAPTCHA_PRIVATE_KEY": {
             "required": true
         },
-        "MANDRILL_KEY": {
+        "RECAPTCHA_PUBLIC_KEY": {
             "required": true
         },
         "OPBEAT_APP_ID": {
@@ -38,9 +36,6 @@
         },
         "SLACK_WEBHOOK_URL": {
             "required": true
-        },
-        "STATIC_URL": {
-            "required": true
         }
     },
     "formation": {
@@ -50,12 +45,11 @@
         },
         "web": {
             "quantity": 1,
-            "size": "Free",
+            "size": "Free"
         }
     },
     "addons": [
-        "heroku-postgresql",
-        "heroku-redis"
+        "heroku-redis", "heroku-postgresql"
     ],
     "buildpacks": [
         {

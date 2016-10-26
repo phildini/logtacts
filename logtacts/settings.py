@@ -298,7 +298,6 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'loggly',
         },
         'sentry': {
             'level': 'ERROR',
@@ -307,10 +306,14 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
         'django.request': {
             'handlers': ['console', 'loggly-handler'],
             'level': 'INFO',
-            'propagate': False,
+            'propagate': True,
         },
         'post_to_social': {
             'handlers': ['console', 'loggly-handler'],
