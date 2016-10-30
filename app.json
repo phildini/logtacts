@@ -49,7 +49,11 @@
         }
     },
     "addons": [
-        "heroku-redis", "heroku-postgresql"
+        "heroku-redis",
+        "heroku-postgresql",
+        {
+            "plan": "papertrail:choklad"
+        }
     ],
     "buildpacks": [
         {
