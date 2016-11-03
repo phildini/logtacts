@@ -9,12 +9,14 @@
         "BONSAI_URL": {
             "required": true
         },
+        "DATABASE_URL": {
+            "required": true
+        },
         "EMAIL_PASSWORD": {
             "required": true
         },
         "LOGTACTS_SECRET_KEY": {
-            "required": true,
-            "generator": "secret"
+            "required": true
         },
         "RECAPTCHA_PRIVATE_KEY": {
             "required": true
@@ -54,7 +56,6 @@
     },
     "addons": [
         "heroku-redis",
-        "heroku-postgresql",
         {
             "plan": "papertrail:choklad"
         }
