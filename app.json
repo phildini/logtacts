@@ -41,11 +41,15 @@
     "formation": {
         "worker": {
             "quantity": 1,
-            "size": "Free"
+            "size": "hobby"
         },
         "web": {
             "quantity": 1,
-            "size": "Free"
+            "size": "hobby"
+        },
+        "webworker": {
+            "quantity": 1,
+            "size": "hobby"
         }
     },
     "addons": [
