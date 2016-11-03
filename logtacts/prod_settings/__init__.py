@@ -27,7 +27,7 @@ SESSION_COOKIE_HTTPONLY = True
 
 INSTALLED_APPS += (
     'gunicorn',
-    'opbeat.contrib.django',
+    # 'opbeat.contrib.django',
 )
 
 HAYSTACK_CONNECTIONS = {
