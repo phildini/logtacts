@@ -1,4 +1,5 @@
 {% load socialaccount %}
+{% load gargoyle_tags %}
 
 {% get_providers as socialaccount_providers %}
 
@@ -12,7 +13,14 @@
      >{{brand.name}}</a>
 {% endfor %}
 {% endif %}
-  <a title="{{provider.name}}" class="list-group-item socialaccount_provider {{provider.id}}" 
+    {% if provider.name.lower == 'google' %}
+    {% ifswitch import_from_google %}
+    <a title="{{provider.name}}" class="list-group-item socialaccount_provider {{provider.id}}" 
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+    {% endifswitch %}
+    {% else %}
+    <a title="{{provider.name}}" class="list-group-item socialaccount_provider {{provider.id}}" 
+     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+    {% endif %}
 {% endfor %}
 </div>
