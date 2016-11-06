@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Hello there!</h1>
 
-<p>You haven't contacted <a href="https://{{domain }}{{ contact.get_absolute_url }}">{{ contact.name }}</a>{% if contact.last_contacted %} since {{ contact.last_contacted | date:"F j, o"}}{% else %} in a while{% endif %}.</p>
+<p>You haven't contacted <a href="https://{{ domain }}{{ contact.get_absolute_url }}">{{ contact.name }}</a>{% if contact.last_contacted %} since {{ contact.last_contacted | date:"F j, o"}}{% else %} in a while{% endif %}.</p>
 <p>Maybe shoot them an email?</p>
 <p></p>
 <p>Cheers,</p>

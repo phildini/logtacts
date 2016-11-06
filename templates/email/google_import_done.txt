@@ -1,0 +1,6 @@
+You're all set!
+
+Your Google contacts have been imported to ContactOtter (https://{{ domain }}). 
+
+Cheers,
+ContactOtter
