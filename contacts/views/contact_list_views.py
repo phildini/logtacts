@@ -120,7 +120,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
                 self._queryset = self._queryset.order_by('-name')
             if sort == 'az':
                 self._queryset = self._queryset.order_by('name')
-            if not self.request.GET.get('q'):
+            if not self.request.GET.get('q') and not sort:
                 self._queryset = self._queryset.order_by('-has_last_contact','-last_contact')
             self._queryset = self._queryset.prefetch_related('tags')
         return self._queryset
