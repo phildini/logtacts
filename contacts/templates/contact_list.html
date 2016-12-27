@@ -23,9 +23,10 @@
             <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
         {% endifnotswitch %}{% endif %}
         <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort <span class="caret"></span></button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By<span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=oldnew">Last contacted</a></li>
+                <li><a href="?{% if is_search %}q={{ query_raw }}{% endif %}">Most recently contacted</a></li>
+                <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=oldnew">Least recently contacted</a></li>
                 <li><a href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}s=az">A to z</a></li>
             </ul>
         </div>
