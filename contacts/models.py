@@ -34,6 +34,9 @@ class Tag(models.Model):
 
     objects = TagManager()
 
+    class Meta:
+        ordering = ['tag']
+
     def __str__(self):
         return self.tag
 
