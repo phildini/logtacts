@@ -28,6 +28,8 @@ from .models import (
     StripeSubscription,
 )
 
+logger = logging.getLogger("loggly_logs")
+
 
 class PaymentView(LoginRequiredMixin, FormView):
 
@@ -97,6 +99,7 @@ class PaymentView(LoginRequiredMixin, FormView):
         return reverse('contacts-list')
 
     def subscribe_book(self, book, plan, token, email):
+        # TODO: Allow for multiple customers, updates, books
         stripe.api_key = settings.STRIPE_SECRET_KEY
         response = stripe.Customer.create(
             source=token,
@@ -112,12 +115,22 @@ class PaymentView(LoginRequiredMixin, FormView):
             default_source=response.default_source,
             user=self.request.user,
         )
+        logger.info("Stripe customer created", extra={
+            'stripe_customer': response.id,
+            'customer_id': customer.id,
+        })
         subscription = StripeSubscription.objects.create(
             customer=customer,
             book=book,
             stripe_id=response.subscriptions.data[0].id,
             paid_until=paid_until,
         )
+        logger.info("Stripe subscription created", extra={
+            'stripe_customer': response.id,
+            'book_id': book.id,
+            'customer_id': customer.id,
+            'subscription_id': subscription.id,
+        })
         book.paid_until = paid_until
         book.plan = plan
         book.save()

@@ -87,6 +87,7 @@ def process_webhook(message):
                 )
                 book.save()
             invoice.save()
+            # Receipt sending goes here
         elif event.get('type') == 'invoice.payment_failed':
             invoice, created = StripeInvoice.objects.get_or_create(
                 stripe_id=data['id'],
@@ -104,6 +105,7 @@ def process_webhook(message):
         elif event.get('type') == 'charge.succeeded':
             try:
                 invoice = StripeInvoice.objects.get(stripe_id=data['invoice'])
+                invoice_id = invoice.id
             except StripeInvoice.DoesNotExist:
                 sentry.error(
                     "No StripeInvoice: {}".format(data['invoice']),
@@ -113,6 +115,7 @@ def process_webhook(message):
                     },
                 )
                 invoice = None
+                invoice_id = None
             charge, created = StripeCharge.objects.get_or_create(
                 stripe_id=data['id'],
                 amount=data['amount'],
@@ -122,7 +125,7 @@ def process_webhook(message):
                 'stripe_charge': data.get('id'),
                 'stripe_customer': data.get('customer'),
                 'stripe_invoice': data.get('invoice'),
-                'invoice_id': invoice.id,
+                'invoice_id': invoice_id,
             })
             if invoice:
                 charge.invoice = invoice
