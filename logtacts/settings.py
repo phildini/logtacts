@@ -43,7 +43,7 @@ DEBUG = True
 
 SANDSTORM = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SITE_ID=1
 
@@ -298,6 +298,12 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'console_json': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'loggly',
         },
         'sentry': {
             'level': 'ERROR',
@@ -321,7 +327,7 @@ LOGGING = {
             'propagate': True,
         },
         'loggly_logs':{
-            'handlers': ['console', 'loggly-handler'],
+            'handlers': ['console_json', 'loggly-handler'],
             'propagate': True,
             'level': 'DEBUG',
         },

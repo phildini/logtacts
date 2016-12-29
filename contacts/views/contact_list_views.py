@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 from braces.views import LoginRequiredMixin
 from django.conf import settings
@@ -28,6 +29,7 @@ from contacts.models import (
 from contacts import forms
 from contacts.views import BookOwnerMixin
 
+logger = logging.getLogger("loggly_logs")
 
 class ContactListView(BookOwnerMixin, FormView, ListView):
 

@@ -2,6 +2,10 @@ import datetime
 import logging
 import stripe
 from django.conf import settings
+from django.contrib.sites.models import Site
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.utils import timezone
 
 from .models import (
     CREATED,
@@ -14,7 +18,8 @@ from .models import (
 )
 
 
-logger = logging.getLogger('sentry')
+sentry = logging.getLogger('sentry')
+logger = logging.getLogger('loggly_logs')
 
 
 def process_webhook(message):
@@ -22,7 +27,7 @@ def process_webhook(message):
     event = message.content.get('event')
     data = event.get('data', {}).get('object')
     if not data:
-        logger.error("No data in stripe webhook", exc_info=True, extra={
+        sentry.error("No data in stripe webhook", exc_info=True, extra={
             'event': event,
         })
         return
@@ -33,10 +38,16 @@ def process_webhook(message):
                 amount=data['amount_due'],
                 currency=data['currency'],
             )
+            logger.info("Stripe invoice created", extra={
+                'stripe_charge': data.get('charge'),
+                'stripe_customer': data.get('customer'),
+                'stripe_invoice': data.get('id'),
+                'invoice_id': invoice.id,
+            })
             try:
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
-                logger.error(
+                sentry.error(
                     "No StripeCustomer: {}".format(data['customer']),
                     exc_info=True,
                     extra={
@@ -56,6 +67,12 @@ def process_webhook(message):
                 amount=data['amount_due'],
                 currency=data['currency'],
             )
+            logger.info("Stripe invoice succeeded", extra={
+                'stripe_charge': data.get('charge'),
+                'stripe_customer': data.get('customer'),
+                'stripe_invoice': data.get('id'),
+                'invoice_id': invoice.id,
+            })
             invoice.status = SUCCEEDED
             for item in data.get('lines', {}).get('data', []):
                 subscription = StripeSubscription.objects.get(stripe_id=item['id'])
@@ -78,11 +95,17 @@ def process_webhook(message):
             )
             invoice.status = FAILED
             invoice.save()
+            logger.info("Stripe invoice failed", extra={
+                'stripe_charge': data.get('charge'),
+                'stripe_customer': data.get('customer'),
+                'stripe_invoice': data.get('id'),
+                'invoice_id': invoice.id,
+            })
         elif event.get('type') == 'charge.succeeded':
             try:
                 invoice = StripeInvoice.objects.get(stripe_id=data['invoice'])
-            except StripeInvoice.DoesNoteExist:
-                logger.error(
+            except StripeInvoice.DoesNotExist:
+                sentry.error(
                     "No StripeInvoice: {}".format(data['invoice']),
                     exc_info=True,
                     extra={
@@ -95,12 +118,18 @@ def process_webhook(message):
                 amount=data['amount'],
                 currency=data['currency'],
             )
+            logger.info("Stripe charge succeeded", extra={
+                'stripe_charge': data.get('id'),
+                'stripe_customer': data.get('customer'),
+                'stripe_invoice': data.get('invoice'),
+                'invoice_id': invoice.id,
+            })
             if invoice:
                 charge.invoice = invoice
             try:
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
-                logger.error(
+                sentry.error(
                     "No StripeCustomer: {}".format(data['customer']),
                     exc_info=True,
                     extra={
@@ -116,7 +145,7 @@ def process_webhook(message):
             try:
                 invoice = StripeInvoice.objects.get(stripe_id=data['invoice'])
             except StripeInvoice.DoesNoteExist:
-                logger.error(
+                sentry.error(
                     "No StripeInvoice: {}".format(data['invoice']),
                     exc_info=True,
                     extra={
@@ -129,12 +158,18 @@ def process_webhook(message):
                 amount=data['amount'],
                 currency=data['currency'],
             )
+            logger.info("Stripe charge succeeded", extra={
+                'stripe_charge': data.get('id'),
+                'stripe_customer': data.get('customer'),
+                'stripe_invoice': data.get('invoice'),
+                'invoice_id': invoice.id,
+            })
             if invoice:
                 charge.invoice = invoice
             try:
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
-                logger.error(
+                sentry.error(
                     "No StripeCustomer: {}".format(data['customer']),
                     exc_info=True,
                     extra={
@@ -151,7 +186,6 @@ def process_webhook(message):
                 'event': event,
             })
     except:
-        logger.error("Error processing stripe webhook", exc_info=True, extra={
+        sentry.error("Error processing stripe webhook", exc_info=True, extra={
             'event': event,
         })
-

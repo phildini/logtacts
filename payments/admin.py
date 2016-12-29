@@ -7,7 +7,18 @@ from .models import (
     StripeSubscription,
 )
 
-admin.site.register(StripeCharge)
+class StripeChargeAdmin(admin.ModelAdmin):
+    list_display = [
+        'stripe_id',
+        'status',
+        'amount',
+        'currency',
+        'customer',
+        'created',
+        'changed',
+    ]
+
+admin.site.register(StripeCharge, StripeChargeAdmin)
 admin.site.register(StripeCustomer)
 admin.site.register(StripeInvoice)
 admin.site.register(StripeSubscription)
