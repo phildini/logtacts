@@ -1,7 +1,9 @@
+import decimal
 from django.contrib.auth.models import User
 from django.db import models
 
 from contacts.models import Book
+import payments as payments_constants
 
 CREATED = 'created'
 SUCCEEDED = 'succeeded'
@@ -33,6 +35,12 @@ class StripeSubscription(models.Model):
     customer = models.ForeignKey(StripeCustomer)
     book = models.ForeignKey(Book)
     stripe_id = models.CharField(max_length=255)
+    plan = models.CharField(
+        max_length=255,
+        choices=payments_constants.PLAN_CHOICES,
+        blank=True,
+        null=True,
+    )
     paid_until = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -56,6 +64,17 @@ class StripeInvoice(models.Model):
 
     def __str__(self):
         return "Invoice on: {}".format(self.customer)
+
+    def plan_tuples(self):
+        tuples = []
+        for subscription in self.subscriptions.all():
+            plan = payments_constants.PLANS.get(subscription.plan)
+            if plan:
+                tuples.append((plan['name'], plan['usd_cost']))
+        return tuples
+
+    def display_amount(self):
+        return '{0:.02f}'.format(float(self.amount)/100)
 
 
 class StripeCharge(models.Model):

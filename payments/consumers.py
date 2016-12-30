@@ -17,6 +17,8 @@ from .models import (
     StripeSubscription,
 )
 
+from .utils import send_receipt
+
 
 sentry = logging.getLogger('sentry')
 logger = logging.getLogger('loggly_logs')
@@ -67,6 +69,19 @@ def process_webhook(message):
                 amount=data['amount_due'],
                 currency=data['currency'],
             )
+            try:
+                customer = StripeCustomer.objects.get(stripe_id=data['customer'])
+            except StripeCustomer.DoesNotExist:
+                sentry.error(
+                    "No StripeCustomer: {}".format(data['customer']),
+                    exc_info=True,
+                    extra={
+                        'event': event,
+                    },
+                )
+                customer = None
+            if customer:
+                invoice.customer = customer
             logger.info("Stripe invoice succeeded", extra={
                 'stripe_charge': data.get('charge'),
                 'stripe_customer': data.get('customer'),
@@ -87,7 +102,7 @@ def process_webhook(message):
                 )
                 book.save()
             invoice.save()
-            # Receipt sending goes here
+            send_receipt(invoice, invoice.customer.email)
         elif event.get('type') == 'invoice.payment_failed':
             invoice, created = StripeInvoice.objects.get_or_create(
                 stripe_id=data['id'],

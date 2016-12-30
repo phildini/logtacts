@@ -124,6 +124,7 @@ class PaymentView(LoginRequiredMixin, FormView):
             book=book,
             stripe_id=response.subscriptions.data[0].id,
             paid_until=paid_until,
+            plan=payment_constants.PLANS[plan]['stripe_id'],
         )
         logger.info("Stripe subscription created", extra={
             'stripe_customer': response.id,

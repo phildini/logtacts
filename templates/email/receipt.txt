@@ -1,0 +1,13 @@
+Receipt for payment to ContactOtter on {{ invoice.created | date:"SHORT_DATE_FORMAT"}}
+
+On {{ invoice.created | date:"SHORT_DATE_FORMAT"}} your card was charged ${{ invoice.display_amount }} for the following ContactOtter plans:
+
+{% for name, amount in invoice.plan_tuples %}
+{{ name }}:    ${{ amount }}
+{% endfor %}
+-------
+Total:    ${{ invoice.display_amount }}
+
+Thanks for your payment! You're helping make ContactOtter possible.
+
+If you have any questions, please email help@contactotter.com

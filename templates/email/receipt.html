@@ -1,0 +1,16 @@
+{% extends "email/email_base.html" %}
+
+{% block content %}
+<h3>Receipt for payment to ContactOtter on {{ invoice.created | date:"SHORT_DATE_FORMAT"}}</h3>
+
+<p>On {{ invoice.created | date:"SHORT_DATE_FORMAT"}} your card was charged ${{ invoice.display_amount }} for the following ContactOtter plans:</p>
+{% for name, amount in invoice.plan_tuples %}
+<p>{{ name }}:    ${{ amount }}</p>
+{% endfor %}
+<p>--------</p>
+<p>Total:    ${{ invoice.display_amount }}</p>
+
+<p>Thanks for your payment! You're helping make ContactOtter possible.</p>
+
+<p>If you have any questions, please email help@contactotter.com</p>
+{% endblock %}

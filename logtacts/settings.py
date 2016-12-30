@@ -191,9 +191,9 @@ ADMINS = (
 MANAGERS = ADMINS
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sparkpostmail.com'
+EMAIL_HOST = 'in-v3.mailjet.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'SMTP_Injection'
+EMAIL_HOST_USER = get_env_variable('EMAIL_USERNAME')
 EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_PASSWORD')
 DEFAULT_FROM_EMAIL = 'site@contactotter.com'
 SERVER_EMAIL = 'site@contactotter.com'
