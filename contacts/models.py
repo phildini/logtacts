@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 from simple_history.models import HistoricalRecords
 
 import contacts as contact_settings
+import payments as payments_constants
 
 
 class TagManager(models.Manager):
@@ -306,7 +307,7 @@ class Book(models.Model):
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, blank=True, null=True)
-    plan = models.CharField(max_length=100, blank=True)
+    plan = models.CharField(choices=payments_constants.PLAN_CHOICES, max_length=100, blank=True)
     paid_until = models.DateTimeField(blank=True, null=True)
     history = HistoricalRecords()
     objects = BookManager()

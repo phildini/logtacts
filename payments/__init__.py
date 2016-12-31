@@ -1,5 +1,12 @@
+BASIC_MONTHLY = 'basic_monthly'
+BASIC_YEARLY = 'basic_yearly'
+TEAM_MONTHLY = 'team_monthly'
+TEAM_YEARLY = 'team_yearly'
+FAMILY_MONTHLY = 'family_monthly'
+FAMILY_YEARLY = 'family_yearly'
+
 PLANS = {
-    'basic_monthly': {
+    BASIC_MONTHLY: {
         'is_active': True,
         'stripe_id': 'basic_monthly',
         'stripe_cost': 500,
@@ -7,7 +14,7 @@ PLANS = {
         'collaborators': 1,
         'name': 'Basic Monthly Subscription'
     },
-    'basic_yearly': {
+    BASIC_YEARLY: {
         'is_active': True,
         'stripe_id': 'basic_yearly',
         'stripe_cost': 5000,
@@ -15,7 +22,7 @@ PLANS = {
         'collaborators': 1,
         'name': 'Basic Yearly Subscription'
     },
-    'family_monthly': {
+    FAMILY_MONTHLY: {
         'is_active': True,
         'stripe_id': 'family_monthly',
         'stripe_cost': 1000,
@@ -23,7 +30,7 @@ PLANS = {
         'collaborators': 5,
         'name': 'Family Monthly Subscription'
     },
-    'family_yearly': {
+    FAMILY_YEARLY: {
         'is_active': True,
         'stripe_id': 'family_yearly',
         'stripe_cost': 10000,
@@ -31,7 +38,7 @@ PLANS = {
         'collaborators': 5,
         'name': 'Family Yearly Subscription'
     },
-    'team_monthly': {
+    TEAM_MONTHLY: {
         'is_active': True,
         'stripe_id': 'team_monthly',
         'stripe_cost': 2000,
@@ -39,7 +46,7 @@ PLANS = {
         'collaborators': 20,
         'name': 'Team Monthly Subscription'
     },
-    'team_yearly': {
+    TEAM_YEARLY: {
         'is_active': True,
         'stripe_id': 'team_yearly',
         'stripe_cost': 20000,
