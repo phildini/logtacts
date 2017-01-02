@@ -20,14 +20,20 @@ from gargoyle import gargoyle
 class BookOwnerMixin(LoginRequiredMixin):
 
     def dispatch(self, request, *args, **kwargs):
-        if gargoyle.is_active('enable_payments', request):
+        if request.user.is_authenticated():
             if hasattr(request, 'current_book'):
                 book = request.current_book
             else:
-                book = Book.objects.get_for_user(self.request.user)
-            if book and (not book.paid_until or book.paid_until < timezone.now()):
-                messages.error(request, "Your subscription has expired. Please re-subscribe, or contact help@contactotter.com")
-                return HttpResponseRedirect('/pricing')
+                try:
+                    book = Book.objects.get_for_user(self.request.user)
+                except:
+                    book = None
+            if not book:
+                book = Book.objects.create_for_user(self.request.user)
+            if gargoyle.is_active('enable_payments', request):
+                if book and (not book.paid_until or book.paid_until < timezone.now()):
+                    messages.error(request, "Your book is currently unpaid. Please select a subscription, or contact help@contactotter.com")
+                    return HttpResponseRedirect('/pricing')
         return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):

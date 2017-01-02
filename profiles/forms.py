@@ -53,9 +53,5 @@ class ReCaptchaSignupForm(forms.Form):
         try:
             book = BookOwner.objects.get(user=user)
         except BookOwner.DoesNotExist:
-            book = Book.objects.create(
-                name="{}'s book".format(user.username),
-                owner=user,
-            )
-            BookOwner.objects.create(user=user, book=book)
+            Book.objects.create_for_user(user)
 

@@ -65,3 +65,12 @@ footer.well {
 .marketing-lead {
     margin-bottom: 10px;
 }
+
+.alameda-hero {
+    background-image: url('../img/marketing/alameda_made_background.jpg');
+    background-size: 100%;
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position:center;
+    color: white;
+}

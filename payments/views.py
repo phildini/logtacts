@@ -37,6 +37,7 @@ class PaymentView(LoginRequiredMixin, FormView):
     form_class = PaymentForm
 
     def dispatch(self, request, *args, **kwargs):
+        # TODO: Make this work even when the user isn't logged in
         if not gargoyle.is_active('enable_payments', request):
             return HttpResponseRedirect('/pricing')
         self.plan = request.GET.get('plan')
@@ -45,8 +46,12 @@ class PaymentView(LoginRequiredMixin, FormView):
             messages.warning(self.request, "Please select a plan")
             url = reverse("pricing")
             return HttpResponseRedirect(url)
+        if not self.request.user.is_authenticated():
+            url = "{}?next=/pay/%3Fplan%3D{}".format(reverse("account_signup"), self.plan)
+            return HttpResponseRedirect(url)
         try:
-            self.book = Book.objects.get_for_user(user=self.request.user)
+            if self.request.user.is_authenticated():
+                self.book = Book.objects.get_for_user(user=self.request.user)
         except Book.DoesNotExist:
             self.book = None
         return super(PaymentView, self).dispatch(request, *args, **kwargs)

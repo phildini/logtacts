@@ -216,7 +216,7 @@ ACCOUNT_UNIQUE_EMAIL=True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile', 'https://www.googleapis.com/auth/contacts.readonly'],
+        'SCOPE': ['profile', 'email', 'https://www.googleapis.com/auth/contacts.readonly'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }

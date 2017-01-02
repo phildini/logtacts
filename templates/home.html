@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block css %}
+<script src="https://use.fontawesome.com/bd76377166.js"></script>
+{% endblock %}
+
 {% block content %}
+<div class="row">
 <div class="col-md-6">
     <div class="jumbotron">
         <h2>Keeping track of the people you care about.</h2>
         <p>ContactOtter is a tool for better contact management; an address books for friends, families and small teams; a friendly CRM.</p>
-        <p><a class="btn btn-success js-signup" href="/signup/">Signup</a> <a class="btn btn-info js-login" href="{% url "login" %}">Login</a></p>
+        <p><a class="btn btn-primary" href="{% url "google_login" %}"><span class="fa fa-google"></span> Login with Google</a> <a class="btn btn-success js-signup" href="/signup/">Signup</a> <a class="btn btn-info js-login" href="{% url "login" %}">Login</a></p>
     </div>
 </div>
 <div class="col-md-6">
     <img src="{% static "img/contactotter.svg" %}?v=1" alt="Contacts just got otterly better">
+</div>
+</div>
+<div class="row marketing-row">
+    <p class="text-center">
+        <a href="/signup/" class="btn btn-lg btn-default js-signup">Want to know more?</a>
+    </p>
 </div>
 {% endblock %}
 

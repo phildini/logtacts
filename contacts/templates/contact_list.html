@@ -44,7 +44,7 @@
         {% for contact in page_obj.object_list %}
             {% include "contact_list_table_item.html" %}
         {% empty %}{% ifnotswitch read_only_mode %}
-            <p class="lead">Oh dear! You don't have any contacts! Let's <a href="{% url "contacts-new" %}">add some</a>.</p>
+            <p class="lead">Oh dear! You don't have any contacts! You can <a href="{% url "contacts-new" %}">add a contact manually</a> or <a href="{% url "import-google-contacts" %}">import your contacts from Google</a>.</p>
         {% endifnotswitch %}{% endfor %}
         </table>
         <div class="col-md-12 text-center">

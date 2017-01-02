@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block css %}
+<script src="https://use.fontawesome.com/bd76377166.js"></script>
+{% endblock %}
 
+{% block content %}
 <div class="row">
 <div class="col-md-6">
+<a class="btn btn-lg btn-primary" href="{% url "google_login" %}">
+    <span class="fa fa-google"></span> Login with Google
+</a>
+</div>
+<div class="col-md-6">
+<h2>...or login with a password</h2>
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}

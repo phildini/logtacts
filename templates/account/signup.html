@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block css %}
+<script src="https://use.fontawesome.com/bd76377166.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="row">
 <div class="col-md-6">
-<h2>Sign up</h2>
-<p class="lead">ContactOtter is in open alpha and accepting signups! After you signup here, we'll finish setting up your account, and send you an email when we're ready.</p>
+<a class="btn btn-lg btn-primary" href="{% url "google_login" %}">
+    <span class="fa fa-google"></span> Login with Google
+</a>
+</div>
+<div class="col-md-6">
+<h2>...or sign up with email</h2>
 <form id="signup_form" method="post" action="/signup/">
     {% csrf_token %}
     {% if form.non_field_errors %}

@@ -104,6 +104,14 @@ allauth_urls = [
     url('^google/', include(google_urls)),
 ]
 
+landing_urls = [
+    url(
+        r'^alameda-made$',
+        TemplateView.as_view(template_name='landing_pages/alameda_made.html'),
+        name='alameda-made',
+    )
+]
+
 
 urlpatterns = [
     url(r'^accounts/', include(allauth_urls)),
@@ -112,10 +120,10 @@ urlpatterns = [
     url(r'^api/', include(api_urls)),
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
     url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^import/google/', GoogleImportView.as_view()),
+    url(r'^import/google/', GoogleImportView.as_view(), name='import-google-contacts'),
     url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
     url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),
-    url(r'^l/', include('django.contrib.flatpages.urls')),
+    url(r'^l/', include(landing_urls)),
     url(r"^login/$", allauth_views.login, name="login"),
     url(r'^log/', include(log_urls)), # needs to be multi-booked
     url(r'^nexus/', include(nexus.site.urls)),

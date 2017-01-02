@@ -56,5 +56,5 @@ class GoogleImportView(LoginRequiredMixin, View):
             'user_id': self.request.user.id,
             'book_id': Book.objects.get_for_user(self.request.user).id
         })
-        messages.success(request, "We're importing your Google contacts now!")
+        messages.success(request, "We're importing your Google contacts now! You'll receive an email when we're done.")
         return HttpResponseRedirect('/')

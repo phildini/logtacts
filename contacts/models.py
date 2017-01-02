@@ -301,6 +301,14 @@ class BookManager(models.Manager):
     def filter_for_user(self, user):
         return self.filter(bookowner__user=user)
 
+    def create_for_user(self, user):
+        book = self.create(
+            name="{}'s book".format(user.username),
+            owner=user,
+        )
+        BookOwner.objects.create(user=user, book=book)
+        return book
+
 
 class Book(models.Model):
     created = models.DateTimeField(auto_now_add=True)
