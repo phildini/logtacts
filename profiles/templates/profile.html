@@ -60,7 +60,7 @@
     </div>
     <input id="add_log" type="submit" value="Save">
     <hr>
-    <h4>Social Settings</h4>
+    <h4 id="social">Social Settings</h4>
     <div>
         <a class="btn btn-default btn-sm" href="/accounts/social/connections/">Social accounts</a>
         {% ifswitch import_from_google %}
@@ -111,13 +111,13 @@
 {% if book %}
 <hr>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="book">
         <h4>Book</h4>
         {% if book.paid_until %}
         <p>Your subscription is paid until {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
         {% endif %}
         {% if plan %}
-        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }}</p>
+        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }} per month.</p>
         {% endif %}
     </div>
     {% if invitations %}

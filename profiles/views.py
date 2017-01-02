@@ -15,6 +15,7 @@ from rest_framework.authtoken.models import Token
 from contacts import models as contact_models
 from invitations.models import Invitation
 import payments as payment_constants
+from payments import models as payments_models
 
 from . import forms
 from . import models
@@ -52,16 +53,21 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         try:
             book = contact_models.Book.objects.get_for_user(self.request.user)
             context['book'] = book
-            if book.plan:
-                context['plan'] = payment_constants.PLANS.get(book.plan)
-                context['plan_cost_string'] = "{:.2f}".format(
-                    context['plan']['stripe_cost'] / 100
-                )
         except contact_models.Book.DoesNotExist:
+            book = None
             logger.error(
                 "Couldn't find book for user: {}".format(self.request.user),
                 exc_info=True,
             )
+        if book:
+            try:
+                sub = payments_models.StripeSubscription.objects.get(book=book)
+                context['plan'] = payment_constants.PLANS.get(sub.plan)
+                context['plan_cost_string'] = "{:.2f}".format(
+                    context['plan']['stripe_cost'] / 100
+                )
+            except payment_constants.models.StripeSubscription.DoesNotExist:
+                pass
         context["google_import_state"] = cache.get("{}::google-import".format(self.request.user))
 
 
