@@ -50,10 +50,12 @@ def process_webhook(message):
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
                 sentry.error(
-                    "No StripeCustomer: {}".format(data['customer']),
+                    "No StripeCustomer for invoice.created",
                     exc_info=True,
                     extra={
                         'event': event,
+                        'invoice': invoice,
+                        'stripe_customer': data.get('customer'),
                     },
                 )
                 customer = None
@@ -73,10 +75,12 @@ def process_webhook(message):
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
                 sentry.error(
-                    "No StripeCustomer: {}".format(data['customer']),
+                    "No StripeCustomer for invoice.payment_succeeded",
                     exc_info=True,
                     extra={
                         'event': event,
+                        'invoice': invoice,
+                        'stripe_customer': data.get('customer'),
                     },
                 )
                 customer = None
@@ -123,10 +127,12 @@ def process_webhook(message):
                 invoice_id = invoice.id
             except StripeInvoice.DoesNotExist:
                 sentry.error(
-                    "No StripeInvoice: {}".format(data['invoice']),
+                    "No StripeInvoice for charge.succeeded",
                     exc_info=True,
                     extra={
                         'event': event,
+                        'stripe_invoice': data.get('invoice'),
+                        'stripe_charge': data.get('id'),
                     },
                 )
                 invoice = None
@@ -148,10 +154,14 @@ def process_webhook(message):
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
                 sentry.error(
-                    "No StripeCustomer: {}".format(data['customer']),
+                    "No StripeCustomer for charge.succeeded",
                     exc_info=True,
                     extra={
                         'event': event,
+                        'stripe_charge': data.get('id'),
+                        'stripe_customer': data.get('customer'),
+                        'stripe_invoice': data.get('invoice'),
+                        'invoice_id': invoice_id,
                     },
                 )
                 customer = None
@@ -164,10 +174,13 @@ def process_webhook(message):
                 invoice = StripeInvoice.objects.get(stripe_id=data['invoice'])
             except StripeInvoice.DoesNoteExist:
                 sentry.error(
-                    "No StripeInvoice: {}".format(data['invoice']),
+                    "No StripeInvoice for charge.failed".format(data['invoice']),
                     exc_info=True,
                     extra={
                         'event': event,
+                        'stripe_charge': data.get('id'),
+                        'stripe_customer': data.get('customer'),
+                        'stripe_invoice': data.get('invoice'),
                     },
                 )
                 invoice = None
@@ -188,10 +201,14 @@ def process_webhook(message):
                 customer = StripeCustomer.objects.get(stripe_id=data['customer'])
             except StripeCustomer.DoesNotExist:
                 sentry.error(
-                    "No StripeCustomer: {}".format(data['customer']),
+                    "No StripeCustomer for charge.failed".format(data['customer']),
                     exc_info=True,
                     extra={
                         'event': event,
+                        'stripe_charge': data.get('id'),
+                        'stripe_customer': data.get('customer'),
+                        'stripe_invoice': data.get('invoice'),
+                        'invoice_id': invoice.id,
                     },
                 )
                 customer = None

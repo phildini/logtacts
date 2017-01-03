@@ -22,7 +22,7 @@ from contacts.models import (
 )
 
 
-logger = logging.getLogger('sentry')
+sentry = logging.getLogger('sentry')
 
 
 def pull_google_contacts(user, book):
@@ -49,7 +49,7 @@ def pull_google_contacts(user, book):
         time.sleep(60)
         connections = people_service.people().connections().list(resourceName='people/me', pageSize=50).execute()
     except HttpAccessTokenRefreshError:
-        logger.error("Bad google token for: {}".format(user), exc_info=True)
+        sentry.error("Bad google token for user", exc_info=True, extra={"user": user})
         return
 
     next_page = connections.get('nextPageToken')
@@ -72,7 +72,7 @@ def pull_google_contacts(user, book):
             next_page = connections.get('nextPageToken')
         return success
     except:
-        logger.error("Google Import Error", exc_info=True)
+        sentry.error("Google Import Error", exc_info=True, extra={"book": book})
         return False
 
 def get_expanded_response_and_create_contacts(connections, people_service, sync_token, book):
@@ -123,9 +123,12 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                             preferred=email['metadata'].get('primary', False)
                         )
                 except:
-                    logger.error("Error adding emails for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
-                    })
+                    sentry.error("Error adding emails for contact", exc_info=True, 
+                        extra={
+                            'gcontact': gcontact,
+                            'contact': contact,
+                        },
+                    )
                 try:
                     for birthday in gcontact['person'].get('birthdays', []):
                         try:
@@ -144,9 +147,12 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                         except KeyError:
                             pass
                 except:
-                    logger.error("Error adding birthdays for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
-                    })
+                    sentry.error("Error adding birthdays for contact", exc_info=True,
+                        extra={
+                            'gcontact': gcontact,
+                            'contact': contact,
+                        },
+                    )
                 try:
                     for organization in gcontact['person'].get('organizations', []):
                         if organization.get('title'):
@@ -166,9 +172,11 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                                 preferred=organization['metadata'].get('primary', False)
                             )
                 except:
-                    logger.error("Error adding organization for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
-                    })
+                    sentry.error("Error adding organization for contact", exc_info=True, extra={
+                            'gcontact': gcontact,
+                            'contact': contact,
+                        },
+                    )
                 # TODO: Photo
                 try:
                     for phone in gcontact['person'].get('phoneNumbers', []):
@@ -181,8 +189,9 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                             preferred=phone['metadata'].get('primary', False)
                         )
                 except:
-                    logger.error("Error adding phones for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
+                    sentry.error("Error adding phones for contact", exc_info=True, extra={
+                        'gcontact': gcontact,
+                        'contact': contact,
                     })
                 try:
                     for address in gcontact['person'].get('addresses', []):
@@ -194,8 +203,9 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                             preferred=address['metadata'].get('primary', False)
                         )
                 except:
-                    logger.error("Error adding addresses for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
+                    sentry.error("Error adding addresses for contact", exc_info=True, extra={
+                        'gcontact': gcontact,
+                        'contact': contact,
                     })
                 try:
                     for photo in gcontact['person'].get('photos', []):
@@ -203,9 +213,10 @@ def get_expanded_response_and_create_contacts(connections, people_service, sync_
                             contact.photo_url = photo['url']
                             contact.save()
                 except:
-                    logger.error("Error setting photo for {}".format(contact), exc_info=True, extra={
-                        'gcontact': gcontact
+                    sentry.error("Error setting photo for contact", exc_info=True, extra={
+                        'gcontact': gcontact,
+                        'contact': contact,
                     })
         except:
-            logger.error('Error adding contact from google', exc_info=True, extra={'gcontact': gcontact})
+            sentry.error('Error adding contact from google', exc_info=True, extra={'gcontact': gcontact})
 

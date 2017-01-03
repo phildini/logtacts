@@ -21,6 +21,8 @@ from oauth2client import GOOGLE_TOKEN_URI
 
 from contacts.models import Book
 
+sentry = logging.getLogger('sentry')
+
 
 class GoogleImportView(LoginRequiredMixin, View):
 
@@ -32,7 +34,9 @@ class GoogleImportView(LoginRequiredMixin, View):
         try:
             token = SocialToken.objects.get(account__user=self.request.user, app=app)
         except SocialToken.DoesNotExist:
-            messages.warning(request, "Please try importing from google again")
+            sentry.error("Social token missing in google import", extra={
+                "user": self.request.user,
+            })
             return HttpResponseRedirect(url)
         try:
             creds = GoogleCredentials(

@@ -3,7 +3,7 @@ from django.http import Http404
 from gargoyle import gargoyle
 from contacts.models import Book
 
-logger = logging.getLogger('sentry')
+sentry = logging.getLogger('sentry')
 
 class ContactBookMiddleware(object):
 
@@ -27,9 +27,8 @@ class ContactBookMiddleware(object):
                         request.current_book = books[0]
                     else:
                         request.current_book = None
-                        logger.error(
-                            "No book for user: {}".format(request.user),
-                            exc_info=True,
+                        sentry.error("No book found for user", exc_info=True,
+                            extra={"user": user}
                         )
                 if (
                     gargoyle.is_active('enable_payments', request) and

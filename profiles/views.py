@@ -21,7 +21,7 @@ from . import forms
 from . import models
 
 
-logger = logging.getLogger('sentry')
+sentry = logging.getLogger('sentry')
 
 
 class ProfileView(LoginRequiredMixin, UpdateView):
@@ -55,9 +55,10 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             context['book'] = book
         except contact_models.Book.DoesNotExist:
             book = None
-            logger.error(
-                "Couldn't find book for user: {}".format(self.request.user),
+            sentry.error(
+                "Couldn't find book for user",
                 exc_info=True,
+                extra={'user': self.request.user},
             )
         if book:
             try:
@@ -130,7 +131,7 @@ class ReviewUserView(LoginRequiredMixin, StaffuserRequiredMixin, FormView):
             )
             message.send()
         except:
-            logger.exception('Problem sending account active email')
+            sentry.exception('Problem sending account active email')
 
         return super(ReviewUserView, self).form_valid(form)
 
