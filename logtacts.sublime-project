@@ -8,7 +8,8 @@
                 "htmlcov",
                 ".coverage",
                 "env",
-                "dist"
+                "dist",
+                "node_modules",
             ],
             "file_exclude_patters":
             [

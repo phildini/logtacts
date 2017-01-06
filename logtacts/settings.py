@@ -55,6 +55,8 @@ MEDIA_ROOT = PROJECT_ROOT.child('media')
 STATIC_ROOT = PROJECT_ROOT.child('dist')
 STATICFILES_DIRS = (
     PROJECT_ROOT.child('static'),
+    PROJECT_ROOT.child('node_modules').child('bootstrap').child('dist'),
+    PROJECT_ROOT.child('node_modules').child('jquery').child('dist'),
 )
 STATIC_URL = '/static/'
 

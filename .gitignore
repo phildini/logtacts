@@ -63,3 +63,4 @@ docs/_build/
 
 # Complied assets
 dist/
+node_modules/
