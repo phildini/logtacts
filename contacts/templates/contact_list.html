@@ -48,9 +48,9 @@
         {% endifnotswitch %}{% endfor %}
         </table>
         <div class="col-md-12 text-center">
-        {% if page_obj.has_previous %}<a class="btn btn-default"href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"><span class="glyphicon glyphicon-arrow-left"></span> Previous</a>
+        {% if page_obj.has_previous %}<a class="btn btn-default" href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}page={{ page_obj.previous_page_number }}{% if sort %}&amp;s={{ sort }}{% endif %}"><span class="glyphicon glyphicon-arrow-left"></span> Previous</a>
         {% endif %}
-        {% if page_obj.has_next %}<a class="btn btn-default" href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next <span class="glyphicon glyphicon-arrow-right"></span></a>{% endif %}
+        {% if page_obj.has_next %}<a class="btn btn-default" href="?{% if is_search %}q={{ query_raw }}&amp;{% endif %}page={{ page_obj.next_page_number }}{% if sort %}&amp;s={{ sort }}{% endif %}">Next <span class="glyphicon glyphicon-arrow-right"></span></a>{% endif %}
         </div>
     </div>
     </form>

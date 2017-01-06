@@ -136,6 +136,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         context = super(ContactListView, self).get_context_data(**kwargs)
         context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
         context['logs'] = self.get_logs()[:10]
+        context['sort'] = self.request.GET.get('s')
         if self.request.GET.get('q'):
             context['search_tags'] = self.search_tags
             context['query_raw'] = self.query
