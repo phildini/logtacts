@@ -5,6 +5,9 @@ env:
 - SECRET_KEY="shhitsasecret" MANDRILL_KEY="anothersecret" SLACK_WEBHOOK_URL="secreturl"
 before_install:
 - pip install codecov
+- nvm install 6.0
+- nvm use 6.0
+- npm install
 before_script:
 - python manage.py collectstatic --noinput --settings=logtacts.test_settings
 after_success:
