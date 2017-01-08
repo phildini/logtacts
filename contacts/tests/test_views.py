@@ -13,9 +13,11 @@ from contacts import views
 class ContactListViewTests(TestCase):
 
     def setUp(self):
+        self.book = factories.BookFactory.create()
         request_factory = RequestFactory()
         request = request_factory.get(reverse('contacts-list'))
         request.user = UserFactory.create()
+        request.current_book = self.book
         self.response = views.contact_list_views.ContactListView.as_view()(request)
 
     def test_contact_list_view_response_200(self):
@@ -25,17 +27,17 @@ class ContactListViewTests(TestCase):
         self.response.render()
 
     def test_contact_list_view_contains_only_what_it_should(self):
-        book = factories.BookFactory.create()
         user = UserFactory.create(username='nicholle')
-        factories.BookOwnerFactory.create(book=book, user=user)
-        good_contact = factories.ContactFactory.create(book=book)
+        factories.BookOwnerFactory.create(book=self.book, user=user)
+        good_contact = factories.ContactFactory.create(book=self.book)
         bad_contact = factories.ContactFactory.create()
-        good_tag = factories.TagFactory.create(book=book)
+        good_tag = factories.TagFactory.create(book=self.book)
         bad_tag = factories.TagFactory.create()
         good_contact.tags.add(good_tag)
         request_factory = RequestFactory()
         request = request_factory.get(reverse('contacts-list'))
         request.user = user
+        request.current_book = self.book
         response = views.contact_list_views.ContactListView.as_view()(request)
         self.assertEqual(len(response.context_data.get('tags')), 1)
         self.assertEqual(len(response.context_data.get('contact_list')), 1)
@@ -53,6 +55,7 @@ class ContactViewTests(TestCase):
         self.contact = factories.ContactFactory.create(book=book)
         request_factory = RequestFactory()
         self.request = request_factory.get(self.contact.get_absolute_url())
+        self.request.current_book = book
 
     def test_contact_detail_view_response_200(self):
         self.request.user = self.user
@@ -90,6 +93,7 @@ class EditContactViewTests(TestCase):
         self.request = request_factory.get(
             reverse('contacts-edit', kwargs={'pk': self.contact.id}),
         )
+        self.request.current_book = book
 
 
     def test_edit_contact_view_200(self):
@@ -127,6 +131,7 @@ class CreateContactViewTests(TestCase):
         self.request = request_factory.get(
             reverse('contacts-new'),
         )
+        self.request.current_book = book
 
 
     def test_create_contact_view_200(self):
@@ -147,10 +152,10 @@ class CreateContactViewTests(TestCase):
 class LogViewTests(TestCase):
 
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
         self.log = factories.LogFactory.create(contact=self.contact)
         self.request_factory = RequestFactory()
 
@@ -159,6 +164,7 @@ class LogViewTests(TestCase):
             reverse('log-edit', kwargs={'pk': self.log.id})
         )
         self.request.user = self.user
+        self.request.current_book = self.book
         response = views.log_views.EditLogView.as_view()(
             self.request,
             pk=self.log.pk,
@@ -170,6 +176,7 @@ class LogViewTests(TestCase):
             reverse('log-edit', kwargs={'pk': self.log.id})
         )
         self.request.user = UserFactory.create()
+        self.request.current_book = self.book
         with self.assertRaises(PermissionDenied):
             views.log_views.EditLogView.as_view()(
                 self.request,
@@ -181,6 +188,7 @@ class LogViewTests(TestCase):
             reverse('log-edit', kwargs={'pk': self.log.id})
         )
         self.request.user = self.user
+        self.request.current_book = self.book
         response = views.log_views.EditLogView.as_view()(
             self.request,
             pk=self.log.pk,
@@ -192,6 +200,7 @@ class LogViewTests(TestCase):
             reverse('log-delete', kwargs={'pk': self.log.id})
         )
         self.request.user = self.user
+        self.request.current_book = self.book
         response = views.log_views.DeleteLogView.as_view()(
             self.request,
             pk=self.log.pk,
@@ -203,6 +212,7 @@ class LogViewTests(TestCase):
             reverse('log-delete', kwargs={'pk': self.log.id})
         )
         self.request.user = UserFactory.create()
+        self.request.current_book = self.book
         with self.assertRaises(PermissionDenied):
             views.log_views.DeleteLogView.as_view()(
                 self.request,
@@ -214,6 +224,7 @@ class LogViewTests(TestCase):
             reverse('log-delete', kwargs={'pk': self.log.id})
         )
         self.request.user = self.user
+        self.request.current_book = self.book
         response = views.log_views.DeleteLogView.as_view()(
             self.request,
             pk=self.log.pk,
@@ -224,11 +235,11 @@ class LogViewTests(TestCase):
 class TagViewTests(TestCase):
 
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
-        self.tag = factories.TagFactory.create(tag='Test', book=book)
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
+        self.tag = factories.TagFactory.create(tag='Test', book=self.book)
         self.contact.tags.add(self.tag)
         self.request_factory = RequestFactory()
 
@@ -237,6 +248,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
@@ -248,6 +260,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id})
         )
         request.user = UserFactory.create()
+        request.current_book = self.book
         with self.assertRaises(Http404):
             views.contact_list_views.TaggedContactListView.as_view()(
                 request,
@@ -259,6 +272,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
@@ -272,6 +286,7 @@ class TagViewTests(TestCase):
             reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_list_views.TaggedContactListView.as_view()(
             request,
             pk=self.tag.pk,
@@ -283,10 +298,10 @@ class TagViewTests(TestCase):
 class CreateTagViewTests(TestCase):
 
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
         self.request_factory = RequestFactory()
 
     def test_edit_tag_view_200(self):
@@ -294,6 +309,7 @@ class CreateTagViewTests(TestCase):
             reverse('tags-new'),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.CreateTagView.as_view()(
             request,
         )
@@ -304,6 +320,7 @@ class CreateTagViewTests(TestCase):
             reverse('tags-new'),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.CreateTagView.as_view()(
             request,
         )
@@ -313,11 +330,11 @@ class CreateTagViewTests(TestCase):
 class EditTagViewTests(TestCase):
 
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
-        self.tag = factories.TagFactory.create(tag='Test2', book=book)
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
+        self.tag = factories.TagFactory.create(tag='Test2', book=self.book)
         self.contact.tags.add(self.tag)
         self.request_factory = RequestFactory()
 
@@ -326,6 +343,7 @@ class EditTagViewTests(TestCase):
             reverse('tags-edit', kwargs={'pk': self.tag.pk}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.EditTagView.as_view()(
             request,
             pk=self.tag.pk,
@@ -337,6 +355,7 @@ class EditTagViewTests(TestCase):
             reverse('tags-edit', kwargs={'pk': self.tag.pk}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.EditTagView.as_view()(
             request,
             pk=self.tag.pk,
@@ -347,11 +366,11 @@ class EditTagViewTests(TestCase):
 class DeleteTagViewTests(TestCase):
 
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
-        self.tag = factories.TagFactory.create(tag='Test', book=book)
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
+        self.tag = factories.TagFactory.create(tag='Test', book=self.book)
         self.contact.tags.add(self.tag)
         self.request_factory = RequestFactory()
 
@@ -360,6 +379,7 @@ class DeleteTagViewTests(TestCase):
             reverse('tags-delete', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.DeleteTagView.as_view()(
             request,
             pk=self.tag.pk,
@@ -371,6 +391,7 @@ class DeleteTagViewTests(TestCase):
             reverse('tags-delete', kwargs={'pk': self.tag.id}),
         )
         request.user = self.user
+        request.current_book = self.book
         response = views.contact_views.DeleteTagView.as_view()(
             request,
             pk=self.tag.pk,

@@ -92,14 +92,7 @@ class CreateContactView(BookOwnerMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super(CreateContactView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
-        try:
-            book = BookOwner.objects.get(user=self.request.user).book
-        except BookOwner.DoesNotExist:
-            book = Book.objects.create(
-                name="{}'s Contacts".format(self.request.user),
-            )
-            BookOwner.objects.create(book=book, user=self.request.user)
-        kwargs['book'] = book
+        kwargs['book'] = self.request.current_book
         return kwargs
 
     def get_context_data(self, **kwargs):
@@ -129,14 +122,7 @@ class EditContactView(BookOwnerMixin, UpdateView):
     def get_form_kwargs(self):
         kwargs = super(EditContactView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
-        try:
-            book = BookOwner.objects.get(user=self.request.user).book
-        except BookOwner.DoesNotExist:
-            book = Book.objects.create(
-                name="{}'s Contacts".format(self.request.user),
-            )
-            BookOwner.objects.create(book=book, user=self.request.user)
-        kwargs['book'] = book
+        kwargs['book'] = self.request.current_book
         return kwargs
 
     def get_context_data(self, **kwargs):
