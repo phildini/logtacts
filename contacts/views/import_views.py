@@ -58,7 +58,7 @@ class GoogleImportView(LoginRequiredMixin, View):
         cache.set("{}::google-import".format(request.user.username), "processing", 86400)
         Channel('import-google-contacts').send({
             'user_id': self.request.user.id,
-            'book_id': Book.objects.get_for_user(self.request.user).id
+            'book_id': self.request.current_book.id
         })
         messages.success(request, "We're importing your Google contacts now! You'll receive an email when we're done.")
         return HttpResponseRedirect('/')

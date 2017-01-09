@@ -111,12 +111,12 @@ tag_urls = [
 
 log_urls = [
     url(
-        r'^log/edit/(?P<pk>\d+)/$',
+        r'^edit/(?P<pk>\d+)/$',
         log_views.EditLogView.as_view(),
         name='log-edit',
     ),
     url(
-        r'^log/delete/(?P<pk>\d+)/$',
+        r'^delete/(?P<pk>\d+)/$',
         log_views.DeleteLogView.as_view(),
         name='log-delete',
     ),

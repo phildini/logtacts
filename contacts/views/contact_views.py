@@ -48,7 +48,10 @@ class ContactView(BookOwnerMixin, FormView):
     def dispatch(self, request, **kwargs):
         if self.request.user.is_authenticated():
             self.contact = get_object_or_404(
-                Contact.objects.get_contacts_for_user(self.request.user),
+                Contact.objects.get_contacts_for_user(
+                    user=self.request.user,
+                    book=self.request.current_book,
+                ),
                 pk=self.kwargs.get('pk'),
             )
         return super(ContactView, self).dispatch(request, **kwargs)
@@ -56,7 +59,10 @@ class ContactView(BookOwnerMixin, FormView):
     def get_success_url(self):
         return reverse(
             'contacts-view',
-            kwargs={'pk': self.kwargs.get('pk')},
+            kwargs={
+                'pk': self.kwargs.get('pk'),
+                'book': self.request.current_book.id,
+            },
         )
 
     def get_context_data(self, **kwargs):
@@ -87,7 +93,10 @@ class CreateContactView(BookOwnerMixin, CreateView):
     form_class = forms.ContactForm
 
     def get_success_url(self):
-        return reverse('contacts-view', kwargs={'pk': self.object.id})
+        return reverse('contacts-view', kwargs={
+            'pk': self.object.id,
+            'book': self.request.current_book.id,
+        })
 
     def get_form_kwargs(self):
         kwargs = super(CreateContactView, self).get_form_kwargs()
@@ -97,7 +106,9 @@ class CreateContactView(BookOwnerMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateContactView, self).get_context_data(**kwargs)
-        context['action'] = reverse('contacts-new')
+        context['action'] = reverse('contacts-new', kwargs={
+            'book': self.request.current_book.id,
+        })
         return context
 
     def form_valid(self, form):
@@ -116,7 +127,10 @@ class EditContactView(BookOwnerMixin, UpdateView):
     def get_success_url(self):
         return reverse(
             'contacts-view',
-            kwargs={'pk': self.get_object().id},
+            kwargs={
+                'pk': self.get_object().id,
+                'book': self.request.current_book.id,
+            },
         )
 
     def get_form_kwargs(self):
@@ -129,7 +143,10 @@ class EditContactView(BookOwnerMixin, UpdateView):
         context = super(EditContactView, self).get_context_data(**kwargs)
         context['action'] = reverse(
             'contacts-edit',
-            kwargs={'pk': self.get_object().id},
+            kwargs={
+                'pk': self.get_object().id,
+                'book': self.request.current_book.id,
+            },
         )
 
         return context
@@ -165,7 +182,10 @@ class CopyContactView(BookOwnerMixin, UpdateView):
             contact.tags.add(tag)
         messages.success(self.request, "Contact copied")
         return HttpResponseRedirect(
-            reverse('contacts-edit', kwargs={'pk': contact.pk})
+            reverse('contacts-edit', kwargs={
+                'pk': contact.pk,
+                'book': self.request.current_book.id,
+            })
         )
 
 
@@ -175,7 +195,9 @@ class DeleteContactView(BookOwnerMixin, DeleteView):
     template_name = 'delete_contact.html'
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def form_valid(self, form):
         messages.success(
@@ -195,7 +217,9 @@ class CreateTagView(BookOwnerMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateTagView, self).get_context_data(**kwargs)
-        context['action'] = reverse('tags-new')
+        context['action'] = reverse('tags-new', kwargs={
+                'book': self.request.current_book.id,
+        })
         return context
 
     def form_valid(self, form):
@@ -211,7 +235,9 @@ class EditTagView(BookOwnerMixin, UpdateView):
     form_class = forms.TagForm
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def form_valid(self, form):
         messages.success(
@@ -227,7 +253,9 @@ class DeleteTagView(BookOwnerMixin, DeleteView):
     template_name = 'delete_tag.html'
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def form_valid(self, form):
         messages.success(
@@ -289,9 +317,15 @@ def address_csv_view(request):
 
 def export_full_contact_book_json_view(request):
     if request.user.is_authenticated():
-        contacts = Contact.objects.get_contacts_for_user(request.user)
+        contacts = Contact.objects.get_contacts_for_user(
+            user=request.user,
+            book=request.current_book,
+        )
         contact_serializer = serializers.ContactSerializer(contacts, many=True)
-        tags = Tag.objects.get_tags_for_user(request.user)
+        tags = Tag.objects.get_tags_for_user(
+            user=request.user,
+            book=request.current_book,
+        )
         tag_serializer = serializers.TagSerializer(tags, many=True)
         export = {
             'version': 2,
@@ -309,7 +343,9 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
     template_name="merge_contacts.html"
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def get_context_data(self, *args, **kwargs):
         context = super(MergeContactsView, self).get_context_data(*args, **kwargs)
@@ -353,9 +389,14 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
             self.request.session['selected_contacts'] = None
             return redirect(reverse(
                 'contacts-view',
-                kwargs={'pk': primary_contact.id},
+                kwargs={
+                    'pk': primary_contact.id,
+                    'book': self.request.current_book.id,
+                },
             ))
-        return redirect(reverse('contacts-list'))
+        return redirect(reverse('contacts-list', kwargs={
+            'book':self.request.current_book.id,
+        }))
 
 
 class AddTagView(LoginRequiredMixin, FormView):
@@ -364,11 +405,16 @@ class AddTagView(LoginRequiredMixin, FormView):
     form_class = forms.MultiTagForm
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def get_tags(self):
         if not hasattr(self, '_tags'):
-            self._tags = Tag.objects.get_tags_for_user(self.request.user)
+            self._tags = Tag.objects.get_tags_for_user(
+                user=self.request.user,
+                book=self.request.current_book,
+            )
         return self._tags
 
     def get_context_data(self, *args, **kwargs):

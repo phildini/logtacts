@@ -11,7 +11,8 @@ def get_selected_contacts_from_request(request):
         selected_contacts = []
     try:
         contacts = Contact.objects.get_contacts_for_user(
-            request.user
+            user=request.user,
+            book=request.current_book,
         ).filter(
             id__in=selected_contacts
         ).order_by('-created')

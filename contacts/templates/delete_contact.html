@@ -3,9 +3,9 @@
 {% block content %}
 <h1>Delete Contact</h1>
 <p>Are you sure you want to delete {{ contact }}?</p>
-<form action="{% url "contacts-delete" pk=contact.id %}" method="POST">
+<form action="{% url "contacts-delete" pk=contact.id book=book.id %}" method="POST">
     {% csrf_token %}
     <input class="btn btn-danger" type="submit" value="Yes, delete." />
-    <a class="btn btn-primary" href="{% url "contacts-list" %}">No, cancel.</a>
+    <a class="btn btn-primary" href="{% url "contacts-list" book=book.id %}">No, cancel.</a>
 </form>
 {% endblock %}

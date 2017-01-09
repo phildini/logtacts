@@ -40,10 +40,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
     paginate_orphans = settings.LIST_PAGINATE_ORPHANS
 
     def get_search_contacts(self):
-        try:
-            book = Book.objects.get_for_user(self.request.user)
-        except Book.DoesNotExist:
-            raise Http404()
+        book = self.request.current_book
         self.query = self.request.GET.get('q')
         results = re.split(
             r'(?P<tag>\w+\:(?:\"[\w\s]+\"|\w+\b))',
@@ -77,7 +74,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return contact_ids
 
     def get_success_url(self, *args, **kwargs):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={'book': self.request.current_book.id})
 
     def get_form_kwargs(self):
         kwargs = super(ContactListView, self).get_form_kwargs()
@@ -92,15 +89,25 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         self.request.session['selected_contacts'] = json.dumps(contact_ids)
         if not contact_ids:
             messages.info(self.request, "No contacts selected.")
-            return HttpResponseRedirect(reverse('contacts-list'))
+            return HttpResponseRedirect(reverse('contacts-list',
+                kwargs={'book', self.request.current_book.id}),
+            )
         if self.request.POST.get('emails'):
-            return HttpResponseRedirect(reverse('contact_emails'))
+            return HttpResponseRedirect(reverse('contact_emails',
+                kwargs={'book', self.request.current_book.id}),
+            )
         if self.request.POST.get('addresses'):
-            return HttpResponseRedirect(reverse('contact_addresses'))
+            return HttpResponseRedirect(reverse('contact_addresses',
+                kwargs={'book', self.request.current_book.id}),
+            )
         if self.request.POST.get('merge'):
-            return HttpResponseRedirect(reverse('contacts_merge'))
+            return HttpResponseRedirect(reverse('contacts_merge',
+                kwargs={'book', self.request.current_book.id}),
+            )
         if self.request.POST.get('addtag'):
-            return HttpResponseRedirect(reverse('contacts_add_tag'))
+            return HttpResponseRedirect(reverse('contacts_add_tag',
+                kwargs={'book', self.request.current_book.id}),
+            )
         return HttpResponseRedirect(self.get_success_url())
 
     def get_queryset(self):
@@ -129,7 +136,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
     def get_logs(self):
         return LogEntry.objects.logs_for_user_book(
-            self.request.user,
+            user=self.request.user,
+            book=self.request.current_book,
         ).order_by('-time')
 
     def get_context_data(self, **kwargs):
@@ -155,8 +163,9 @@ class TaggedContactListView(ContactListView):
 
     def get_logs(self):
         return LogEntry.objects.logs_for_user_and_tag(
-            self.request.user,
-            self.tag,
+            user=self.request.user,
+            tag=self.tag,
+            book=self.request.current_book,
         ).order_by('-time')
 
     def get_queryset(self):

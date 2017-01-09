@@ -101,7 +101,9 @@ class PaymentView(LoginRequiredMixin, FormView):
         return super(PaymentView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def subscribe_book(self, book, plan, token, email):
         # TODO: Allow for multiple customers, updates, books

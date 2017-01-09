@@ -99,7 +99,10 @@ class Contact(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('contacts-view', kwargs={'pk': self.id})
+        return reverse('contacts-view', kwargs={
+            'pk': self.id,
+            'book': self.book.id,
+        })
 
     def get_complete_url(self):
         return "https://{}{}".format(
@@ -328,6 +331,9 @@ class Book(models.Model):
 
     def can_be_edited_by(self, user):
         return bool(self.bookowner_set.filter(user=user))
+
+    def get_absolute_url(self):
+        return reverse("contacts-list", kwargs={"book": self.id})
 
 class BookOwner(models.Model):
     created = models.DateTimeField(auto_now_add=True)

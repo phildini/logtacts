@@ -121,11 +121,17 @@ urlpatterns = [
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^import/google/', GoogleImportView.as_view(), name='import-google-contacts'),
+    url(
+        r'^(?P<book>\d+)/import/google/',
+        GoogleImportView.as_view(),
+        name='import-google-contacts',
+    ),
     url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
     url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),
     url(r'^l/', include(landing_urls)),
     url(r"^login/$", allauth_views.login, name="login"),
-    url(r'^log/', include(log_urls)), # needs to be multi-booked
+    url(r'^log/', include(log_urls)),
+    url(r'^(?P<book>\d+)/log/', include(log_urls)),
     url(r'^nexus/', include(nexus.site.urls)),
     url(r'^policies$', TemplateView.as_view(template_name='pages/policies.html'), name='policies'),
     url(r'^pricing$', TemplateView.as_view(template_name='pages/pricing.html'), name='pricing'),
@@ -134,9 +140,11 @@ urlpatterns = [
     url(r"^signup/$", allauth_views.signup, name="signup"),
     url(r'^sms/$', sms),
     url(r'^stripe/$', stripe_webhook_view),
-    url(r'^tags/', include(tag_urls)), # needs to be multi-booked
+    url(r'^tags/', include(tag_urls)),
+    url(r'^(?P<book>\d+)/tags/', include(tag_urls)),
     url(r'^u/', include('profiles.urls')),
     url(r'^$', HomeView.as_view(), name='home'),
-    url(r'^', include(contact_urls)), # needs to be multi-booked
+    url(r'^', include(contact_urls)),
+    url(r'^(?P<book>\d+)/', include(contact_urls)),
     url(r'^', include('django.contrib.auth.urls')),
 ]

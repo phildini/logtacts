@@ -20,7 +20,7 @@
         {% endif %}
 
         {% if tag %}{% ifnotswitch read_only_mode %}
-            <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
+            <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id book=book.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id book=book.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
         {% endifnotswitch %}{% endif %}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By<span class="caret"></span></button>
@@ -44,7 +44,7 @@
         {% for contact in page_obj.object_list %}
             {% include "contact_list_table_item.html" %}
         {% empty %}{% ifnotswitch read_only_mode %}
-            <p class="lead">Oh dear! You don't have any contacts! You can <a href="{% url "contacts-new" %}">add a contact manually</a> or <a href="{% url "import-google-contacts" %}">import your contacts from Google</a>.</p>
+            <p class="lead">Oh dear! You don't have any contacts! You can <a href="{% url "contacts-new" book=book.id %}">add a contact manually</a> or <a href="{% url "import-google-contacts" book=book.id %}">import your contacts from Google</a>.</p>
         {% endifnotswitch %}{% endfor %}
         </table>
         <div class="col-md-12 text-center">
@@ -55,9 +55,9 @@
     </div>
     </form>
     <div class="col-md-4">
-        <h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
+        <h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
         {% for tag in tags %}
-            <a href="{% url "contacts-tagged" pk=tag.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+            <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
         {% if logs %}
         <h3>Activity Log</h3>

@@ -8,8 +8,8 @@
 <h1>
     <img height="60" width="60" src="{% if contact.photo_url %}{{ contact.photo_url }}{% else %}{% gravatar_url contact.preferred_email 60 %}{% endif %}" alt="Photo for {{ contact.name }}"/> {{ contact.name }}
     <div class="btn-group" role="group">
-        <a href="{% url "contacts-edit" pk=contact.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-        <a href="{% url "contacts-copy" pk=contact.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Copy</a>
+        <a href="{% url "contacts-edit" pk=contact.pk book=book.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+        <a href="{% url "contacts-copy" pk=contact.pk book=book.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Copy</a>
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Add reminder <span class="caret"></span></button>
             <ul class="dropdown-menu">
@@ -24,7 +24,7 @@
 <div class="row">
     <div class="col-md-12">
     {% for tag in contact.tags.all %}
-        <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+        <a href="{% url "contacts-tagged" pk=tag.id book=book.pk %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
     {% endfor %}
     </div>
 </div>

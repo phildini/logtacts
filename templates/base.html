@@ -53,7 +53,7 @@
                             </span>
                         </div>
                     </div>
-                    <a href="{% url "contacts-new" %}" class="btn btn-success navbar-btn" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Add Contact</a>
+                    <a href="{% url "contacts-new" book=book.id %}" class="btn btn-success navbar-btn" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Add Contact</a>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     {% ifswitch multi_book %}
@@ -61,7 +61,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if request.current_book %}{{ request.current_book }}{% else %}Books{% endif %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             {% for book in request.books %}
-                            <li><a href="#">{{ book.name }}</a></li>
+                            <li><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
                             {% endfor %}
                             <li role="separator" class="divider"></li>
                             <li><a href="/books/new/">New</a></li>

@@ -134,7 +134,7 @@
 {% endif %}
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-default" href="{% url "fullexport" %}">Export all data</a>
+        <a class="btn btn-default" href="{% url "fullexport" book=book.id %}">Export all data</a>
     </div>
 </div>
 {% endblock %}

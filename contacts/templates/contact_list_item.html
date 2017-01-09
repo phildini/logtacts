@@ -20,9 +20,9 @@
                 <div class="contact-list-contact-info">
                     <a href="{{ contact.get_absolute_url }}">{{ contact }}</a>
                     {% for tag in contact.tags.all %}
-                    <a href="{% url "contacts-tagged" pk=tag.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+                    <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
                     {% endfor %}
-                    {% ifnotswitch read_only_mode %}(<a href="{% url "contacts-edit" pk=contact.id %}">edit</a>){% endifnotswitch %}
+                    {% ifnotswitch read_only_mode %}(<a href="{% url "contacts-edit" pk=contact.id book=book.id %}">edit</a>){% endifnotswitch %}
                 </div>
                 <div class="contact-list-interaction-info">
                     <span class="text-faint">{% if contact.last_contact %}Last contacted {{ contact.last_contact | localtime | naturaltime }}{% endif %}</span>

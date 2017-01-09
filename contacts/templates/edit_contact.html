@@ -13,10 +13,10 @@
 <div class="well well-sm">
 <input class="btn btn-success" type="submit" value="Save" form="contactForm">
 {% if contact.id %}
-<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
-<a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
+<a href="{% url "contacts-delete" pk=contact.id book=book.id %}" class="btn btn-danger">Delete</a>
+<a href="{% url "contacts-view" pk=contact.id book=book.id %}" class="btn btn-primary">back to contact</a>
 {% endif %}
-<a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
+<a href="{% url "contacts-list" book=book.id %}" class="btn btn-default">back to list</a>
 </div>
 <form class="form-inline" action="{{ action }}" method="POST" id="contactForm">
     {% csrf_token %}
@@ -141,10 +141,10 @@
 <div class="well well-sm">
 <input class="btn btn-success" type="submit" value="Save" form="contactForm">
 {% if contact.id %}
-<a href="{% url "contacts-delete" pk=contact.id %}" class="btn btn-danger">Delete</a>
-<a href="{% url "contacts-view" pk=contact.id %}" class="btn btn-primary">back to contact</a>
+<a href="{% url "contacts-delete" pk=contact.id book=book.id %}" class="btn btn-danger">Delete</a>
+<a href="{% url "contacts-view" pk=contact.id book=book.id %}" class="btn btn-primary">back to contact</a>
 {% endif %}
-<a href="{% url "contacts-list" %}" class="btn btn-default">back to list</a>
+<a href="{% url "contacts-list" book=book.id %}" class="btn btn-default">back to list</a>
 </div>
 
 {% endblock %}

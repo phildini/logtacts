@@ -21,12 +21,10 @@ class EditLogView(LoginRequiredMixin, UpdateView):
         if response.status_code == 200:
             if self.object.kind == 'edit':
                 messages.warning(self.request, "Edit logs cannot be changed")
-                return redirect(
-                    reverse(
-                        'contacts-view',
-                        kwargs={'pk': self.object.contact.id},
-                    ),
-                )
+                return redirect(reverse('contacts-view', kwargs={
+                    'pk': self.object.contact.id,
+                    'book': self.request.current_book.id,
+                }))
         return response
 
     def get_object(self, queryset=None):
@@ -38,7 +36,10 @@ class EditLogView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse(
             'contacts-view',
-            kwargs={'pk': self.object.contact.id},
+            kwargs={
+                'pk': self.object.contact.id,
+                'book': self.request.current_book.id,
+            },
         )
 
     def form_valid(self, form):
@@ -47,6 +48,11 @@ class EditLogView(LoginRequiredMixin, UpdateView):
             "Log edited",
         )
         return super(EditLogView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EditLogView, self).get_context_data(*args, **kwargs)
+        context['book'] = self.request.current_book
+        return context
 
 class DeleteLogView(LoginRequiredMixin, DeleteView):
 
@@ -59,11 +65,10 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
             if self.object.kind == 'edit':
                 messages.warning(self.request, "Edit logs cannot be changed")
                 return redirect(
-                    reverse(
-                        'contacts-view',
-                        kwargs={'pk': self.object.contact.id},
-                    ),
-                )
+                    reverse('contacts-view', kwargs={
+                            'pk': self.object.contact.id,
+                            'book': self.request.current_book.id,
+                    }))
         return response
 
     def get_object(self, queryset=None):
@@ -77,7 +82,10 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse(
             'contacts-view',
-            kwargs={'pk': self.object.contact.id},
+            kwargs={
+                'pk': self.object.contact.id,
+                'book': self.request.current_book.id,
+            },
         )
 
         def form_valid(self, form):
@@ -86,3 +94,8 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
                 "Log deleted",
             )
         return super(DeleteLogView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(DeleteLogView, self).get_context_data(*args, **kwargs)
+        context['book'] = self.request.current_book
+        return context

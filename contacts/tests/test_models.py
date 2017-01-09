@@ -20,7 +20,10 @@ class ContactModelTests(TestCase):
         self.assertEqual(self.contact.name, str(self.contact))
 
     def test_contact_url(self):
-        expected_url = reverse('contacts-view', kwargs={'pk': self.contact.id})
+        expected_url = reverse('contacts-view', kwargs={
+            'pk': self.contact.id,
+            'book': self.book.id,
+        })
         self.assertEqual(self.contact.get_absolute_url(), expected_url)
 
     def test_contact_last_contacted(self):

@@ -37,7 +37,9 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
     template_name = 'invite_edit.html'
 
     def get_success_url(self, **kwargs):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def get_context_data(self, *args, **kwargs):
         context = super(CreateInviteView, self).get_context_data(*args, **kwargs)
@@ -90,7 +92,9 @@ class AcceptInviteView(FormView):
                 self.request,
                 "Logged-in users can't accept invitations",
                 )
-            return redirect(reverse('contacts-list'))
+            return redirect(reverse('contacts-list', kwargs={
+                'book': self.request.current_book.id,
+            }))
         invite = get_object_or_404(
             Invitation.objects,
             key=kwargs.get('key'),
@@ -117,7 +121,9 @@ class AcceptInviteView(FormView):
         return response
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def get_form(self):
         return self.form_class(self.request.user, **self.get_form_kwargs())
