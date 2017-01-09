@@ -1,2 +1,3 @@
 def book(request):
-    return {'book': request.current_book}
+    if hasattr(request, 'current_book'):
+        return {'book': request.current_book}
