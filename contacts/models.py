@@ -340,6 +340,11 @@ class BookOwner(models.Model):
     changed = models.DateTimeField(auto_now=True)
     book = models.ForeignKey('Book')
     user = models.ForeignKey(User)
+    send_contact_reminders = models.BooleanField(default=False)
+    send_birthday_reminders = models.BooleanField(default=False)
+    check_twitter_dms = models.BooleanField(default=True)
+    check_twitter_mentions = models.BooleanField(default=True)
+    check_foursquare = models.BooleanField(default=True)
     history = HistoricalRecords()
 
     def __str__(self):

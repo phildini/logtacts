@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 BASIC_MONTHLY = 'basic_monthly'
 BASIC_YEARLY = 'basic_yearly'
 TEAM_MONTHLY = 'team_monthly'
@@ -5,7 +7,7 @@ TEAM_YEARLY = 'team_yearly'
 FAMILY_MONTHLY = 'family_monthly'
 FAMILY_YEARLY = 'family_yearly'
 
-PLANS = {
+PLANS = OrderedDict({
     BASIC_MONTHLY: {
         'is_active': True,
         'stripe_id': 'basic_monthly',
@@ -54,7 +56,7 @@ PLANS = {
         'collaborators': 20,
         'name': 'Team Yearly Subscription'
     },
-}
+})
 
 PLAN_CHOICES = (
     (PLANS[plan]['stripe_id'], PLANS[plan]['name']) for plan in PLANS
