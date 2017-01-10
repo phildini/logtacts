@@ -60,6 +60,8 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 
+ENVIRONMENT = 'dev'
+
 LIST_PAGINATE_BY = 25
 LIST_PAGINATE_ORPHANS = 5
 
@@ -75,6 +77,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'logtacts.context_processors.donottrack',
+                'logtacts.context_processors.selected_settings',
                 'contacts.processors.book',
             ],
         },

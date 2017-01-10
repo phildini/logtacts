@@ -48,3 +48,5 @@ SWAGGER_SETTINGS['base_path'] = 'https://www.contactotter.com/'
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 DEFAULT_HTTP_PROTOCOL = "https"
+
+ENVIRONMENT = get_env_variable('ENVIRONMENT')
