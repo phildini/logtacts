@@ -2,9 +2,17 @@
 
 {% block content %}
 {% if tag.id %}
-<h2>Edit Tag</h2>
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{% url "contacts-tagged" pk=tag.id book=book.pk %}"><span class="label label-default" style="font-size: 80%; background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
+    <li class="active">Edit</li>
+</ol>
 {% else %}
-<h2>Add Tag</h2>
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li class="active">Add tag</li>
+</ol>
 {% endif %}
 <form method="POST">
     {% csrf_token %}

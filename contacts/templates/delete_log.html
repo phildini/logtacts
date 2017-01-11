@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li><a href="{{ logentry.contact.get_absolute_url }}">{{ logentry.contact.name }}</a></li>
+    <li class="active">Delete Log</li>
+</ol>
 <h1>Delete Log</h1>
 <p>Are you sure you want to delete the following log?</p>
 <ul class="list-group">

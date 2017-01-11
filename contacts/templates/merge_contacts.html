@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li class="active">Merge</li>
+</ol>
 <h1>Merge Contact</h1>
 <p>Are you sure you want to merge the following contacts? This can't be undone.</p>
 {% for contact in contacts %}

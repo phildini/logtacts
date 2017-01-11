@@ -78,3 +78,15 @@ footer.well {
 a.navbar-title {
     padding-left: 5px;
 }
+
+form.add-log-form {
+    margin-bottom: 0;
+}
+
+h4.add-log-header {
+    margin-top: 0;
+}
+
+#add_log {
+    margin-top: 20px;
+}

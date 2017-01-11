@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li class="active">Export Addresses</li>
+</ol>
 {% if contacts %}
 <h3>Contact Addresses <a href="{% url "contact_address_export" book=book.id %}" class="btn btn-primary">Download CSV</a></h3>
 <ul>

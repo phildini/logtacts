@@ -3,10 +3,25 @@
 {% block content %}
 
 {% if logentry.id %}
-<h2>Edit Log</h2>
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li><a href="{{ logentry.contact.get_absolute_url }}">{{ logentry.contact.name }}</a></li>
+    <li class="active">Edit Log</li>
+</ol>
 {% else %}
-<h2>Add Log</h2>
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li><a href="{{ logentry.contact.get_absolute_url }}">{{ logentry.contact.name }}</a></li>
+    <li class="active">Add Log</li>
+</ol>
 {% endif %}
+<ul class="list-group">
+    <li class="list-group-item">
+        {% with log=logentry %}{% include "log_line.html" %}{% endwith %}
+    </li>
+</ul>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
     {% if form.non_field_errors %}

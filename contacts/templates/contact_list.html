@@ -7,18 +7,16 @@
 
 {% block content %}
 <div class="row">
+    <ol class="breadcrumb">
+        {% include "breadcrumbs_common.html" %}
+        {% if not tag %}
+        <li class="active">Contacts</li>
+        {% endif %}
+    </ol>
     <form id="id_contact_action_form" name="contact_action_form" method="POST" action="{{ action }}">
     {% csrf_token %}
     <div class="col-md-8">
-        <h3>
-        {% if tag %}
-            <span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span> Contacts
-        {% elif is_search %}
-            Search{% if query %} - "{{ query }}"{% endif %}{% for search_tag in search_tags %} - <span class="label label-default" style="background-color:{{ search_tag.corrected_color}};">{{ search_tag }}</span>{% endfor %}
-        {% elif contact_list %}
-            Contacts
-        {% endif %}
-
+        <h4>
         {% if tag %}{% ifnotswitch read_only_mode %}
             <a class="btn btn-info" href="{% url "tags-edit" pk=tag.id book=book.id %}"><span class="glyphicon glyphicon-pencil"></span> Edit tag</a> <a class="btn btn-danger" href="{% url "tags-delete" pk=tag.id book=book.id %}"><span class="glyphicon glyphicon-trash"></span> Delete tag</a>
         {% endifnotswitch %}{% endif %}
@@ -39,7 +37,7 @@
                 <li><input class="btn btn-default" name="merge" id="merge-submit" type="submit" value="Merge" /></li>
             </ul>
         </div>
-        </h3>
+        </h4>
         <table class="table">
         {% for contact in page_obj.object_list %}
             {% include "contact_list_table_item.html" %}
@@ -55,12 +53,12 @@
     </div>
     </form>
     <div class="col-md-4">
-        <h3>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h3>
+        <h4>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h4>
         {% for tag in tags %}
             <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
         {% if logs %}
-        <h3>Activity Log</h3>
+        <h4>Activity Log</h4>
         <ul class="list-group">
             {% for log in logs %}
             <li class="list-group-item">

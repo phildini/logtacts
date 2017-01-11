@@ -41,10 +41,10 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
     def get_search_contacts(self):
         book = self.request.current_book
-        self.query = self.request.GET.get('q')
+        self.query_raw = self.request.GET.get('q')
         results = re.split(
             r'(?P<tag>\w+\:(?:\"[\w\s]+\"|\w+\b))',
-            self.query,
+            self.query_raw,
         )
         self.search_tags = []
         parts = []
@@ -63,9 +63,9 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
                 tags_ids__in=[tag.id for tag in self.search_tags],
             )
 
-        query = ' '.join(parts).strip()
+        self.query = ' '.join(parts).strip()
         sqs = searchqueryset.filter(
-            SQ(name=AutoQuery(query)) | SQ(content=AutoQuery(query))
+            SQ(name=AutoQuery(self.query)) | SQ(content=AutoQuery(self.query))
         )
         try:
             contact_ids = [result.object.id for result in sqs]
@@ -147,7 +147,8 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         context['sort'] = self.request.GET.get('s')
         if self.request.GET.get('q'):
             context['search_tags'] = self.search_tags
-            context['query_raw'] = self.query
+            context['query_raw'] = self.query_raw
+            context['query'] = self.query
             context['is_search'] = True
         return context
 

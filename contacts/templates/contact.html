@@ -5,7 +5,12 @@
 {% load gargoyle_tags %}
 
 {% block content %}
-<h1>
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a></li>
+    <li>{{ contact.name }}</li>
+</ol>
+<h2>
     <img height="60" width="60" src="{% if contact.photo_url %}{{ contact.photo_url }}{% else %}{% gravatar_url contact.preferred_email 60 %}{% endif %}" alt="Photo for {{ contact.name }}"/> {{ contact.name }}
     <div class="btn-group" role="group">
         <a href="{% url "contacts-edit" pk=contact.pk book=book.pk %}" class="btn btn-default" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}><span class="glyphicon glyphicon-pencil"></span> Edit</a>
@@ -20,14 +25,18 @@
             </ul>
         </div>
     </div>
-</h1>
+</h2>
+{% if contact.tags_cached %}
+<hr />
 <div class="row">
-    <div class="col-md-12">
-    {% for tag in contact.tags.all %}
+    <div class="col-md-6">
+    <span class="text-muted">Tags:</span> {% for tag in contact.tags_cached %}
         <a href="{% url "contacts-tagged" pk=tag.id book=book.pk %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
     {% endfor %}
     </div>
 </div>
+{% endif %}
+<hr />
 {% if contact.emails %}
 <div class="row">
     {% for field in contact.emails %}
@@ -109,8 +118,9 @@
 <hr />
 {% endif %}
 {% ifnotswitch read_only_mode %}
-<h3>Add Log:</h3>
-<form action="{{ action }}" method="POST">
+<div class="well well-sm">
+<h4 class="add-log-header">Add Log</h4>
+<form action="{{ action }}" method="POST" class="add-log-form">
     {% csrf_token %}
     {% if form.non_field_errors %}
     <ul>
@@ -156,6 +166,7 @@
         </div>
     </div>
 </form>
+</div>
 {% endifnotswitch %}
 
 {% if logs %}

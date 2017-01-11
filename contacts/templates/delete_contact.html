@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    <li><a href="{{ book.get_absolute_url }}">Contacts</a>
+    <li><a href="{{ contact.get_absolute_url }}">{{ contact.name }}</a></li>
+    <li class="active">Delete</li>
+</ol>
 <h1>Delete Contact</h1>
 <p>Are you sure you want to delete {{ contact }}?</p>
 <form action="{% url "contacts-delete" pk=contact.id book=book.id %}" method="POST">

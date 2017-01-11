@@ -121,6 +121,12 @@ class Contact(models.Model):
         return bool(self.book.bookowner_set.filter(user=user))
 
     @property
+    def tags_cached(self):
+        if not hasattr(self, '_tags_cache'):
+            self._tags_cache = self.tags.all()
+        return self._tags_cache
+
+    @property
     def preferred_email(self):
         if not (hasattr(self, '_preferred_email') and self._preferred_email):
             self._preferred_email = ''

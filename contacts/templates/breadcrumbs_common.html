@@ -1,0 +1,25 @@
+{% load gargoyle_tags %}
+
+{% ifswitch multi_book %}
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if request.current_book %}{{ request.current_book }}{% else %}Books{% endif %}<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        {% for book in request.books %}
+        <li><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
+        {% endfor %}
+        <li role="separator" class="divider"></li>
+        <li><a href="/books/new/">New</a></li>
+    </ul>
+</li>
+{% endifswitch %}
+{% if tag %}
+<li><a href="{{ book.get_absolute_url }}">Contacts</a>
+<li>
+    <span class="label label-default" style="font-size: 80%; background-color:{{ tag.corrected_color}};">{{ tag }}</span>
+</li>
+{% elif is_search %}
+<li><a href="{{ book.get_absolute_url }}">Contacts</a>
+<li>
+    Search{% if query %} - "{{ query }}"{% endif %}{% for search_tag in search_tags %} - <span class="label label-default" style="background-color:{{ search_tag.corrected_color}};">{{ search_tag }}</span>{% endfor %}
+</li>
+{% endif %}
