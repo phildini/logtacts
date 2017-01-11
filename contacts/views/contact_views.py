@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import csv
 import json
 from braces.views import LoginRequiredMixin
@@ -100,6 +101,11 @@ class CreateContactView(BookOwnerMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(CreateContactView, self).get_form_kwargs()
+        self.tags = Tag.objects.get_tags_for_user(
+            user=self.request.user,
+            book=self.request.current_book,
+        )
+        kwargs['tag_choices'] = self.tags.values_list('id', 'tag')
         kwargs['user'] = self.request.user
         kwargs['book'] = self.request.current_book
         return kwargs
@@ -109,6 +115,10 @@ class CreateContactView(BookOwnerMixin, CreateView):
         context['action'] = reverse('contacts-new', kwargs={
             'book': self.request.current_book.id,
         })
+        tag_dict = OrderedDict()
+        for tag in self.tags:
+            tag_dict[tag.id] = tag
+        context['tag_dict'] = tag_dict
         return context
 
     def form_valid(self, form):
@@ -135,12 +145,24 @@ class EditContactView(BookOwnerMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super(EditContactView, self).get_form_kwargs()
+        self.tags = Tag.objects.get_tags_for_user(
+            user=self.request.user,
+            book=self.request.current_book,
+        )
+        kwargs['tag_choices'] = self.tags.values_list('id', 'tag')
         kwargs['user'] = self.request.user
         kwargs['book'] = self.request.current_book
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(EditContactView, self).get_context_data(**kwargs)
+        tag_dict = OrderedDict()
+        context['checked_tags'] = self.get_object().tags_cached.values_list(
+            'id', flat=True,
+        )
+        for tag in self.tags:
+            tag_dict[tag.id] = tag
+        context['tag_dict'] = tag_dict
         context['action'] = reverse(
             'contacts-edit',
             kwargs={

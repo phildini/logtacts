@@ -23,9 +23,10 @@ class ContactForm(forms.ModelForm):
         if kwargs.get('data'):
             document_items = dict((key, value) for key, value in kwargs.get('data').items() if key.startswith('document'))
         self.book = kwargs.pop('book')
+        tag_choices = kwargs.pop('tag_choices')
         super(ContactForm, self).__init__(*args, **kwargs)
         choices = Tag.objects.filter(book=self.book).values_list('id', 'tag')
-        self.fields['tags'].choices = choices
+        self.fields['tags'].choices = tag_choices
         self.fields['deleted_fields'] = forms.CharField(required=False)
         if document_items:
             for item in document_items:

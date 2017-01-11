@@ -53,7 +53,7 @@
     </div>
     </form>
     <div class="col-md-4">
-        <h4>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info">Add <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h4>
+        <h4>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info btn-sm">Add tag <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h4>
         {% for tag in tags %}
             <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}

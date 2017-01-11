@@ -136,7 +136,15 @@
             <h4>Tags</h4>
             <div>
                 <label class="sr-only" for="id_tags_0">Tags:</label>
-                {{ form.tags }}
+                <div id="id_tags">
+                    {% for id, tag in tag_dict.items %}
+                    <label for="id_tags_{{ id }}" class="tag-input">
+                        <input {% if id in checked_tags %}checked="checked"{% endif %} id="id_tags_{{ id }}" name="tags" type="checkbox" value="{{ id }}">
+                        <span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span>
+                    </label>
+                    {% if not forloop.last %}{% endif %}
+                    {% endfor %}
+                </div>
             </div>
             <div id="id_tags_errors">
                 {{ form.tags.errors }}

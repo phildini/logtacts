@@ -12,26 +12,29 @@ class ContactFormTests(TestCase):
         self.book = factories.BookFactory.create()
         self.tag = factories.TagFactory.create(book=self.book)
         self.contact = factories.ContactFactory(book=self.book)
+        self.tag_choices = [(self.tag.id, self.tag.tag)]
 
     def test_form_without_book(self):
         with self.assertRaises(KeyError):
             form = forms.ContactForm()
 
     def test_form_valid_with_valid_data(self):
-        form = forms.ContactForm({
-            'name': 'Philip James',
-            }, book=self.book,
+        form = forms.ContactForm(
+            {'name': 'Philip James',}, 
+            book=self.book,
+            tag_choices=self.tag_choices,
         )
         self.assertTrue(form.is_valid())
 
     def test_form_invalid_with_invalid_data(self):
-        form = forms.ContactForm(book=self.book)
+        form = forms.ContactForm(book=self.book,tag_choices=self.tag_choices)
         self.assertFalse(form.is_valid())
 
     def test_correct_tags_in_form(self):
-        form = forms.ContactForm({
-            'name': 'Philip James',
-            }, book=self.book,
+        form = forms.ContactForm(
+            {'name': 'Philip James',}, 
+            book=self.book,
+            tag_choices=self.tag_choices,
         )
         bad_tag = factories.TagFactory.create()
         correct_choices = [(self.tag.id, self.tag.tag)]
@@ -46,6 +49,7 @@ class ContactFormTests(TestCase):
         }
         form = forms.ContactForm(
             book=self.book,
+            tag_choices=self.tag_choices,
             data=form_data
         )
         self.assertTrue('document_email_1' in form.fields)
@@ -64,6 +68,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assert_(form.is_valid())
@@ -88,6 +93,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assert_(form.is_valid())
@@ -112,6 +118,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assert_(form.is_valid())
@@ -133,6 +140,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assertFalse(form.is_valid())
@@ -152,6 +160,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assertFalse(form.is_valid())
@@ -171,6 +180,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assertFalse(form.is_valid())
@@ -190,6 +200,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assertFalse(form.is_valid())
@@ -209,6 +220,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         self.assertFalse(form.is_valid())
@@ -238,6 +250,7 @@ class ContactFormTests(TestCase):
         form = forms.ContactForm(
             book=self.book,
             data=form_data,
+            tag_choices=self.tag_choices,
             instance=self.contact,
         )
         form.is_valid()

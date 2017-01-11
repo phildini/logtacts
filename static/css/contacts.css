@@ -90,3 +90,9 @@ h4.add-log-header {
 #add_log {
     margin-top: 20px;
 }
+
+label.tag-input {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+}
