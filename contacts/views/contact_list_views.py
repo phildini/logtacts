@@ -142,7 +142,10 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)
-        context['tags'] = Tag.objects.get_tags_for_user(self.request.user)
+        context['tags'] = Tag.objects.get_tags_for_user(
+            user=self.request.user,
+            book=self.request.current_book,
+        )
         context['logs'] = self.get_logs()[:10]
         context['sort'] = self.request.GET.get('s')
         if self.request.GET.get('q'):

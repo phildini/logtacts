@@ -58,6 +58,7 @@
             <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
         {% endfor %}
         {% if logs %}
+        <hr />
         <h4>Activity Log</h4>
         <ul class="list-group">
             {% for log in logs %}

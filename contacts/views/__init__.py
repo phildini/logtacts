@@ -47,9 +47,7 @@ class BookOwnerMixin(LoginRequiredMixin):
 
     def form_valid(self, form):
         try:
-            form.instance.book = BookOwner.objects.get(
-                user=self.request.user
-            ).book
+            form.instance.book = self.request.current_book
         except BookOwner.DoesNotExist:
             form.instance.book = Book.objects.create_for_user(self.request.user)
         return super(BookOwnerMixin, self).form_valid(form)
