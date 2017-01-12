@@ -235,7 +235,9 @@ class CreateTagView(BookOwnerMixin, CreateView):
     form_class = forms.TagForm
 
     def get_success_url(self):
-        return reverse('contacts-list')
+        return reverse('contacts-list', kwargs={
+            'book': self.request.current_book.id,
+        })
 
     def get_context_data(self, **kwargs):
         context = super(CreateTagView, self).get_context_data(**kwargs)
