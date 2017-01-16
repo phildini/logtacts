@@ -160,7 +160,10 @@ class TaggedContactListView(ContactListView):
 
     def dispatch(self, request, *args, **kwargs):
         self.tag = get_object_or_404(
-            Tag.objects.get_tags_for_user(self.request.user),
+            Tag.objects.get_tags_for_user(
+                user=self.request.user,
+                book=request.current_book,
+            ),
             pk=self.kwargs.get('pk'),
         )
         return super(TaggedContactListView, self).dispatch(request, *args, **kwargs)
