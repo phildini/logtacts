@@ -51,7 +51,7 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         context['check_foursquare'] = self.profile.check_foursquare
         context['phone_number'] = self.profile.phone_number
         try:
-            book = contact_models.Book.objects.get_for_user(self.request.user)
+            book = self.request.current_book
             context['book'] = book
         except contact_models.Book.DoesNotExist:
             book = None

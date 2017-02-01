@@ -329,6 +329,9 @@ class Book(models.Model):
     history = HistoricalRecords()
     objects = BookManager()
 
+    class Meta:
+        ordering = ['pk']
+
     def __str__(self):
         return self.name
 
