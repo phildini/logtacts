@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    {% if not tag %}
+    <li class="active">Invitations</li>
+    {% endif %}
+</ol>
 {% if invitation.id %}
 <h3>Edit Invite</h3>
 {% else %}
