@@ -64,9 +64,7 @@ class CreateInviteView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.sender = self.request.user
         if form.cleaned_data.get('share_book'):
-            book = BookOwner.objects.get(
-                user=self.request.user,
-            ).book
+            book = self.request.current_book
             if gargoyle.is_active('enable_payments', self.request):
                 invitations = Invitation.objects.filter(book=book)
                 if book.plan and len(invitations) >= payment_constants.PLANS[book.plan]['collaborators']:

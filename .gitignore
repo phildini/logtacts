@@ -52,6 +52,7 @@ coverage.xml
 .env
 whoosh_index/
 newrelic.ini
+dump.rdb
 
 # Sphinx documentation
 docs/_build/

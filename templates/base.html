@@ -75,7 +75,7 @@
                             <li><a href="/u/">Settings</a></li>
                             <li><a href="/accounts/logout/">Logout</a></li>
                             {% if request.can_invite %}
-                            <li><a href="{% url "create-invite" %}">Invite others</a></li>
+                            <li><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>
                             {% endif %}
                             {% endif %}
                             <li><a href="mailto:help@contactotter.com" target="_blank">Give Feedback</a><li>
@@ -89,7 +89,7 @@
                     {% if not SANDSTORM %}
                     <li class="visible-sm visible-xs"><a href="/u/">Settings</a></li>
                     <li class="visible-sm visible-xs"><a href="/accounts/logout/">Logout</a></li>
-                    <li class="visible-sm visible-xs"><a href="{% url "create-invite" %}">Invite others</a></li>
+                    <li class="visible-sm visible-xs"><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>
                     <li role="separator" class="divider"></li>
@@ -122,7 +122,7 @@
     </div>
     {% endblock %}
     <footer class="well">
-        {% if user.is_authenticated and not SANDSTORM and request.can_invite %}<a href="{% url "create-invite" %}">Invite others</a> |{% endif %} <a href="mailto:support@contactotter.com" target="_blank">Give Feedback</a> | &copy; Inkpebble, LLC {% now "Y" %} | <a href="/policies">Terms of Service</a> | <a href="/privacy/">Privacy Policy</a>
+        {% if user.is_authenticated and not SANDSTORM and request.can_invite %}<a href="{% url "create-invite" book=book.id %}">Invite others</a> |{% endif %} <a href="mailto:support@contactotter.com" target="_blank">Give Feedback</a> | &copy; Inkpebble, LLC {% now "Y" %} | <a href="/policies">Terms of Service</a> | <a href="/privacy/">Privacy Policy</a>
     </footer>
     <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
     <script>Raven.config('{% sentry_public_dsn 'https' %}').install()</script>

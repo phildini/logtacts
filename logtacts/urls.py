@@ -126,7 +126,7 @@ urlpatterns = [
         GoogleImportView.as_view(),
         name='import-google-contacts',
     ),
-    url(r'^invites/add$', CreateInviteView.as_view(), name='create-invite'),
+    url(r'^(?P<book>\d+)/invites/add$', CreateInviteView.as_view(), name='create-invite'),
     url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),
     url(r'^l/', include(landing_urls)),
     url(r"^login/$", allauth_views.login, name="login"),
