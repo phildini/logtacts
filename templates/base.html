@@ -43,7 +43,7 @@
                 <a class="navbar-brand navbar-title" href="/">ContactOtter</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and not hide_chrome %}
                 <form id="id_ search_form" name="search_form" class="navbar-form navbar-left" method="get" action="{% url "search" book=book.id %}" role="search" style="margin-top: 0; margin-bottom:0">
                     <div class="form-group">
                         <div class="input-group">

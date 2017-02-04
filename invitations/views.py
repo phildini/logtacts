@@ -84,7 +84,6 @@ class AcceptInviteView(FormView):
     template_name = "set_password.html"
 
     def get(self, request, *args, **kwargs):
-        response = super(AcceptInviteView, self).get(request, *args, **kwargs)
         if request.user.is_authenticated():
             messages.warning(
                 self.request,
@@ -108,15 +107,23 @@ class AcceptInviteView(FormView):
         )
         user = authenticate(username=invite.email, password=password_plain)
         if invite.book:
+            self.book = invite.book
             BookOwner.objects.create(user=user, book=invite.book)
         else:
-            book = Book.objects.create(name="{}'s Book".format(user))
-            BookOwner.objects.create(book=book,user=user)
+            self.book = Book.objects.create(name="{}'s Book".format(user))
+            BookOwner.objects.create(book=self.book,user=user)
         user.save()
         login(request, user)
         invite.status = invite.ACCEPTED
         invite.save()
+        response = super(AcceptInviteView, self).get(request, *args, **kwargs)
         return response
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AcceptInviteView, self).get_context_data(*args, **kwargs)
+        context['book'] = self.book
+        context['hide_chrome'] = True
+        return context
 
     def get_success_url(self):
         return reverse('contacts-list', kwargs={
