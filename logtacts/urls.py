@@ -22,6 +22,7 @@ from contacts.urls import (
 )
 
 from contacts.views.import_views import GoogleImportView
+from contacts.views.log_views import email_log_view
 
 from invitations.views import (
     CreateInviteView,
@@ -130,6 +131,7 @@ urlpatterns = [
     url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),
     url(r'^l/', include(landing_urls)),
     url(r"^login/$", allauth_views.login, name="login"),
+    url(r'^log/email/$', email_log_view),
     url(r'^log/', include(log_urls)),
     url(r'^(?P<book>\d+)/log/', include(log_urls)),
     url(r'^nexus/', include(nexus.site.urls)),

@@ -344,6 +344,7 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse("contacts-list", kwargs={"book": self.id})
 
+
 class BookOwner(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)

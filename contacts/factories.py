@@ -1,3 +1,4 @@
+from datetime import timedelta
 import factory
 
 from django.utils import timezone
@@ -9,6 +10,8 @@ from . import models
 class BookFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Book
+
+    paid_until = timezone.now() + timedelta(weeks=1)
 
 
 class ContactFactory(factory.django.DjangoModelFactory):

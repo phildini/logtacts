@@ -1,7 +1,13 @@
 from braces.views import LoginRequiredMixin
+from channels import Channel
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+)
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     DeleteView,
     UpdateView,
@@ -99,3 +105,9 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
         context = super(DeleteLogView, self).get_context_data(*args, **kwargs)
         context['book'] = self.request.current_book
         return context
+
+@csrf_exempt
+def email_log_view(request):
+    if request.method == 'POST':
+        Channel('process-incoming-email').send(request.POST)
+    return HttpResponse(status=200)
