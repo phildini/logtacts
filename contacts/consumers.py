@@ -76,6 +76,7 @@ def process_incoming_email(message):
         pass
 
     if not (user and book):
+        sentry.error("Somehow we got an email without user or book", extra=message)
         return
 
     to = message.get('To', '').split(',')
@@ -104,11 +105,11 @@ def process_incoming_email(message):
                     label="Email",
                     preferred=True,
                 )
-            LogEntry.objects.create(
+            log=LogEntry.objects.create(
                 contact=contact,
                 kind='email',
                 logged_by=user,
                 time=timezone.now(),
                 notes='Subject: {}'.format(message.get('subject')),
             )
-
+            contact.update_last_contact_from_log(log)

@@ -119,6 +119,7 @@
         {% if plan %}
         <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }} per month.</p>
         {% endif %}
+        <p>Logging email address: <a href="mailto:log-{{ book.id }}@mg.contactotter.com">log-{{ book.id }}@mg.contactotter.com</a>
     </div>
     {% if invitations %}
     <div class="col-md-12">
