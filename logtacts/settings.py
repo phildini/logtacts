@@ -308,7 +308,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+            'formatter': 'verbose',
         },
         'console_json': {
             'level': 'DEBUG',
@@ -343,7 +343,7 @@ LOGGING = {
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['verbose'],
+            'handlers': ['console'],
             'propagate': False,
         },
         'sentry.errors': {
