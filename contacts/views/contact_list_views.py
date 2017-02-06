@@ -90,23 +90,23 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         if not contact_ids:
             messages.info(self.request, "No contacts selected.")
             return HttpResponseRedirect(reverse('contacts-list',
-                kwargs={'book', self.request.current_book.id}),
+                kwargs={'book': self.request.current_book.id}),
             )
         if self.request.POST.get('emails'):
             return HttpResponseRedirect(reverse('contact_emails',
-                kwargs={'book', self.request.current_book.id}),
+                kwargs={'book': self.request.current_book.id}),
             )
         if self.request.POST.get('addresses'):
             return HttpResponseRedirect(reverse('contact_addresses',
-                kwargs={'book', self.request.current_book.id}),
+                kwargs={'book': self.request.current_book.id}),
             )
         if self.request.POST.get('merge'):
             return HttpResponseRedirect(reverse('contacts_merge',
-                kwargs={'book', self.request.current_book.id}),
+                kwargs={'book': self.request.current_book.id}),
             )
         if self.request.POST.get('addtag'):
             return HttpResponseRedirect(reverse('contacts_add_tag',
-                kwargs={'book', self.request.current_book.id}),
+                kwargs={'book': self.request.current_book.id}),
             )
         return HttpResponseRedirect(self.get_success_url())
 
