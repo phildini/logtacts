@@ -257,10 +257,9 @@ SWAGGER_SETTINGS = {
     ],
 }
 
-if not DEBUG:
-    RAVEN_CONFIG = {
-        'dsn': get_env_variable('SENTRY_URL'),
-    }
+RAVEN_CONFIG = {
+    'dsn': get_env_variable('SENTRY_URL'),
+}
 
 try:
     RAVEN_CONFIG['release'] = raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__)))
