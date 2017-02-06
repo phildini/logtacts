@@ -288,6 +288,10 @@ LOGGING = {
             '()': 'jsonlogger.JsonFormatter',
             'format': '%(levelname)s %(message)s %(status_code)s %(module)s %(name)s %(pathname)s %(asctime)s',
         },
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
     },
     'filters': {
         'require_debug_false': {
@@ -339,7 +343,7 @@ LOGGING = {
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['verbose'],
             'propagate': False,
         },
         'sentry.errors': {

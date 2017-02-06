@@ -19,7 +19,7 @@ from contacts.models import (
 )
 from .utils import pull_google_contacts
 
-sentry = logging.getLogger("sentry")
+sentry = logging.getLogger("raven")
 
 
 def import_google_contacts(message):
