@@ -17,6 +17,15 @@ ALLOWED_HOSTS = [
     '.herokuapp.com',
 ]
 
+RAVEN_CONFIG = {
+        'dsn': get_env_variable('SENTRY_URL'),
+    }
+
+try:
+    RAVEN_CONFIG['release'] = raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__)))
+except:
+    pass
+
 # SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 3600
 SECURE_FRAME_DENY = True
