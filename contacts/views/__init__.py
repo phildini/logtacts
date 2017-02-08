@@ -19,6 +19,11 @@ from gargoyle import gargoyle
 
 class BookOwnerMixin(LoginRequiredMixin):
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(BookOwnerMixin, self).get_context_data(*args, **kwargs)
+        context['book'] = self.request.current_book
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         book = None
         if request.user.is_authenticated():
@@ -46,8 +51,9 @@ class BookOwnerMixin(LoginRequiredMixin):
         return instance
 
     def form_valid(self, form):
-        try:
-            form.instance.book = self.request.current_book
-        except BookOwner.DoesNotExist:
-            form.instance.book = Book.objects.create_for_user(self.request.user)
+        if hasattr(form, 'instance'):
+            try:
+                form.instance.book = self.request.current_book
+            except BookOwner.DoesNotExist:
+                form.instance.book = Book.objects.create_for_user(self.request.user)
         return super(BookOwnerMixin, self).form_valid(form)

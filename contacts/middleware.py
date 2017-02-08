@@ -10,7 +10,7 @@ class ContactBookMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         # CONTRACT: At the end of this, if the user is authenticated,
         # request.current_book _must_ be populated with a valid book, and 
-        # request.books _must_ be a list of Books with length greater than 1.
+        # request.books _must_ be a list of Books with length greater than 0.
         request.current_book = None
         if hasattr(request, 'user'):
             if request.user.is_authenticated():

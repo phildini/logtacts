@@ -375,6 +375,7 @@ class MergeContactsView(BookOwnerMixin, TemplateView):
         context = super(MergeContactsView, self).get_context_data(*args, **kwargs)
         contacts = common.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
+        context['book'] = self.request.current_book
         return context
 
     def post(self, request, *args, **kwargs):

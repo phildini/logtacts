@@ -74,6 +74,17 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return contact_ids
 
     def get_success_url(self, *args, **kwargs):
+        if not self.contact_ids:
+            messages.info(self.request, "No contacts selected.")
+            return reverse('contacts-list', kwargs={'book': self.request.current_book.id})
+        if self.request.POST.get('emails'):
+            return reverse('contact_emails', kwargs={'book': self.request.current_book.id})
+        if self.request.POST.get('addresses'):
+            return reverse('contact_addresses', kwargs={'book': self.request.current_book.id})
+        if self.request.POST.get('merge'):
+            return reverse('contacts_merge', kwargs={'book': self.request.current_book.id})
+        if self.request.POST.get('addtag'):
+            return reverse('contacts_add_tag', kwargs={'book': self.request.current_book.id})
         return reverse('contacts-list', kwargs={'book': self.request.current_book.id})
 
     def get_form_kwargs(self):
@@ -82,33 +93,13 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return kwargs
 
     def form_valid(self, form, *args, **kwargs):
-        contact_ids = []
+        self.contact_ids = []
         for contact in form.cleaned_data:
             if form.cleaned_data[contact]:
-                contact_ids.append(contact.split('_')[1])
-        self.request.session['selected_contacts'] = json.dumps(contact_ids)
-        if not contact_ids:
-            messages.info(self.request, "No contacts selected.")
-            return HttpResponseRedirect(reverse('contacts-list',
-                kwargs={'book': self.request.current_book.id}),
-            )
-        if self.request.POST.get('emails'):
-            return HttpResponseRedirect(reverse('contact_emails',
-                kwargs={'book': self.request.current_book.id}),
-            )
-        if self.request.POST.get('addresses'):
-            return HttpResponseRedirect(reverse('contact_addresses',
-                kwargs={'book': self.request.current_book.id}),
-            )
-        if self.request.POST.get('merge'):
-            return HttpResponseRedirect(reverse('contacts_merge',
-                kwargs={'book': self.request.current_book.id}),
-            )
-        if self.request.POST.get('addtag'):
-            return HttpResponseRedirect(reverse('contacts_add_tag',
-                kwargs={'book': self.request.current_book.id}),
-            )
-        return HttpResponseRedirect(self.get_success_url())
+                self.contact_ids.append(contact.split('_')[1])
+        self.request.session['selected_contacts'] = json.dumps(self.contact_ids)
+        
+        return super(ContactListView, self).form_valid(form, *args, **kwargs)
 
     def get_queryset(self):
         if not (hasattr(self, '_queryset') and self._queryset):

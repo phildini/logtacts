@@ -146,7 +146,6 @@ urlpatterns = [
     url(r'^(?P<book>\d+)/tags/', include(tag_urls)),
     url(r'^u/', include('profiles.urls')),
     url(r'^$', HomeView.as_view(), name='home'),
-    url(r'^', include(contact_urls)),
     url(r'^(?P<book>\d+)/', include(contact_urls)),
     url(r'^', include('django.contrib.auth.urls')),
 ]

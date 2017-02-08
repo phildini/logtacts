@@ -15,7 +15,7 @@ class ContactListViewTests(TestCase):
     def setUp(self):
         self.book = factories.BookFactory.create()
         request_factory = RequestFactory()
-        request = request_factory.get(reverse('contacts-list'))
+        request = request_factory.get(reverse('contacts-list', kwargs={'book': self.book.id}))
         request.user = UserFactory.create()
         request.current_book = self.book
         self.response = views.contact_list_views.ContactListView.as_view()(request)
@@ -35,7 +35,7 @@ class ContactListViewTests(TestCase):
         bad_tag = factories.TagFactory.create()
         good_contact.tags.add(good_tag)
         request_factory = RequestFactory()
-        request = request_factory.get(reverse('contacts-list'))
+        request = request_factory.get(reverse('contacts-list', kwargs={'book': self.book.id}))
         request.user = user
         request.current_book = self.book
         response = views.contact_list_views.ContactListView.as_view()(request)
@@ -91,7 +91,7 @@ class EditContactViewTests(TestCase):
         self.contact = factories.ContactFactory.create(book=book)
         request_factory = RequestFactory()
         self.request = request_factory.get(
-            reverse('contacts-edit', kwargs={'pk': self.contact.id}),
+            reverse('contacts-edit', kwargs={'pk': self.contact.id, 'book': book.id}),
         )
         self.request.current_book = book
 
@@ -129,7 +129,7 @@ class CreateContactViewTests(TestCase):
         bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
         request_factory = RequestFactory()
         self.request = request_factory.get(
-            reverse('contacts-new'),
+            reverse('contacts-new', kwargs={'book': book.id}),
         )
         self.request.current_book = book
 
@@ -161,7 +161,7 @@ class LogViewTests(TestCase):
 
     def test_log_edit_view_200_if_right_user(self):
         self.request = self.request_factory.get(
-            reverse('log-edit', kwargs={'pk': self.log.id})
+            reverse('log-edit', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = self.user
         self.request.current_book = self.book
@@ -173,7 +173,7 @@ class LogViewTests(TestCase):
 
     def test_log_edit_view_401_if_right_user(self):
         self.request = self.request_factory.get(
-            reverse('log-edit', kwargs={'pk': self.log.id})
+            reverse('log-edit', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = UserFactory.create()
         self.request.current_book = self.book
@@ -185,7 +185,7 @@ class LogViewTests(TestCase):
 
     def test_log_edit_view_renders(self):
         self.request = self.request_factory.get(
-            reverse('log-edit', kwargs={'pk': self.log.id})
+            reverse('log-edit', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = self.user
         self.request.current_book = self.book
@@ -197,7 +197,7 @@ class LogViewTests(TestCase):
 
     def test_log_delete_view_200_if_right_user(self):
         self.request = self.request_factory.get(
-            reverse('log-delete', kwargs={'pk': self.log.id})
+            reverse('log-delete', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = self.user
         self.request.current_book = self.book
@@ -209,7 +209,7 @@ class LogViewTests(TestCase):
 
     def test_log_delete_view_401_if_wrong_user(self):
         self.request = self.request_factory.get(
-            reverse('log-delete', kwargs={'pk': self.log.id})
+            reverse('log-delete', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = UserFactory.create()
         self.request.current_book = self.book
@@ -221,7 +221,7 @@ class LogViewTests(TestCase):
 
     def test_log_delete_view_renders(self):
         self.request = self.request_factory.get(
-            reverse('log-delete', kwargs={'pk': self.log.id})
+            reverse('log-delete', kwargs={'pk': self.log.id, 'book': self.book.id})
         )
         self.request.user = self.user
         self.request.current_book = self.book
@@ -245,7 +245,7 @@ class TagViewTests(TestCase):
 
     def test_tagged_list_view_200(self):
         request = self.request_factory.get(
-            reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
+            reverse('contacts-tagged', kwargs={'pk': self.tag.id, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -257,7 +257,7 @@ class TagViewTests(TestCase):
 
     def test_tagged_list_view_401_if_wrong_user(self):
         request = self.request_factory.get(
-            reverse('contacts-tagged', kwargs={'pk': self.tag.id})
+            reverse('contacts-tagged', kwargs={'pk': self.tag.id, 'book': self.book.id})
         )
         request.user = UserFactory.create()
         request.current_book = self.book
@@ -269,7 +269,7 @@ class TagViewTests(TestCase):
 
     def test_tagged_list_view_renders(self):
         request = self.request_factory.get(
-            reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
+            reverse('contacts-tagged', kwargs={'pk': self.tag.id, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -283,7 +283,7 @@ class TagViewTests(TestCase):
         tag = factories.TagFactory.create(tag='Test Bad')
         contact = factories.ContactFactory.create()
         request = self.request_factory.get(
-            reverse('contacts-tagged', kwargs={'pk': self.tag.id}),
+            reverse('contacts-tagged', kwargs={'pk': self.tag.id, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -306,7 +306,7 @@ class CreateTagViewTests(TestCase):
 
     def test_edit_tag_view_200(self):
         request = self.request_factory.get(
-            reverse('tags-new'),
+            reverse('tags-new', kwargs={'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -317,7 +317,7 @@ class CreateTagViewTests(TestCase):
 
     def test_edit_tag_view_renders(self):
         request = self.request_factory.get(
-            reverse('tags-new'),
+            reverse('tags-new', kwargs={'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -340,7 +340,7 @@ class EditTagViewTests(TestCase):
 
     def test_edit_tag_view_200(self):
         request = self.request_factory.get(
-            reverse('tags-edit', kwargs={'pk': self.tag.pk}),
+            reverse('tags-edit', kwargs={'pk': self.tag.pk, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -352,7 +352,7 @@ class EditTagViewTests(TestCase):
 
     def test_edit_tag_view_renders(self):
         request = self.request_factory.get(
-            reverse('tags-edit', kwargs={'pk': self.tag.pk}),
+            reverse('tags-edit', kwargs={'pk': self.tag.pk, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -376,7 +376,7 @@ class DeleteTagViewTests(TestCase):
 
     def test_delete_tag_view_200(self):
         request = self.request_factory.get(
-            reverse('tags-delete', kwargs={'pk': self.tag.id}),
+            reverse('tags-delete', kwargs={'pk': self.tag.id, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
@@ -388,7 +388,7 @@ class DeleteTagViewTests(TestCase):
 
     def test_delete_tag_view_renders(self):
         request = self.request_factory.get(
-            reverse('tags-delete', kwargs={'pk': self.tag.id}),
+            reverse('tags-delete', kwargs={'pk': self.tag.id, 'book': self.book.id}),
         )
         request.user = self.user
         request.current_book = self.book
