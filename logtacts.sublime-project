@@ -10,6 +10,7 @@
                 "env",
                 "dist",
                 "node_modules",
+                "__pycache__",
             ],
             "file_exclude_patters":
             [
