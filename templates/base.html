@@ -56,27 +56,22 @@
                     <a href="{% url "contacts-new" book=book.id %}" class="btn btn-success navbar-btn" {% ifswitch read_only_mode %}disabled="disabled"{% endifswitch %}>Add Contact</a>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    {% ifswitch multi_book %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if request.current_book %}{{ request.current_book }}{% else %}Books{% endif %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            {% for book in request.books %}
-                            <li><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></li>
-                            {% endfor %}
-                            <li role="separator" class="divider"></li>
-                            <li><a href="/books/new/">New</a></li>
+                            <li><a href="{% url "contacts-list" book=book.id %}">Contacts</a></li>
+                            <li><a href="{% url "book_settings" book=book.id %}">Settings</a></li>
+                            {% if request.can_invite %}
+                            <li><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>
+                            {% endif %}
                         </ul>
                     </li>
-                    {% endifswitch %}
                     <li class="dropdown hidden-xs hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             {% if not SANDSTORM %}
                             <li><a href="/u/">Settings</a></li>
                             <li><a href="/accounts/logout/">Logout</a></li>
-                            {% if request.can_invite %}
-                            <li><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>
-                            {% endif %}
                             {% endif %}
                             <li><a href="mailto:help@contactotter.com" target="_blank">Give Feedback</a><li>
                             {% if user.is_staff %}
@@ -89,7 +84,6 @@
                     {% if not SANDSTORM %}
                     <li class="visible-sm visible-xs"><a href="/u/">Settings</a></li>
                     <li class="visible-sm visible-xs"><a href="/accounts/logout/">Logout</a></li>
-                    <li class="visible-sm visible-xs"><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>
                     <li role="separator" class="divider"></li>

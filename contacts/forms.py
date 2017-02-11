@@ -5,7 +5,14 @@ from haystack.forms import ModelSearchForm
 from floppyforms import widgets
 
 import contacts as contact_constants
-from contacts.models import Contact, ContactField, LogEntry, Tag
+from contacts.models import (
+    BookOwner,
+    Contact,
+    ContactField,
+    LogEntry,
+    Tag,
+)
+
 
 class ContactForm(forms.ModelForm):
 
@@ -209,12 +216,26 @@ class MultiContactForm(forms.Form):
                 required=False,
             )
 
+
 class MultiTagForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         tag_ids = kwargs.pop('tag_ids')
         super(MultiTagForm, self).__init__(*args, **kwargs)
         for tag_id in tag_ids:
-            self.fields['tag_%s' % (tag_id,)] = forms.BooleanField(
-                required=False,
-            )
+            self.fields['tag_%s' % (tag_id,)] = forms.BooleanField(required=False)
+
+
+class BookSettingsForm(forms.ModelForm):
+
+    book_name = forms.CharField(max_length=100, required=True)
+
+    class Meta:
+        model = BookOwner
+        fields = [
+            'send_contact_reminders',
+            'send_birthday_reminders',
+            'check_twitter_dms',
+            'check_twitter_mentions',
+            'check_foursquare'
+        ]

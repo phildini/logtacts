@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from .views import (
+    book_views,
     contact_views,
     contact_list_views,
     log_views,
@@ -13,11 +14,6 @@ contact_urls = [
         r'^contacts/$',
         contact_list_views.ContactListView.as_view(),
         name='contacts-list',
-    ),
-    # TODO: Make this pattern universal
-    url(
-        r'^(?P<book>\d+)/contacts/$',
-        contact_list_views.ContactListView.as_view(),
     ),
     url(
         r'^(?P<pk>\d+)/$',
@@ -80,14 +76,19 @@ contact_urls = [
         name="fullexport",
     ),
     url(
-        r'merge/',
+        r'^merge/',
         contact_views.MergeContactsView.as_view(),
         name="contacts_merge",
     ),
     url(
-        r'addtag/',
+        r'^addtag/',
         contact_views.AddTagView.as_view(),
         name="contacts_add_tag",
+    ),
+    url(
+        r'^settings/',
+        book_views.BookSettingsView.as_view(),
+        name="book_settings",
     ),
 ]
 

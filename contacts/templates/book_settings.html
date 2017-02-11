@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% load socialaccount %}
+{% load gargoyle_tags %}
+
+{% block css %}
+<script src="https://use.fontawesome.com/bd76377166.js"></script>
+{% endblock %}
+
+{% block content %}
+<ol class="breadcrumb">
+    {% include "breadcrumbs_common.html" %}
+    {% if not tag %}
+    <li class="active">Settings</li>
+    {% endif %}
+</ol>
+
+{% if book %}
+<div class="row">
+    <div class="col-md-12" id="book">
+        <h4>Book</h4>
+        {% if book.paid_until %}
+        <p>Your subscription is paid until {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
+        {% endif %}
+        {% if plan %}
+        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }} per month.</p>
+        {% endif %}
+        <p>Logging email address: <a href="mailto:log-{{ book.id }}@mg.contactotter.com">log-{{ book.id }}@mg.contactotter.com</a>
+    </div>
+</div>
+{% endif %}
+<hr />
+<form action="{{ action }}" method="POST">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <ul>
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="form-group">
+        <label for="id_book_name">Book Name</label>
+        {{ form.book_name.help_text }}
+        {{ form.book_name.errors }}
+        <input id="id_book_name" class="form-control" maxlength="100" name="book_name" type="text" {% if book.name %}value="{{ book.name }}"{% endif %}/>
+    </div>
+    <hr>
+    <h4 id="social">Social Settings</h4>
+    <div>
+        <a class="btn btn-default btn-sm" href="/accounts/social/connections/">Social accounts</a>
+        {% ifswitch import_from_google %}
+        <a class="btn btn-default btn-sm" {% if google_import_state == "processing" %}disabled="disabled"{% endif %} href="/import/google/">Import from Google</a>
+        {% endifswitch %}
+        {% if google_import_state == "error" %}
+        <small>There was an error processing your google contacts. Please try again or contact <a href="mailto:help@contactotter.com">help@contactotter.com</a></small>
+        {% elif google_import_state == "processing" %}
+        <small>We're currently processing your contacts. Check back soon!</small>
+        {% endif %}
+    </div>
+    <div class="checkbox">
+        {{ form.check_twitter_dms.help_text }}
+        <label for="id_check_twitter_dms">
+            <input type="checkbox" {% if bookowner.check_twitter_dms %}checked="checked"{% endif %} name="check_twitter_dms" id="id_check_twitter_dms">Log DMs on Twitter
+        </label>
+        {% if not has_twitter %}
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "twitter" process="connect" scope=scope auth_params=auth_params next="/u/"" %}"><span class="fa fa-twitter"></span> Connect to Twitter</a>
+        {% endif %}
+        {{ form.check_twitter_dms.errors }}
+    </div>
+    <div class="checkbox">
+        {{ form.check_foursquare.help_text }}
+        <label for="id_check_foursquare">
+            <input type="checkbox" {% if bookowner.check_foursquare %}checked="checked"{% endif %} name="check_foursquare" id="id_check_foursquare">Log Foursquare and Swarm checkins
+        </label>
+        {% if not has_foursquare %}
+        <a class="btn btn-info btn-sm" href="{% provider_login_url "foursquare" process="connect" scope=scope auth_params=auth_params next="/u/"" %}"><span class="fa fa-foursquare"></span> Connect to Foursquare</a>
+        {% endif %}
+        {{ form.check_foursquare.errors }}
+    </div>
+    <div class="checkbox">
+        {{ form.send_contact_reminders.help_text }}
+        <label for="id_send_contact_reminders">
+            <input type="checkbox" {% if bookowner.send_contact_reminders %}checked="checked"{% endif %} name="send_contact_reminders" id="id_send_contact_reminders">Send contact reminders
+        </label>
+        {{ form.send_contact_reminders.errors }}
+    </div>
+    <div class="checkbox">
+        {{ form.send_birthday_reminders.help_text }}
+        <label for="id_send_birthday_reminders">
+            <input type="checkbox" {% if bookowner.send_birthday_reminders %}checked="checked"{% endif %} name="send_birthday_reminders" id="id_send_birthday_reminders">Send birthday reminders
+        </label>
+        {{ form.send_birthday_reminders.errors }}
+    </div>
+    <input id="save_book" class="btn btn-success" type="submit" value="Save">
+</form>
+{% if book %}
+<hr>
+<div class="row">
+    {% if invitations %}
+    <div class="col-md-12">
+        <h5>Invitations</h5>
+        <ul class="list-group">
+            {% for invitation in invitations %}
+            <li class="list-group-item">{{ invitation.email }}{% if invitation.book %} was invited by {{ invitation.sender }}{% endif %}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-default" href="{% url "fullexport" book=book.id %}">Export all data</a>
+    </div>
+</div>
+{% endblock %}

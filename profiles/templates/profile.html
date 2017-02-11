@@ -44,21 +44,7 @@
         {{ form.phone_number.errors }}
         <input id="id_phone_number" class="form-control" maxlength="30" name="phone_number" type="tel" {% if phone_number %}value="{{ phone_number }}"{% endif %}/>
     </div>
-    <div class="checkbox">
-        {{ form.send_contact_reminders.help_text }}
-        <label for="id_send_contact_reminders">
-            <input type="checkbox" {% if send_contact_reminders %}checked="checked"{% endif %} name="send_contact_reminders" id="id_send_contact_reminders">Send contact reminders
-        </label>
-        {{ form.send_contact_reminders.errors }}
-    </div>
-    <div class="checkbox">
-        {{ form.send_birthday_reminders.help_text }}
-        <label for="id_send_birthday_reminders">
-            <input type="checkbox" {% if send_birthday_reminders %}checked="checked"{% endif %} name="send_birthday_reminders" id="id_send_birthday_reminders">Send birthday reminders
-        </label>
-        {{ form.send_birthday_reminders.errors }}
-    </div>
-    <input id="add_log" type="submit" value="Save">
+    <input id="save_profile" type="submit" value="Save">
     <hr>
     <h4 id="social">Social Settings</h4>
     <div>
@@ -108,34 +94,17 @@
     </div>
 </div>
 {% endif %}
-{% if book %}
 <hr>
 <div class="row">
-    <div class="col-md-12" id="book">
-        <h4>Book</h4>
-        {% if book.paid_until %}
-        <p>Your subscription is paid until {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
-        {% endif %}
-        {% if plan %}
-        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }} per month.</p>
-        {% endif %}
-        <p>Logging email address: <a href="mailto:log-{{ book.id }}@mg.contactotter.com">log-{{ book.id }}@mg.contactotter.com</a>
-    </div>
     {% if invitations %}
     <div class="col-md-12">
         <h5>Invitations</h5>
         <ul class="list-group">
             {% for invitation in invitations %}
-            <li class="list-group-item">You invited {{ invitation.email }}{% if invitation.book %} to your contact book {% else %} to ContactOtter{% endif %}</li>
+            <li class="list-group-item">You invited {{ invitation.email }}{% if invitation.book %} to your book "{{ invitation.book.name }}" {% else %} to ContactOtter{% endif %}</li>
             {% endfor %}
         </ul>
     </div>
     {% endif %}
-</div>
-{% endif %}
-<div class="row">
-    <div class="col-md-12">
-        <a class="btn btn-default" href="{% url "fullexport" book=book.id %}">Export all data</a>
-    </div>
 </div>
 {% endblock %}
