@@ -70,7 +70,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             {% if not SANDSTORM %}
-                            <li><a href="/u/">Settings</a></li>
+                            <li><a href="/u/">Profile</a></li>
                             <li><a href="/accounts/logout/">Logout</a></li>
                             {% endif %}
                             <li><a href="mailto:help@contactotter.com" target="_blank">Give Feedback</a><li>
@@ -82,7 +82,7 @@
                         </ul>
                     </li>
                     {% if not SANDSTORM %}
-                    <li class="visible-sm visible-xs"><a href="/u/">Settings</a></li>
+                    <li class="visible-sm visible-xs"><a href="/u/">Profile</a></li>
                     <li class="visible-sm visible-xs"><a href="/accounts/logout/">Logout</a></li>
                     {% endif %}
                     <li class="visible-sm visible-xs"><a href="http://goo.gl/forms/npAgYliQM8">Give Feedback</a><li>

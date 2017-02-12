@@ -9,7 +9,7 @@
 
 {% block content %}
 <ol class="breadcrumb">
-    <li class="active">Settings</li>
+    <li class="active">Profile</li>
 </ol>
 <form action="{{ action }}" method="POST">
     {% csrf_token %}
@@ -44,7 +44,7 @@
         {{ form.phone_number.errors }}
         <input id="id_phone_number" class="form-control" maxlength="30" name="phone_number" type="tel" {% if phone_number %}value="{{ phone_number }}"{% endif %}/>
     </div>
-    <input id="save_profile" type="submit" value="Save">
+    <input id="save_profile" class="btn btn-info" type="submit" value="Save">
     <hr>
     <h4 id="social">Social Settings</h4>
     <div>
@@ -78,7 +78,7 @@
         {% endif %}
         {{ form.check_foursquare.errors }}
     </div>
-    <input id="add_log" type="submit" value="Save">
+    <input id="save_profile" class="btn btn-info" type="submit" value="Save">
 </form>
 {% if tokens %}
 <hr>
