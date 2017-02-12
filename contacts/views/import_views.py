@@ -30,7 +30,9 @@ class GoogleImportView(LoginRequiredMixin, View):
         if not gargoyle.is_active('import_from_google', request):
             return HttpResponseRedirect('/')
         app = SocialApp.objects.filter(provider='google')[0]
-        url = "{}?process=connect&next=/import/google/".format(reverse("google_login"))
+        url = "{}?process=connect&next={}".format(
+            reverse("google_login"), reverse("import-google-contacts", kwargs={'book': self.request.current_book.id}),
+        )
         try:
             token = SocialToken.objects.get(account__user=self.request.user, app=app)
         except SocialToken.DoesNotExist:

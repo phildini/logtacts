@@ -4,6 +4,7 @@ from .views import (
     book_views,
     contact_views,
     contact_list_views,
+    import_views,
     log_views,
 )
 

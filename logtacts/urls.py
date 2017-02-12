@@ -121,7 +121,6 @@ urlpatterns = [
     url(r'^api/', include(api_urls)),
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
     url(r'^docs/', include('rest_framework_swagger.urls')),
-    url(r'^import/google/', GoogleImportView.as_view(), name='import-google-contacts'),
     url(
         r'^(?P<book>\d+)/import/google/',
         GoogleImportView.as_view(),
