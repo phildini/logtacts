@@ -11,6 +11,7 @@ from profiles.models import Profile
 
 
 logger = logging.getLogger('scripts')
+sentry = logging.getLogger('sentry')
 
 
 class Command(BaseCommand):
@@ -23,7 +24,7 @@ class Command(BaseCommand):
             self.twitter_key = twitter_app_creds.client_id
             self.twitter_secret = twitter_app_creds.secret
         except IndexError:
-            logger.error("Couldn't find twitter app creds")
+            sentry.error("Couldn't find twitter app creds", exc_info=True)
 
     def get_messages(self, user, token):
         messages = None
@@ -37,30 +38,8 @@ class Command(BaseCommand):
                     )
                 messages = api.direct_messages()
             except:
-                logger.error(
-                    "Error fetching messages for {} ({})".format(user, user.id),
-                )
+                sentry.error("Error fetching twitter messages", exc_info=True, extra={'user':user})
         return messages
-
-    def get_user_properties(self, profile):
-        user = profile.user
-        token = None
-        book = None
-        try:
-            book = BookOwner.objects.get(user=user).book
-        except BookOwner.DoesNotExist:
-            logger.error(
-                "No BookOwner found for: {} ({})".format(user, user.id),
-            )
-        try:
-            token = SocialToken.objects.get(
-                account__user=user,
-                app__provider='twitter',
-            )
-        except SocialToken.DoesNotExist:
-            logger.error("No twitter token for {} ({})".format(user, user.id))
-
-        return user, token, book
 
     def create_log_or_contact_for_message(self, message):
         created = pytz.utc.localize(message.created_at)
@@ -68,6 +47,7 @@ class Command(BaseCommand):
             kind=contact_settings.FIELD_TYPE_TWITTER,
             value=message.sender.screen_name,
             check_for_logs=True,
+            contact__book=self.book,
         )
         if fields:
             for field in fields:
@@ -117,9 +97,18 @@ class Command(BaseCommand):
 
         self.setup_twitter_app_creds()
 
-        opted_into_dms = Profile.objects.filter(check_twitter_dms=True)
-        for profile in opted_into_dms:
-            self.user, self.token, self.book = self.get_user_properties(profile)
+        opted_into_dms = BookOwner.objects.filter(check_twitter_dms=True)
+        for bookowner in opted_into_dms:
+            self.user = bookowner.user
+            self.book = bookowner.book
+
+            try:
+                token = SocialToken.objects.get(
+                    account__user=self.user,
+                    app__provider='twitter',
+                )
+            except SocialToken.DoesNotExist:
+                sentry.error("No twitter token for user", exc_info=True, extra={'user': self.user, 'book': book})
 
             messages = self.get_messages(self.user, self.token)
 

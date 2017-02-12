@@ -11,12 +11,13 @@ from django.template.loader import get_template
 from django.utils import timezone
 import contacts as contact_constants
 from contacts.models import (
+    BookOwner,
     Contact,
     ContactField,
 )
-from profiles.models import Profile
 
 logger = logging.getLogger('scripts')
+sentry = logging.getLogger('sentry')
 
 class Command(BaseCommand):
     help = "send reminder for contacts to contact"
@@ -24,11 +25,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         logger.debug("Starting contact reminder sending")
         last_month = timezone.now() - timedelta(weeks=4)
-        profiles_opted_in = Profile.objects.filter(send_contact_reminders=True)
-        for profile in profiles_opted_in:
-            logger.debug("Starting compilation for {}".format(profile.user))
+        books_to_check = BookOwner.objects.filter(send_contact_reminders=True)
+        for bookowner in books_to_check:
+            user = bookowner.user
+            book = bookowner.book
+            logger.debug("Starting compilation for {}".format(user))
             contact = Contact.objects.get_contacts_for_user(
-                profile.user
+                user=user, book=book,
             ).filter(
                 Q(last_contact__lte=last_month) | Q(last_contact=None),
                 should_surface=True,
@@ -45,35 +48,27 @@ class Command(BaseCommand):
                 subject=subject,
                 body=txt,
                 from_email="ContactOtter <reminders@contactotter.com>",
-                to=[profile.user.email],
+                to=[user.email],
             )
             message.attach_alternative(html, "text/html")
             try:
                 logger.debug("Trying to send message to {} about {}".format(
-                    profile.user, contact
+                    user, contact
                 ))
                 message.send()
-                logger.debug("Sent message to {} successfuly".format(profile.user))
+                logger.debug("Sent message to {} successfuly".format(user))
             except:
-                logger.exception('Problem sending reminder for %s' % (profile))
-                try:
-                    if not settings.DEBUG:
-                        payload = {
-                            'text': 'Error in contactotter reminder: {}'.format(profile)
-                        }
-                        r = requests.post(
-                            settings.SLACK_WEBHOOK_URL,
-                            data=json.dumps(payload),
-                        )
-                except:
-                    logger.exception("Error sending error to slack")
+                sentry.error('Problem sending contact reminder', exc_info=True, extra={'user': user, 'book': book})
 
-        profiles_opted_in = Profile.objects.filter(send_birthday_reminders=True)
-        for profile in profiles_opted_in:
+        books_to_check = BookOwner.objects.filter(send_birthday_reminders=True)
+        for bookowner in books_to_check:
+            book = bookowner.book
+            user = bookowner.user
             birthdays = ContactField.objects.filter(
                 Q(label='Birthday') | Q(label='birthday') | Q(label='BIRTHDAY'),
                 kind=contact_constants.FIELD_TYPE_DATE,
-                value=timezone.now().strftime("%Y-%m-%d")
+                value=timezone.now().strftime("%Y-%m-%d"),
+                contact__book=book,
             )
             contacts = None
             if birthdays:
@@ -90,25 +85,14 @@ class Command(BaseCommand):
                     subject=subject,
                     body=txt,
                     from_email='ContactOtter <reminders@contactotter.com>',
-                    to=[profile.user.email],
+                    to=[user.email],
                 )
                 message.attach_alternative(html, "text/html")
                 try:
                     logger.debug("Trying to send message to {} about {}".format(
-                        profile.user, contact
+                        user, contact
                     ))
                     message.send()
-                    logger.debug("Sent message to {} successfuly".format(profile.user))
+                    logger.debug("Sent message to {} successfuly".format(user))
                 except:
-                    logger.exception('Problem sending reminder for %s' % (profile))
-                    try:
-                        if not settings.DEBUG:
-                            payload = {
-                                'text': 'Error in logtacts reminder: {}'.format(profile)
-                            }
-                            r = requests.post(
-                                settings.SLACK_WEBHOOK_URL,
-                                data=json.dumps(payload),
-                            )
-                    except:
-                        logger.exception("Error sending error to slack")
+                    sentry.error('Problem sending birthday reminder', exc_info=True, extra={'user': user, 'book': book})

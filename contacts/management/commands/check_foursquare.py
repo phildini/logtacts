@@ -8,40 +8,12 @@ from allauth.socialaccount.models import SocialToken, SocialApp
 
 import contacts as contact_settings
 from contacts.models import Contact, ContactField, LogEntry, BookOwner
-from profiles.models import Profile
-
 
 logger = logging.getLogger('scripts')
+sentry = logging.getLogger('sentry')
 
 
 class Command(BaseCommand):
-
-    def get_user_book_client(self, app, profile):
-        user = profile.user
-        book = None
-        token = None
-        client = None
-
-        try:
-            book = BookOwner.objects.get(user=user).book
-        except BookOwner.DoesNotExist:
-            book = None
-            logger.error(
-                "No BookOwner found for: {} ({})".format(user, user.id)
-            )
-
-        try:
-            token = SocialToken.objects.get(account__user=user, app=app)
-        except SocialToken.DoesNotExist:
-            token = None
-            logger.error(
-                "No foursquare token found for: {} ({})".format(user, user.id),
-            )
-
-        if token:
-            client = foursquare.Foursquare(access_token=token.token)
-
-        return user, book, client
 
     def handle_checkin(self, checkin):
         created = pytz.utc.localize(
@@ -55,6 +27,7 @@ class Command(BaseCommand):
                     kind=contact_settings.FIELD_TYPE_EMAIL,
                     value=email,
                     check_for_logs=True,
+                    contact__book=self.book,
                 )
                 if fields:
                     for field in fields:
@@ -117,11 +90,8 @@ class Command(BaseCommand):
                 'checkins', {}
             ).get('items', [])
         except:
-            logger.error(
-                'Error getting foursquare checkins for {} ({})'.format(
-                    self.user, self.user.id,
-                )
-            )
+            sentry.error(
+                'Error getting foursquare checkins', exc_info=True, extra={'user':self.user, 'book': self.book})
         return checkins
 
     def get_foursquare_user_details(self, id=None):
@@ -130,30 +100,29 @@ class Command(BaseCommand):
             try:
                 user_dict = self.client.users(id).get('user', {})
             except:
-                logger.error(
-                    'Error getting foursquare user details for 4SQ id: {}'.format(
-                        id
-                    ),
-                )
+                sentry.error('Unable to get 4SQ user from ID', exc_info=True, extra={'user': self.user, 'id': id})
         else:
             try:
                 user_dict = self.client.users().get('user', {})
             except:
-                logger.error(
-                    'Error getting foursquare user details for {} ({})'.format(
-                        self.user, self.user.id,
-                    ),
-                )
+                sentry.error('Unable to get 4SQ user for user', exc_info=True, extra={'user': self.user})
         return user_dict
 
     def handle(self, *args, **options):
         logger.info("Starting foursquare job")
         app = SocialApp.objects.filter(provider='foursquare')[0]
 
-        for profile in Profile.objects.filter(check_foursquare=True):
-            self.user, self.book, self.client = self.get_user_book_client(
-                app=app, profile=profile,
-            )
+        for bookowner in BookOwner.objects.filter(check_foursquare=True):
+            self.user = bookowner.user
+            self.book = bookowner.book
+            try:
+                token = SocialToken.objects.get(account__user=self.user, app=app)
+            except SocialToken.DoesNotExist:
+                token = None
+                sentry.error("No foursquare token found", exc_info=True, extra={'user':self.user})
+
+            if token:
+                self.client = foursquare.Foursquare(access_token=token.token)
 
             if self.user and self.book and self.client:
                 checkins = self.get_checkins()
