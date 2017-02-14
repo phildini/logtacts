@@ -16,6 +16,7 @@ from contacts.models import (
     Contact,
     ContactField,
     LogEntry,
+    Tag,
 )
 from .utils import pull_google_contacts
 
@@ -79,12 +80,22 @@ def process_incoming_email(message):
         sentry.error("Somehow we got an email without user or book", extra=message)
         return
 
+    contacts_updated = []
+    tag = None
     to = message.get('To', '').split(',')
     to += (message.get('Cc', '').split(','))
     to += (message.get('Bcc', '').split(','))
     for item in set(to):
         name, email = parseaddr(item)
         if email and email != recipient:
+            email_parts = email.split('@')
+            if len(email_parts) > 1 and email_parts[1] == 'googlegroups.com':
+                tag_name = name if name else email_parts[0]
+                tag = Tag.objects.create(
+                    book=book,
+                    tag=tag_name,
+                )
+                continue
             try:
                 contact = ContactField.objects.filter(
                     kind=contact_settings.FIELD_TYPE_EMAIL,
@@ -113,3 +124,8 @@ def process_incoming_email(message):
                 notes='Subject: {}'.format(message.get('subject')),
             )
             contact.update_last_contact_from_log(log)
+            contacts_updated.append(contact)
+    if tag and contacts_updated:
+        for contact in contacts_updated:
+            contact.tags.add(tag)
+            contact.save()
