@@ -27,7 +27,7 @@ class ContactBookMiddleware(object):
                         request.current_book = request.books[0]
                 else:
                     sentry.error("No book found for user", exc_info=True,
-                        extra={"user": user}
+                        extra={"user": request.user}
                     )
                     request.current_book = Book.objects.create_for_user(request.user)
                     request.books = Book.objects.filter_for_user(request.user)
