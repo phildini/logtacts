@@ -53,6 +53,14 @@
     </div>
     </form>
     <div class="col-md-4">
+        {% if random_contact %}
+        <div class="panel panel-info">
+            <div class="panel-heading">Keep in touch!</div>
+            <div class="panel-body">
+                It looks like you haven't heard from <a href="{{ random_contact.get_absolute_url }}">{{ random_contact.name }}</a> in a while. Maybe drop them a line? 
+            </div>
+        </div>
+        {% endif %}
         <h4>Tags {% ifnotswitch read_only_mode %}<a href="{% url "tags-new" book=book.id %}" class="btn btn-info btn-sm">Add tag <span class="glyphicon glyphicon-plus"></span></a>{% endifnotswitch %}</h4>
         {% for tag in tags %}
             <a href="{% url "contacts-tagged" pk=tag.id book=book.id %}" class="tag-list-tag"><span class="label label-default tag-label" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>

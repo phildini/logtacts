@@ -2,8 +2,10 @@ import json
 import logging
 import re
 from braces.views import LoginRequiredMixin
+from datetime import timedelta
 from django.conf import settings
 from django.contrib import messages
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Case, Count, When
@@ -16,6 +18,8 @@ from django.views.generic import (
     ListView,
     FormView,
 )
+
+from django.utils import timezone
 from haystack.generic_views import SearchView
 from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet, SQ
@@ -139,6 +143,18 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         )
         context['logs'] = self.get_logs()[:10]
         context['sort'] = self.request.GET.get('s')
+
+        cache_key = cache_key = "{}::{}::random".format(self.request.user, self.request.current_book)
+        if cache.get(cache_key):
+            try:
+                contact = Contact.objects.for_user(
+                    user=self.request.user, book=self.request.current_book,
+                ).get(id=cache.get(cache_key))
+                last_day = timezone.now() - timedelta(days=1)
+                if not contact.last_contact or contact.last_contact < last_day:
+                    context['random_contact'] = contact
+            except Contact.DoesNotExist:
+                pass
         if self.request.GET.get('q'):
             context['search_tags'] = self.search_tags
             context['query_raw'] = self.query_raw
