@@ -41,12 +41,6 @@ class InvitationAdminAddForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         self.instance.key = get_random_string(32).lower()
-        response = super(InvitationForm, self).save(*args, **kwargs)
-        notification = {
-            'id': self.instance.id,
-            'created': self.instance.created.strftime("%a %d %b %Y %H:%M"),
-        }
-        Channel('send-invite').send(notification)
         return super(InvitationAdminAddForm, self).save(*args, **kwargs)
 
 

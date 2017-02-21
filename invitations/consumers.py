@@ -9,15 +9,16 @@ from django.utils import timezone
 from invitations.models import Invitation
 
 logger = logging.getLogger('email')
+sentry = logging.getLogger('sentry')
 
 def send_invite(message):
     try:
         invite = Invitation.objects.get(
-            id=message.content.get('id'),
-            status=Invitation.PENDING,
+            id=message.get('id'),
+            status__in=[Invitation.PENDING, Invitation.ERROR],
         )
     except Invitation.DoesNotExist:
-        logger.error("Invitation to send not found")
+        sentry.error("Invitation to send not found", exc_info=True, extra={'message': message})
         return
     invite.status = Invitation.PROCESSING
     invite.save()
@@ -43,17 +44,6 @@ def send_invite(message):
         invite.sent = timezone.now()
         invite.save()
     except:
-        logger.exception('Problem sending invite %s' % (invite.id))
+        sentry.exception('Problem sending invite', exc_info=True, extra={'invite_id': invite.id})
         invite.status = Invitation.ERROR
         invite.save()
-        try:
-            if not settings.DEBUG:
-                payload = {
-                    'text': 'Error in logtacts invite: {}'.format(job.id)
-                }
-                r = requests.post(
-                    settings.SLACK_WEBHOOK_URL,
-                    data=json.dumps(payload),
-                )
-        except:
-            logger.exception("Error sending error to slack")
