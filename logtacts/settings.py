@@ -374,4 +374,9 @@ GARGOYLE_SWITCH_DEFAULTS = {
         'label': "Import from Google",
         'description': 'Enable importing contacts from Google',
     },
+    'scheduled_reminders': {
+        'is_active': False,
+        'label': 'Scheduled reminders on contacts',
+        'description': 'Allow setting reminder frequency on individual contacts',
+    },
 }

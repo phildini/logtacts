@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load gargoyle_tags %}
 {% load staticfiles %}
 
 {% block content %}
@@ -43,14 +43,32 @@
             <div id="id_name_errors">
                 {{ form.name.errors }}
             </div>
-            {% if not SANDSTORM %}
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
             <label for="id_should_surface">
                 <small>Should send contact reminders?</small>
                 {{ form.should_surface }}
             </label>
             <p><small>(Contact reminders need to be enabled in <a href="/u/">your settings</a>)</small></p>
-            {% endif %}
         </div>
+        {% ifswitch scheduled_reminders %}
+        <div class="col-md-6">
+            <label for="id_reminder_frequency">
+                <small>Remind me to contact:</small>
+                <select class="form-control" id="id_reminder_frequency" name="reminder_frequency">
+                    <option value="" selected="selected">---------</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </label>
+        </div>
+        {% endifswitch %}
     </div>
     <hr class="hidden-xs hidden-sm">
     <div class="row">

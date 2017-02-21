@@ -81,6 +81,14 @@ class Contact(models.Model):
         (contact_settings.FIELD_TYPE_BIG_TEXT, 'Big Text'),
     )
 
+    REMINDER_INTERVALS = (
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly'),
+    )
+
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     last_contact = models.DateTimeField(blank=True, null=True)
@@ -90,6 +98,7 @@ class Contact(models.Model):
     notes = models.TextField(blank=True, null=True)
     should_surface = models.BooleanField(blank=True, default=True)
     photo_url = models.URLField(blank=True, null=True)
+    reminder_frequency = models.CharField(max_length=20, choices=REMINDER_INTERVALS, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     history = HistoricalRecords()
 

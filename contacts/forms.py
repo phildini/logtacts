@@ -18,7 +18,7 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        fields = ('name','notes','tags', 'should_surface')
+        fields = ('name','notes','tags', 'should_surface', 'reminder_frequency')
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
             'notes': forms.Textarea(attrs={'rows':3}),
@@ -64,6 +64,8 @@ class ContactForm(forms.ModelForm):
             self.has_changed_list.append('Notes')
         if self.cleaned_data.get('should_surface') != self.instance.should_surface:
             self.has_changed_list.append('Send Contact Reminders')
+        if self.cleaned_data.get('reminder_frequency') != self.instance.reminder_frequency:
+            self.has_changed_list.append('Reminder Frequency')
 
         # Deal with deleted fields
         has_changed_list = []
