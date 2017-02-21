@@ -60,6 +60,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% if request.current_book %}{{ request.current_book }}{% else %}Books{% endif %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="{% url "contacts-list" book=book.id %}">Contacts</a></li>
+                            <li><a href="{% url "log-list" book=book.id %}">Activity Log</a></li>
                             <li><a href="{% url "book_settings" book=book.id %}">Settings</a></li>
                             {% if request.can_invite %}
                             <li><a href="{% url "create-invite" book=book.id %}">Invite others</a></li>

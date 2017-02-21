@@ -122,6 +122,7 @@ log_urls = [
         log_views.DeleteLogView.as_view(),
         name='log-delete',
     ),
+    url(r'^$', log_views.LogListView.as_view(), name='log-list'),
 ]
 
 api_urls = [

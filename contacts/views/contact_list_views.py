@@ -133,7 +133,7 @@ class ContactListView(BookOwnerMixin, FormView, ListView):
         return LogEntry.objects.logs_for_user_book(
             user=self.request.user,
             book=self.request.current_book,
-        ).order_by('-time')
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ContactListView, self).get_context_data(**kwargs)

@@ -432,6 +432,9 @@ class LogEntry(models.Model):
 
     objects = LogEntryManager()
 
+    class Meta:
+        ordering = ['-time']
+
     def __str__(self):
         return "Log on %s" % (self.contact,)
 

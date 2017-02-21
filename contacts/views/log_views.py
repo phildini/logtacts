@@ -1,6 +1,9 @@
 from braces.views import LoginRequiredMixin
 from channels import Channel
+from datetime import timedelta
 from django.contrib import messages
+from django.conf import settings
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import (
@@ -10,12 +13,16 @@ from django.http import (
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import (
     DeleteView,
+    ListView,
     UpdateView,
 )
 from django.shortcuts import redirect
+from django.utils import timezone
 
 import contacts.forms
-from contacts.models import LogEntry
+from contacts.models import Contact, LogEntry, Tag
+from contacts.views import BookOwnerMixin
+
 
 class EditLogView(LoginRequiredMixin, UpdateView):
     model = LogEntry
@@ -59,6 +66,7 @@ class EditLogView(LoginRequiredMixin, UpdateView):
         context = super(EditLogView, self).get_context_data(*args, **kwargs)
         context['book'] = self.request.current_book
         return context
+
 
 class DeleteLogView(LoginRequiredMixin, DeleteView):
 
@@ -105,6 +113,35 @@ class DeleteLogView(LoginRequiredMixin, DeleteView):
         context = super(DeleteLogView, self).get_context_data(*args, **kwargs)
         context['book'] = self.request.current_book
         return context
+
+
+class LogListView(BookOwnerMixin, ListView):
+
+    template_name = "log_list.html"
+    model = LogEntry
+    paginate_by = settings.LIST_PAGINATE_BY
+    paginate_orphans = settings.LIST_PAGINATE_ORPHANS
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(LogListView, self).get_context_data(*args, **kwargs)
+        context['tags'] = Tag.objects.get_tags_for_user(
+            user=self.request.user,
+            book=self.request.current_book,
+        )
+        context['book'] = self.request.current_book
+        cache_key = cache_key = "{}::{}::random".format(self.request.user, self.request.current_book)
+        if cache.get(cache_key):
+            try:
+                contact = Contact.objects.for_user(
+                    user=self.request.user, book=self.request.current_book,
+                ).get(id=cache.get(cache_key))
+                last_day = timezone.now() - timedelta(days=1)
+                if not contact.last_contact or contact.last_contact < last_day:
+                    context['random_contact'] = contact
+            except Contact.DoesNotExist:
+                pass
+        return context
+
 
 @csrf_exempt
 def email_log_view(request):
