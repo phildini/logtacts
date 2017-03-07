@@ -3,12 +3,9 @@ import logging
 import requests
 from datetime import timedelta
 from django.core.management.base import BaseCommand
-from django.contrib.sites.models import Site
-from django.conf import settings
 from django.core.cache import cache
 from django.db.models import Q
 from django.utils import timezone
-import contacts as contact_constants
 from contacts.models import (
     BookOwner,
     Contact,
@@ -42,5 +39,3 @@ class Command(BaseCommand):
                 cache.set(cache_key, contact.id, CACHE_TIMEOUT)
             except IndexError:
                 pass
-
-

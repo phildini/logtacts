@@ -108,7 +108,7 @@ class Command(BaseCommand):
                     app__provider='twitter',
                 )
             except SocialToken.DoesNotExist:
-                sentry.error("No twitter token for user", exc_info=True, extra={'user': self.user, 'book': book})
+                sentry.error("No twitter token for user", exc_info=True, extra={'user': self.user, 'book': self.book})
 
             messages = self.get_messages(self.user, self.token)
 
