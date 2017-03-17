@@ -92,6 +92,18 @@
         </label>
         {{ form.send_birthday_reminders.errors }}
     </div>
+    <div class="form-group">
+        <label for="id_weekly_reminder_day">Weekly reminder day</label>
+        <select class="form-control" id="id_weekly_reminder_day" name="weekly_reminder_day">
+            <option value="0" {% if bookowner.weekly_reminder_day == 0 %}selected="selected"{% endif %}>Monday</option>
+            <option value="1" {% if bookowner.weekly_reminder_day == 1 %}selected="selected"{% endif %}>Tuesday</option>
+            <option value="2" {% if bookowner.weekly_reminder_day == 2 %}selected="selected"{% endif %}>Wednesday</option>
+            <option value="3" {% if bookowner.weekly_reminder_day == 3 %}selected="selected"{% endif %}>Thursday</option>
+            <option value="4" {% if bookowner.weekly_reminder_day == 4 %}selected="selected"{% endif %}>Friday</option>
+            <option value="5" {% if bookowner.weekly_reminder_day == 5 %}selected="selected"{% endif %}>Saturday</option>
+            <option value="6" {% if bookowner.weekly_reminder_day == 6 %}selected="selected"{% endif %}>Sunday</option>
+        </select>
+    </div>
     <input id="save_book" class="btn btn-success" type="submit" value="Save">
 </form>
 {% if book %}

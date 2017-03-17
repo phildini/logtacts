@@ -59,12 +59,12 @@
             <label for="id_reminder_frequency">
                 <small>Remind me to contact:</small>
                 <select class="form-control" id="id_reminder_frequency" name="reminder_frequency">
-                    <option value="" selected="selected">---------</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
+                    <option value="" {% if not contact.reminder_frequency %}selected="selected"{% endif %}>---------</option>
+                    <option value="daily" {% if contact.reminder_frequency == 'daily' %}selected="selected"{% endif %}>Daily</option>
+                    <option value="weekly" {% if contact.reminder_frequency == 'weekly' %}selected="selected"{% endif %}>Weekly</option>
+                    <option value="monthly" {% if contact.reminder_frequency == 'monthly' %}selected="selected"{% endif %}>Monthly</option>
+                    <option value="quarterly" {% if contact.reminder_frequency == 'quarterly' %}selected="selected"{% endif %}>Quarterly</option>
+                    <option value="yearly" {% if contact.reminder_frequency == 'yearly' %}selected="selected"{% endif %}>Yearly</option>
                 </select>
             </label>
         </div>

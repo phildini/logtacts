@@ -17,6 +17,9 @@
 <li>
     <span class="label label-default" style="font-size: 80%; background-color:{{ tag.corrected_color}};">{{ tag }}</span>
 </li>
+{% elif reminder %}
+<li><a href="{{ book.get_absolute_url }}">Contacts</a>
+<li>{{ reminder }}</li>
 {% elif is_search %}
 <li><a href="{{ book.get_absolute_url }}">Contacts</a>
 <li>

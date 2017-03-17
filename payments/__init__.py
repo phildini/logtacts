@@ -59,5 +59,10 @@ PLANS = OrderedDict({
 })
 
 PLAN_CHOICES = (
-    (PLANS[plan]['stripe_id'], PLANS[plan]['name']) for plan in PLANS
+    (BASIC_MONTHLY, PLANS[BASIC_MONTHLY]['name']),
+    (BASIC_YEARLY, PLANS[BASIC_YEARLY]['name']),
+    (TEAM_MONTHLY, PLANS[TEAM_MONTHLY]['name']),
+    (TEAM_YEARLY , PLANS[TEAM_YEARLY ]['name']),
+    (FAMILY_MONTHLY, PLANS[FAMILY_MONTHLY]['name']),
+    (FAMILY_YEARLY, PLANS[FAMILY_YEARLY]['name']),
 )

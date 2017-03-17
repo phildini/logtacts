@@ -144,3 +144,10 @@ api_urls = [
     ),
     url(r'^tags/$', contact_api_views.TagListCreateAPIView.as_view()),
 ]
+
+reminder_urls = [
+    url(r'^daily/$', contact_list_views.DailyRemindersView.as_view(), name="reminders-daily"),
+    url(r'^weekly/$', contact_list_views.WeeklyRemindersView.as_view(), name="reminders-weekly"),
+    url(r'^monthly/$', contact_list_views.MonthlyRemindersView.as_view(), name="reminders-monthly"),
+    url(r'^quarterly/$', contact_list_views.QuarterlyRemindersView.as_view(), name="reminders-quarterly"),
+]

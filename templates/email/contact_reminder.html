@@ -1,11 +1,58 @@
 {% extends "email/email_base.html" %}
 
+{% load humanize %}
+
 {% block content %}
 <h1>Hello there!</h1>
-
-<p>You haven't contacted <a href="https://{{ domain }}{{ contact.get_absolute_url }}">{{ contact.name }}</a>{% if contact.last_contacted %} since {{ contact.last_contacted | date:"F j, o"}}{% else %} in a while{% endif %}.</p>
-<p>Maybe shoot them an email?</p>
+{% if has_high_interval_contacts %}
+<h2>Here's your weekly reminders from ContactOtter</h2>
+{% else %}
+<h2>Here's your daily reminders from ContactOtter</h2>
+{% endif %}
+<p>These people haven't heard from you in a while, but are on your list to contact regularly. Maybe shoot them an email?</p>
+{% if daily_contacts %}
+<h3>Daily</h3>
+<p>
+    <ul>
+        {% for contact in daily_contacts %}
+        <li><a href="{{ contact.get_complete_url }}">{{ contact.name }}</a> (Last contacted {{ contact.last_contacted | naturaltime }})</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+{% if weekly_contacts %}
+<h3>Weekly</h3>
+<p>
+    <ul>
+        {% for contact in weekly_contacts %}
+        <li><a href="{{ contact.get_complete_url }}">{{ contact.name }}</a> (Last contacted {{ contact.last_contacted | naturaltime }})</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+{% if monthly_contacts %}
+<h3>Monthly</h3>
+<p>
+    <ul>
+        {% for contact in monthly_contacts %}
+        <li><a href="{{ contact.get_complete_url }}">{{ contact.name }}</a> (Last contacted {{ contact.last_contacted | naturaltime }})</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+{% if quarterly_contacts %}
+<h3>Quarterly</h3>
+<p>
+    <ul>
+        {% for contact in quarterly_contacts %}
+        <li><a href="{{ contact.get_complete_url }}">{{ contact.name }}</a> (Last contacted {{ contact.last_contacted | naturaltime }})</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
 <p></p>
 <p>Cheers,</p>
-<p>Contact Otter</p>
+<p>ContactOtter</p>
+
+<small>If you want to change your reminder settings, you can do so <a href="{{ book.get_complete_settings_url }}">here</a>.</small>
 {% endblock %}

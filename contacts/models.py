@@ -1,5 +1,6 @@
 import collections
 from six.moves.urllib.parse import quote_plus
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -114,7 +115,11 @@ class Contact(models.Model):
         })
 
     def get_complete_url(self):
-        return "https://{}{}".format(
+        protocol = 'https'
+        if settings.ENVIRONMENT == 'dev':
+            protocol = 'http'
+        return "{}://{}{}".format(
+            protocol,
             Site.objects.get_current().domain,
             self.get_absolute_url(),
         )
@@ -353,8 +358,32 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse("contacts-list", kwargs={"book": self.id})
 
+    def get_settings_url(self):
+        return reverse("book_settings", kwargs={"book": self.id})
+
+    def get_complete_settings_url(self):
+        protocol = 'https'
+        if settings.ENVIRONMENT == 'dev':
+            protocol = 'http'
+        return "{}://{}{}".format(
+            protocol,
+            Site.objects.get_current().domain,
+            self.get_settings_url(),
+        )
+
+
 
 class BookOwner(models.Model):
+    DAY_CHOICES = (
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
+    )
+
     created = models.DateTimeField(auto_now_add=True)
     changed = models.DateTimeField(auto_now=True)
     book = models.ForeignKey('Book')
@@ -364,6 +393,7 @@ class BookOwner(models.Model):
     check_twitter_dms = models.BooleanField(default=True)
     check_twitter_mentions = models.BooleanField(default=True)
     check_foursquare = models.BooleanField(default=True)
+    weekly_reminder_day = models.IntegerField(choices=DAY_CHOICES, default=6)
     history = HistoricalRecords()
 
     def __str__(self):

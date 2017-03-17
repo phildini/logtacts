@@ -239,5 +239,6 @@ class BookSettingsForm(forms.ModelForm):
             'send_birthday_reminders',
             'check_twitter_dms',
             'check_twitter_mentions',
-            'check_foursquare'
+            'check_foursquare',
+            'weekly_reminder_day',
         ]

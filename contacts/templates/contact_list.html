@@ -9,7 +9,7 @@
 <div class="row">
     <ol class="breadcrumb">
         {% include "breadcrumbs_common.html" %}
-        {% if not tag %}
+        {% if not tag and not is_search and not reminder%}
         <li class="active">Contacts</li>
         {% endif %}
     </ol>
@@ -67,6 +67,12 @@
         {% endfor %}
         {% if logs %}
         <hr />
+        <h4>Reminders</h4>
+        <a class="btn btn-default btn-sm" href="{% url "reminders-daily" book=book.id %}">Daily</a>
+        <a class="btn btn-default btn-sm" href="{% url "reminders-weekly" book=book.id %}">Weekly</a>
+        <a class="btn btn-default btn-sm" href="{% url "reminders-monthly" book=book.id %}">Monthly</a>
+        <a class="btn btn-default btn-sm" href="{% url "reminders-quarterly" book=book.id %}">Quarterly</a>
+        <hr />
         <h4><a href="{% url "log-list" book=book.id %}">Activity Log</a></h4>
         <ul class="list-group">
             {% for log in logs %}
@@ -77,10 +83,10 @@
             </li>
             {% endfor %}
         </ul>
-        {% endif %}
         <div class="col-md-12 text-center">
             <a class="btn btn-default" href="{% url "log-list" book=book.id %}">More</a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

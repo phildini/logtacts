@@ -192,3 +192,59 @@ class TaggedContactListView(ContactListView):
         context['tag'] = self.tag
 
         return context
+
+
+class DailyRemindersView(ContactListView):
+
+    def get_queryset(self):
+        return super(DailyRemindersView, self).get_queryset().filter(
+            reminder_frequency='daily',
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(DailyRemindersView, self).get_context_data(**kwargs)
+        context['reminder'] = 'Daily Reminders'
+
+        return context
+
+
+class WeeklyRemindersView(ContactListView):
+
+    def get_queryset(self):
+        return super(WeeklyRemindersView, self).get_queryset().filter(
+            reminder_frequency='weekly',
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(WeeklyRemindersView, self).get_context_data(**kwargs)
+        context['reminder'] = 'Weekly Reminders'
+
+        return context
+
+
+class MonthlyRemindersView(ContactListView):
+
+    def get_queryset(self):
+        return super(MonthlyRemindersView, self).get_queryset().filter(
+            reminder_frequency='monthly',
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(MonthlyRemindersView, self).get_context_data(**kwargs)
+        context['reminder'] = 'Monthly Reminders'
+
+        return context
+
+
+class QuarterlyRemindersView(ContactListView):
+
+    def get_queryset(self):
+        return super(QuarterlyRemindersView, self).get_queryset().filter(
+            reminder_frequency='quarterly',
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(QuarterlyRemindersView, self).get_context_data(**kwargs)
+        context['reminder'] = 'Quarterly Reminders'
+
+        return context

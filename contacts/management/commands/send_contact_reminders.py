@@ -23,42 +23,66 @@ class Command(BaseCommand):
     help = "send reminder for contacts to contact"
 
     def handle(self, *args, **options):
-        logger.debug("Starting contact reminder sending")
-        last_month = timezone.now() - timedelta(weeks=4)
+        logger.info("Starting daily reminder job")
+        now = timezone.now()
+        yesterday = now - timedelta(days=2)
+        last_week = now - timedelta(days=7)
+        last_month = now - timedelta(days=30)
+        last_quarter = now - timedelta(days=90)
         books_to_check = BookOwner.objects.filter(send_contact_reminders=True)
         for bookowner in books_to_check:
             user = bookowner.user
             book = bookowner.book
-            logger.debug("Starting compilation for {}".format(user))
-            contact = Contact.objects.get_contacts_for_user(
-                user=user, book=book,
-            ).filter(
-                Q(last_contact__lte=last_month) | Q(last_contact=None),
-                should_surface=True,
-            ).order_by('?')[0]
-            subject = '[Contact Otter] Contact reminder'
-            context = {
-                'contact': contact,
-                'domain': Site.objects.get_current().domain,
-
-            }
-            txt = get_template('email/contact_reminder.txt').render(context)
-            html = get_template('email/contact_reminder.html').render(context)
-            message = EmailMultiAlternatives(
-                subject=subject,
-                body=txt,
-                from_email="ContactOtter <reminders@contactotter.com>",
-                to=[user.email],
+            logger.debug("Starting daily reminders for bookowner", extra={'owner': bookowner})
+            daily_reminders = Contact.objects.for_user(user=user, book=book).filter(
+                reminder_frequency='daily',
+                last_contact__lte=yesterday,
             )
-            message.attach_alternative(html, "text/html")
-            try:
-                logger.debug("Trying to send message to {} about {}".format(
-                    user, contact
-                ))
-                message.send()
-                logger.debug("Sent message to {} successfuly".format(user))
-            except:
-                sentry.error('Problem sending contact reminder', exc_info=True, extra={'user': user, 'book': book})
+            weekly_reminders = None
+            monthly_reminders = None
+            quarterly_reminders = None
+            if now.weekday() == bookowner.weekly_reminder_day:
+                weekly_reminders = Contact.objects.for_user(user=user, book=book).filter(
+                    reminder_frequency='weekly',
+                    last_contact__lte=last_week,
+                )
+                monthly_reminders = Contact.objects.for_user(user=user, book=book).filter(
+                    reminder_frequency='monthly',
+                    last_contact__lte=last_month,
+                )
+                quarterly_reminders = Contact.objects.for_user(user=user, book=book).filter(
+                    reminder_frequency='quarterly',
+                    last_contact__lte=last_quarter,
+                )
+            has_high_interval_contacts = weekly_reminders or monthly_reminders or quarterly_reminders
+            has_contacts = has_high_interval_contacts or daily_reminders
+            subject = '[ContactOtter] Daily Contact Reminder'
+            if has_high_interval_contacts:
+                subject = '[ContactOtter] Weekly Contact Reminders'
+            context = {
+                'daily_contacts': daily_reminders,
+                'weekly_contacts': weekly_reminders,
+                'monthly_contacts': monthly_reminders,
+                'quarterly_contacts': quarterly_reminders,
+                'book': book,
+                'has_high_interval_contacts': has_high_interval_contacts
+            }
+            if has_contacts:
+                txt = get_template('email/contact_reminder.txt').render(context)
+                html = get_template('email/contact_reminder.html').render(context)
+                message = EmailMultiAlternatives(
+                    subject=subject,
+                    body=txt,
+                    from_email="ContactOtter <reminders@contactotter.com>",
+                    to=[user.email],
+                )
+                message.attach_alternative(html, "text/html")
+                try:
+                    logger.debug("Trying to send daily reminder")
+                    message.send()
+                    logger.debug("Sent message to {} successfuly".format(user))
+                except:
+                    sentry.error('Problem sending contact reminder', exc_info=True, extra={'user': user, 'book': book})
 
         books_to_check = BookOwner.objects.filter(send_birthday_reminders=True)
         for bookowner in books_to_check:

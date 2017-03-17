@@ -18,6 +18,7 @@ from contacts.urls import (
     api_urls,
     contact_urls,
     log_urls,
+    reminder_urls,
     tag_urls,
 )
 
@@ -138,6 +139,7 @@ urlpatterns = [
     url(r'^pricing$', TemplateView.as_view(template_name='pages/pricing.html'), name='pricing'),
     url(r'^privacy/$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
     url(r'^pay/$', PaymentView.as_view(), name='pay-view'),
+    url(r'^(?P<book>\d+)/reminders/', include(reminder_urls)),
     url(r"^signup/$", allauth_views.signup, name="signup"),
     url(r'^sms/$', sms),
     url(r'^stripe/$', stripe_webhook_view),

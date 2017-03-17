@@ -1,6 +1,51 @@
+{% extends "email/email_base.html" %}
+
+{% load humanize %}
+
+{% block content %}
 Hello there!
 
-You haven't contacted {{ contact.name }} (https://{{ domain }}{{ contact.get_absolute_url }}) {% if contact.last_contacted %} since {{ contact.last_contacted | date:"F j, o"}}{% else %} in a while{% endif %} - maybe send them a note?
+{% if has_high_interval_contacts %}
+Here's your weekly reminders from ContactOtter
+{% else %}
+Here's your daily reminders from ContactOtter
+{% endif %}
+
+These people haven't heard from you in a while, but are on your list to contact regularly. Maybe shoot them an email?
+{% if daily_contacts %}
+
+Daily
+{% for contact in daily_contacts %}
+{{ contact.get_complete_url }} - {{ contact.name }} (Last contacted {{ contact.last_contacted | naturaltime }})
+{% endfor %}
+
+{% endif %}
+{% if weekly_contacts %}
+Weekly
+
+{% for contact in weekly_contacts %}
+{{ contact.get_complete_url }} - {{ contact.name }} (Last contacted {{ contact.last_contacted | naturaltime }})
+{% endfor %}
+{% endif %}
+
+{% if monthly_contacts %}
+Monthly
+
+{% for contact in monthly_contacts %}
+{{ contact.get_complete_url }} - {{ contact.name }} (Last contacted {{ contact.last_contacted | naturaltime }})
+{% endfor %}
+{% endif %}
+
+{% if quarterly_contacts %}
+Quarterly
+
+{% for contact in quarterly_contacts %}
+{{ contact.get_complete_url }} - {{ contact.name }} (Last contacted {{ contact.last_contacted | naturaltime }}){% endfor %}
+{% endif %}
 
 Cheers,
-Contact Otter
+
+ContactOtter
+
+If you want to change your reminder settings, you can do so {{ book.get_complete_settings_url }}
+{% endblock %}
