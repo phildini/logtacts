@@ -16,10 +16,11 @@ import payments as payment_constants
 from payments.models import StripeSubscription
 
 from contacts.forms import BookSettingsForm
+from contacts.views import BookOwnerMixin
 
 sentry = logging.getLogger('sentry')
 
-class BookSettingsView(LoginRequiredMixin, UpdateView):
+class BookSettingsView(BookOwnerMixin, UpdateView):
 
     form_class = BookSettingsForm
     model = BookOwner

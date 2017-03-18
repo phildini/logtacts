@@ -6,7 +6,6 @@ from contacts.factories import BookFactory, BookOwnerFactory
 
 from profiles.views import (
     ProfileView,
-    ReviewUserView,
 )
 
 

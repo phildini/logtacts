@@ -114,7 +114,6 @@ INSTALLED_APPS = (
     'nexus',
     'gargoyle',
     'channels',
-    'rest_framework_swagger',
     'captcha',
     'raven.contrib.django.raven_compat',
     # ContactOtter Apps
@@ -244,17 +243,6 @@ CHANNEL_LAYERS = {
         },
         "ROUTING": "logtacts.routing.channel_routing",
     },
-}
-
-SWAGGER_SETTINGS = {
-    'api_version': '0.1',
-    'api_path': '/',
-    'enabled_methods': [
-        'get',
-        'post',
-        'put',
-        'delete',
-    ],
 }
 
 RAVEN_CONFIG = {
