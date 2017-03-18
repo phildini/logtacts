@@ -35,7 +35,6 @@ from payments.views import (
     PaymentView,
     stripe_webhook_view,
 )
-from profiles.views import ReviewUserView
 from chats.views import sms
 
 admin.autodiscover()
@@ -117,7 +116,6 @@ landing_urls = [
 
 urlpatterns = [
     url(r'^accounts/', include(allauth_urls)),
-    url(r'^admin/dashboard', ReviewUserView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_urls)),
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),

@@ -22,29 +22,6 @@ class ProfileForm(forms.ModelForm):
         fields = ['username', 'first_name', 'email']
 
 
-class ReviewUserForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        super(ReviewUserForm, self).__init__(*args, **kwargs)
-        queryset = User.objects.filter(is_active=False)
-        choices = [
-            (
-                user.id,
-                "{}: registered with {} on {}".format(
-                    user.username,
-                    user.email,
-                    user.date_joined,
-                )
-            ) for user in queryset
-        ]
-
-        self.fields['users'] = forms.MultipleChoiceField(
-            required=False,
-            choices=choices,
-            widget=forms.CheckboxSelectMultiple()
-        )
-
-
 class ReCaptchaSignupForm(forms.Form):
 
     captcha = ReCaptchaField()
