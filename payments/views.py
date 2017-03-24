@@ -51,7 +51,7 @@ class PaymentView(LoginRequiredMixin, FormView):
             return HttpResponseRedirect(url)
         try:
             if self.request.user.is_authenticated():
-                self.book = Book.objects.get_for_user(user=self.request.user)
+                self.book = self.request.current_book
         except Book.DoesNotExist:
             self.book = None
         return super(PaymentView, self).dispatch(request, *args, **kwargs)

@@ -19,11 +19,9 @@
 <div class="row">
     <div class="col-md-12" id="book">
         <h4>Book</h4>
-        {% if book.paid_until %}
+        {% if book.is_paid %}
         <p>Your subscription is paid until {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
-        {% endif %}
-        {% if plan %}
-        <p>You are on the {{ plan.name }} plan, paying USD${{ plan_cost_string }} per month.</p>
+        <p>This book currently has {{ book_owners|length }} owner{{ book_owners|length|pluralize }}, and {{ book.owner.email }} will be charged USD${{ subscription_cost }} on {{ book.paid_until|date:"SHORT_DATE_FORMAT" }}</p>
         {% endif %}
         <p>Logging email address: <a href="mailto:log-{{ book.id }}@mg.contactotter.com">log-{{ book.id }}@mg.contactotter.com</a>
     </div>

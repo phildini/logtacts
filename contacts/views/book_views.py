@@ -20,7 +20,7 @@ from contacts.views import BookOwnerMixin
 
 sentry = logging.getLogger('sentry')
 
-class BookSettingsView(BookOwnerMixin, UpdateView):
+class BookSettingsView(LoginRequiredMixin, UpdateView):
 
     form_class = BookSettingsForm
     model = BookOwner
@@ -33,15 +33,13 @@ class BookSettingsView(BookOwnerMixin, UpdateView):
         context = super(BookSettingsView, self).get_context_data(*args, **kwargs)
         context['invitations'] = Invitation.objects.filter(book=self.request.current_book)
         context['book'] = self.request.current_book
-        try:
-            sub = StripeSubscription.objects.get(book=self.request.current_book)
-            context['plan'] = payment_constants.PLANS.get(sub.plan)
-            context['plan_cost_string'] = "{:.2f}".format(
-                context['plan']['stripe_cost'] / 100
-            )
-        except StripeSubscription.DoesNotExist:
-            pass
+        context['book_owners'] = self.request.current_book.owners()
+        context['subscription_cost'] = "{:.2f}".format(len(self.request.current_book.owners()) * 5)
+        context['stripe_subscription_cost'] = len(self.request.current_book.owners()) * 500
         context['google_import_state'] = cache.get("{}::google-import".format(self.request.user))
+        context['is_book_customer'] = self.request.current_book.customer and (
+            self.request.current_book.customer.user == self.request.user
+        )
 
         return context
 

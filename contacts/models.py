@@ -1,16 +1,19 @@
 import collections
+from datetime import timedelta
 from six.moves.urllib.parse import quote_plus
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from simple_history.models import HistoricalRecords
 
 import contacts as contact_settings
 import payments as payments_constants
+from payments.models import StripeCustomer, StripeSubscription
 
 
 class TagManager(models.Manager):
@@ -322,14 +325,31 @@ class BookManager(models.Manager):
         return self.get(bookowner__user=user)
 
     def filter_for_user(self, user):
-        return self.filter(bookowner__user=user)
+        return self.filter(Q(owner=user) | Q(bookowner__user=user))
 
     def create_for_user(self, user):
+        now = timezone.now()
+        try:
+            customer = StripeCustomer.objects.get(user=user)
+        except StripeCustomer.DoesNotExist:
+            customer = StripeCustomer.objects.create_for_user(user)
+
+        books = self.filter_for_user(user)
+        if len(books) > 0:
+            trial_period_days = 0
+            paid_until = timezone.now()
+        else:
+            trial_period_days=30
+            paid_until = now + timedelta(days=30)
+
         book = self.create(
             name="{}'s book".format(user.username),
             owner=user,
+            customer=customer,
+            paid_until=paid_until,
         )
-        BookOwner.objects.create(user=user, book=book)
+        BookOwner.objects.create(user=user, book=book, customer=customer)
+
         return book
 
 
@@ -338,6 +358,7 @@ class Book(models.Model):
     changed = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, blank=True, null=True)
+    customer = models.ForeignKey(StripeCustomer, blank=True, null=True)
     plan = models.CharField(choices=payments_constants.PLAN_CHOICES, max_length=100, blank=True)
     paid_until = models.DateTimeField(blank=True, null=True)
     history = HistoricalRecords()
@@ -371,6 +392,26 @@ class Book(models.Model):
             self.get_settings_url(),
         )
 
+    def is_paid(self):
+        if self.paid_until:
+            return timezone.now() < self.paid_until
+        return False
+
+    def owners(self):
+        return BookOwner.objects.filter(book=self)
+
+
+class BookOwnerManager(models.Manager):
+
+    def create_for_user(self, user, book):
+        try:
+            customer = StripeCustomer.objects.get(user=user)
+        except StripeCustomer.DoesNotExist:
+            if book.customer:
+                customer = book.customer
+            else:
+                customer = StripeCustomer.create_for_user(user)
+        return self.create(user=user, book=book, customer=customer)
 
 
 class BookOwner(models.Model):
@@ -388,13 +429,17 @@ class BookOwner(models.Model):
     changed = models.DateTimeField(auto_now=True)
     book = models.ForeignKey('Book')
     user = models.ForeignKey(User)
+    customer = models.ForeignKey(StripeCustomer, blank=True, null=True)
     send_contact_reminders = models.BooleanField(default=False)
     send_birthday_reminders = models.BooleanField(default=False)
     check_twitter_dms = models.BooleanField(default=True)
     check_twitter_mentions = models.BooleanField(default=True)
     check_foursquare = models.BooleanField(default=True)
     weekly_reminder_day = models.IntegerField(choices=DAY_CHOICES, default=6)
+    is_active = models.BooleanField(default=True)
     history = HistoricalRecords()
+
+    objects = BookOwnerManager()
 
     def __str__(self):
         return "{} is an owner of {}".format(self.user, self.book)

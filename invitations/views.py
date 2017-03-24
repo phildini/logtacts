@@ -108,10 +108,9 @@ class AcceptInviteView(FormView):
         user = authenticate(username=invite.email, password=password_plain)
         if invite.book:
             self.book = invite.book
-            BookOwner.objects.create(user=user, book=invite.book)
+            BookOwner.objects.create_for_user(user=user, book=invite.book)
         else:
-            self.book = Book.objects.create(name="{}'s Book".format(user))
-            BookOwner.objects.create(book=self.book,user=user)
+            self.book = Book.objects.create_for_user(user)
         user.save()
         login(request, user)
         invite.status = invite.ACCEPTED

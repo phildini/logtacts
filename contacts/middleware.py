@@ -18,7 +18,7 @@ class ContactBookMiddleware(object):
                 request.current_book = None
                 if request.books:
                     if 'book' in view_kwargs:
-                        current_book = request.books.get(id=view_kwargs['book'])
+                        current_book = request.books.filter(pk=view_kwargs['book'])[0]
                         if current_book:
                             request.current_book = current_book
                         else:

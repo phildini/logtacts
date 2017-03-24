@@ -30,7 +30,7 @@ class BookOwnerMixin(LoginRequiredMixin):
             if hasattr(request, 'current_book'):
                 book = request.current_book      
         if gargoyle.is_active('enable_payments', request):
-            if book and (not book.paid_until or book.paid_until < timezone.now()):
+            if book and not book.is_paid():
                 messages.error(request, "Your book is currently unpaid. Please select a subscription, or contact help@contactotter.com")
                 return HttpResponseRedirect('/pricing')
         return super(BookOwnerMixin, self).dispatch(request, *args, **kwargs)
