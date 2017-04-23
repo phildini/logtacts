@@ -53,8 +53,6 @@ OPBEAT = {
     'SECRET_TOKEN': get_env_variable("OPBEAT_SECRET_KEY"),
 }
 
-SWAGGER_SETTINGS['base_path'] = 'https://www.contactotter.com/'
-
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 DEFAULT_HTTP_PROTOCOL = "https"
 
