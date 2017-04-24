@@ -41,7 +41,7 @@
 <div class="row">
     {% for field in contact.emails %}
     <div class="col-md-6">
-        <span class="text-muted">{{ field.label }}:</span> <a href="mailto:{{ field.value }}" target="_blank">{{ field.value }}</a>
+        <span class="text-muted">{{ field.label }}:</span> <a href="mailto:{{ field.value }}?bcc=log-{{ book.id }}@mg.contactotter.com" target="_blank">{{ field.value }}</a>
     </div>
     {% endfor %}
 </div>
