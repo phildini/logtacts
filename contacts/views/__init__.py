@@ -52,8 +52,9 @@ class BookOwnerMixin(LoginRequiredMixin):
 
     def form_valid(self, form):
         if hasattr(form, 'instance'):
+            # I'm pretty sure this code is just wrong... why are we catching this exception?
             try:
                 form.instance.book = self.request.current_book
-            except BookOwner.DoesNotExist:
+            except Book.DoesNotExist:
                 form.instance.book = Book.objects.create_for_user(self.request.user)
         return super(BookOwnerMixin, self).form_valid(form)

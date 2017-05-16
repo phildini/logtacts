@@ -22,21 +22,29 @@
                 <a href="javascript:void(0)" class="js-add-trello"><span class="glyphicon glyphicon-list-alt"></span> Trello</a>
                 {% endif %}</li>
                 <li><a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Contact+{{ contact.name | urlencode }}&amp;details={{ contact.get_complete_url }}" target="_blank"><span class="glyphicon glyphicon-calendar"></span> Google Calendar</a></li>
+                <li><a href="{% url "contacts-edit" pk=contact.pk book=book.pk %}"><span class="glyphicon glyphicon-pencil"></span> ContactOtter Email</a></li>
             </ul>
         </div>
     </div>
 </h2>
-{% if contact.tags_cached %}
 <hr />
+{% if contact.tags_cached or contact.reminder_frequency %}
 <div class="row">
+    {% if contact.tags_cached %}
     <div class="col-md-6">
     <span class="text-muted">Tags:</span> {% for tag in contact.tags_cached %}
         <a href="{% url "contacts-tagged" pk=tag.id book=book.pk %}"><span class="label label-default" style="background-color:{{ tag.corrected_color}};">{{ tag }}</span></a>
     {% endfor %}
     </div>
+    {% endif %}
+    {% if contact.reminder_frequency %}
+    <div class="col-md-6">
+    <span class="text-muted">Reminder frequency:</span> {{ contact.reminder_frequency | title }}
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 <hr />
+{% endif %}
 {% if contact.emails %}
 <div class="row">
     {% for field in contact.emails %}
