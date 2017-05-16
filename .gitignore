@@ -54,6 +54,8 @@ whoosh_index/
 newrelic.ini
 dump.rdb
 
+notes/
+
 # Sphinx documentation
 docs/_build/
 
