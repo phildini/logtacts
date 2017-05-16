@@ -42,7 +42,8 @@
         {% for contact in page_obj.object_list %}
             {% include "contact_list_table_item.html" %}
         {% empty %}{% ifnotswitch read_only_mode %}
-            <p class="lead">Oh dear! You don't have any contacts! You can <a href="{% url "contacts-new" book=book.id %}">add a contact manually</a> or <a href="{% url "import-google-contacts" book=book.id %}">import your contacts from Google</a>.</p>
+            <p class="lead">Oh dear! You don't have any contacts {% if reminder %}for this reminder{% elif tag %}for this tag{% elif query %}that match this search{% endif %}!</p>
+            <p>You can <a href="{% url "contacts-new" book=book.id %}">add a contact manually</a> or <a href="{% url "import-google-contacts" book=book.id %}">import your contacts from Google</a>.</p>
         {% endifnotswitch %}{% endfor %}
         </table>
         <div class="col-md-12 text-center">
@@ -67,12 +68,14 @@
         {% endfor %}
         {% if logs %}
         <hr />
+        {% ifswitch scheduled_reminders %}
         <h4>Reminders</h4>
         <a class="btn btn-default btn-sm" href="{% url "reminders-daily" book=book.id %}">Daily</a>
         <a class="btn btn-default btn-sm" href="{% url "reminders-weekly" book=book.id %}">Weekly</a>
         <a class="btn btn-default btn-sm" href="{% url "reminders-monthly" book=book.id %}">Monthly</a>
         <a class="btn btn-default btn-sm" href="{% url "reminders-quarterly" book=book.id %}">Quarterly</a>
         <hr />
+        {% endifswitch %}
         <h4><a href="{% url "log-list" book=book.id %}">Activity Log</a></h4>
         <ul class="list-group">
             {% for log in logs %}

@@ -15,6 +15,8 @@ from contacts.models import (
     Contact,
     ContactField,
 )
+from gargoyle import gargoyle
+
 
 logger = logging.getLogger('scripts')
 sentry = logging.getLogger('sentry')
@@ -32,6 +34,8 @@ class Command(BaseCommand):
         books_to_check = BookOwner.objects.filter(send_contact_reminders=True)
         for bookowner in books_to_check:
             user = bookowner.user
+            if not gargoyle.is_active('scheduled_reminders', user):
+                return
             book = bookowner.book
             logger.debug("Starting daily reminders for bookowner", extra={'owner': bookowner})
             daily_reminders = Contact.objects.for_user(user=user, book=book).filter(

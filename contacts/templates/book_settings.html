@@ -82,6 +82,7 @@
             <input type="checkbox" {% if bookowner.send_contact_reminders %}checked="checked"{% endif %} name="send_contact_reminders" id="id_send_contact_reminders">Send contact reminders
         </label>
         {{ form.send_contact_reminders.errors }}
+        <p><small>Settings for each contact are on the contact's edit page.</small></p>
     </div>
     <div class="checkbox">
         {{ form.send_birthday_reminders.help_text }}
@@ -119,9 +120,11 @@
     {% endif %}
 </div>
 {% endif %}
+<!--
 <div class="row">
     <div class="col-md-12">
         <a class="btn btn-default" href="{% url "fullexport" book=book.id %}">Export all data</a>
     </div>
 </div>
+-->
 {% endblock %}
