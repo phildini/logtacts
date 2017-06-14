@@ -35,7 +35,7 @@ class Command(BaseCommand):
         for bookowner in books_to_check:
             user = bookowner.user
             if not gargoyle.is_active('scheduled_reminders', user):
-                return
+                continue
             book = bookowner.book
             logger.debug("Starting daily reminders for bookowner", extra={'owner': bookowner})
             daily_reminders = Contact.objects.for_user(user=user, book=book).filter(
