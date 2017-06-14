@@ -318,9 +318,9 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'post_to_social': {
+        'scripts': {
             'handlers': ['console', 'loggly-handler'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         },
         'loggly_logs':{
