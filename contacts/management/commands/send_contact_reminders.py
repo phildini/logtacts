@@ -35,6 +35,7 @@ class Command(BaseCommand):
         for bookowner in books_to_check:
             user = bookowner.user
             if not gargoyle.is_active('scheduled_reminders', user):
+                logger.debug("Skipping bookowner - flag not enabled")
                 continue
             book = bookowner.book
             logger.debug("Starting daily reminders for bookowner", extra={'owner': bookowner})
@@ -87,6 +88,7 @@ class Command(BaseCommand):
                     logger.debug("Sent message to {} successfuly".format(user))
                 except:
                     sentry.error('Problem sending contact reminder', exc_info=True, extra={'user': user, 'book': book})
+        logger.debug("Done with reminder sending, starting birthday sending")
 
         books_to_check = BookOwner.objects.filter(send_birthday_reminders=True)
         for bookowner in books_to_check:
