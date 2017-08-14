@@ -3,10 +3,12 @@ from django.core.exceptions import PermissionDenied
 from django.http.response import Http404
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 from common.factories import UserFactory
 
 from contacts import factories
+from contacts import models
 from contacts import views
 
 
@@ -49,13 +51,13 @@ class ContactListViewTests(TestCase):
 
 class ContactViewTests(TestCase):
     def setUp(self):
-        book = factories.BookFactory.create()
+        self.book = factories.BookFactory.create()
         self.user = UserFactory.create(username='phildini')
-        bookowner = factories.BookOwnerFactory.create(user=self.user,book=book)
-        self.contact = factories.ContactFactory.create(book=book)
-        request_factory = RequestFactory()
-        self.request = request_factory.get(self.contact.get_absolute_url())
-        self.request.current_book = book
+        bookowner = factories.BookOwnerFactory.create(user=self.user, book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
+        self.request_factory = RequestFactory()
+        self.request = self.request_factory.get(self.contact.get_absolute_url())
+        self.request.current_book = self.book
 
     def test_contact_detail_view_response_200(self):
         self.request.user = self.user
@@ -80,6 +82,38 @@ class ContactViewTests(TestCase):
             pk=self.contact.pk,
         )
         response.render()
+
+    def test_add_log_to_contact_missing_fields(self):
+        self.request = self.request_factory.post(
+            self.contact.get_absolute_url(),
+        )
+        self.request.user = self.user
+        self.request.current_book = self.book
+        response = views.contact_views.ContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        self.assertEqual(['This field is required.'], response.context_data['form'].errors['kind'])
+
+    def test_add_log_to_contact(self):
+        logs = models.LogEntry.objects.filter(contact=self.contact)
+        self.assertEqual(0, len(logs))
+        self.request = self.request_factory.post(
+            self.contact.get_absolute_url(),
+            {'kind': 'in person', 'notes': 'Met at DjangoCon!'}
+        )
+        self.request.user = self.user
+        self.request.current_book = self.book
+        setattr(self.request, 'session', 'session')
+        messages = FallbackStorage(self.request)
+        setattr(self.request, '_messages', messages)
+        response = views.contact_views.ContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        self.assertEqual(302, response.status_code)
+        logs = models.LogEntry.objects.filter(contact=self.contact)
+        self.assertEqual(1, len(logs))
 
 
 class EditContactViewTests(TestCase):
@@ -397,3 +431,73 @@ class DeleteTagViewTests(TestCase):
             pk=self.tag.pk,
         )
         response.render()
+
+
+
+class CopyContactViewTests(TestCase):
+
+    def setUp(self):
+        self.book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        self.contact = factories.ContactFactory.create(book=self.book)
+        request_factory = RequestFactory()
+        self.request = request_factory.get(
+            reverse('contacts-copy', kwargs={'pk': self.contact.id, 'book': self.book.id}),
+        )
+        self.request.current_book = self.book
+        setattr(self.request, 'session', 'session')
+        messages = FallbackStorage(self.request)
+        setattr(self.request, '_messages', messages)
+
+    def test_copy_contact_view(self):
+        contacts = models.Contact.objects.filter(book=self.book)
+        self.assertEqual(1, len(contacts))
+        self.request.user = self.user
+        response = views.contact_views.CopyContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        self.assertEqual(response.status_code, 302)
+        contacts = models.Contact.objects.filter(book=self.book)
+        self.assertEqual(2, len(contacts))
+        self.assertEqual(self.contact.name, contacts[1].name)
+
+    def test_copy_contact_view_with_tags(self):
+        self.tag = factories.TagFactory.create(tag='Test2', book=self.book)
+        self.contact.tags.add(self.tag)
+        self.request.user = self.user
+        response = views.contact_views.CopyContactView.as_view()(
+            self.request,
+            pk=self.contact.pk,
+        )
+        self.assertEqual(response.status_code, 302)
+        contacts = models.Contact.objects.filter(book=self.book)
+        self.assertEqual(2, len(contacts))
+        self.assertEqual(self.contact.tags.all()[0], contacts[1].tags.all()[0])
+
+
+class BookSettingsViewTests(TestCase):
+
+    def setUp(self):
+        self.book = factories.BookFactory.create()
+        self.user = UserFactory.create(username='phildini')
+        bookowner = factories.BookOwnerFactory.create(user=self.user,book=self.book)
+        request_factory = RequestFactory()
+        self.request = request_factory.get(
+            reverse('book_settings', kwargs={'book': self.book.id}),
+        )
+        self.request.current_book = self.book
+        setattr(self.request, 'session', 'session')
+        messages = FallbackStorage(self.request)
+        setattr(self.request, '_messages', messages)
+
+    def test_book_settings_view_returns_and_renders(self):
+        self.request.user = self.user
+        response = views.book_views.BookSettingsView.as_view()(
+            self.request,
+            book=self.request.current_book,
+        )
+        self.assertEqual(response.status_code, 200)
+        response.render()
+
