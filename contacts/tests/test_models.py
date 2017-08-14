@@ -84,6 +84,46 @@ class ContactModelTests(TestCase):
     def test_preferred_address_no_address(self):
         self.assertEqual(self.contact.preferred_address, '')
 
+    def test_preferred_email_with_preferred(self):
+        field = factories.ContactFieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_EMAIL,
+            value='1600 Pennsylvania Ave.',
+            preferred=True,
+        )
+        self.assertEqual(self.contact.preferred_email, field.value)
+
+    def test_preferred_email_without_preferred(self):
+        field = factories.ContactFieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_EMAIL,
+            value='1600 Pennsylvania Ave.',
+        )
+        self.assertEqual(self.contact.preferred_email, field.value)
+
+    def test_preferred_email_no_email(self):
+        self.assertEqual(self.contact.preferred_email, '')
+
+    def test_preferred_phone_with_preferred(self):
+        field = factories.ContactFieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_PHONE,
+            value='1600 Pennsylvania Ave.',
+            preferred=True,
+        )
+        self.assertEqual(self.contact.preferred_phone, field.value)
+
+    def test_preferred_phone_without_preferred(self):
+        field = factories.ContactFieldFactory(
+            contact=self.contact,
+            kind=contact_constants.FIELD_TYPE_PHONE,
+            value='1600 Pennsylvania Ave.',
+        )
+        self.assertEqual(self.contact.preferred_phone, field.value)
+
+    def test_preferred_phone_no_phone(self):
+        self.assertEqual(self.contact.preferred_phone, '')
+
 
 class TagModelTests(TestCase):
 
@@ -213,3 +253,17 @@ class LogEntryModelTests(TestCase):
         self.assertTrue(self.contact.last_contact)
         self.contact.update_last_contact_from_log(self.log)
         self.assertEqual(self.log.created, self.contact.last_contact)
+
+
+
+class ContactFieldModelTests(TestCase):
+
+    def test_for_user(self):
+        book = factories.BookFactory.create()
+        user = UserFactory.create()
+        contact = factories.ContactFactory.create(book=book)
+        bookowner = factories.BookOwnerFactory.create(user=user,book=book)
+        contactField1 = factories.ContactFieldFactory.create(contact=contact)
+        contactField2 = factories.ContactFieldFactory.create()
+        fields = models.ContactField.objects.for_user(user=user)
+        self.assertEqual(1, len(fields))

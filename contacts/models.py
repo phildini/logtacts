@@ -262,7 +262,7 @@ class ContactFieldManager(models.Manager):
             owners = BookOwner.objects.filter(user=user)
             if owners:
                 book = owners[0].book
-        return self.filter(book=book, book__bookowner__user=user)
+        return self.filter(contact__book=book, contact__book__bookowner__user=user)
 
 
 class ContactField(models.Model):
