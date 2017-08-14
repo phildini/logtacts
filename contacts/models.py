@@ -325,7 +325,7 @@ class BookManager(models.Manager):
         return self.get(bookowner__user=user)
 
     def filter_for_user(self, user):
-        return self.filter(Q(owner=user) | Q(bookowner__user=user))
+        return self.filter(Q(owner=user) | Q(bookowner__user=user)).distinct()
 
     def create_for_user(self, user):
         now = timezone.now()

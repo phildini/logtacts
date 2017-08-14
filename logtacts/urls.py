@@ -22,7 +22,7 @@ from contacts.urls import (
     tag_urls,
 )
 
-from contacts.views.import_views import GoogleImportView
+from contacts.views.import_views import UploadImportView
 from contacts.views.log_views import email_log_view
 
 from invitations.views import (
@@ -120,9 +120,9 @@ urlpatterns = [
     url(r'^api/', include(api_urls)),
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
     url(
-        r'^(?P<book>\d+)/import/google/',
-        GoogleImportView.as_view(),
-        name='import-google-contacts',
+        r'^(?P<book>\d+)/import/upload/',
+        UploadImportView.as_view(),
+        name='import-upload-contacts',
     ),
     url(r'^(?P<book>\d+)/invites/add$', CreateInviteView.as_view(), name='create-invite'),
     url(r'^invites/accept/(?P<key>[\w-]+)/$', AcceptInviteView.as_view(), name='accept-invite'),

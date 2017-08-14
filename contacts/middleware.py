@@ -12,6 +12,7 @@ class ContactBookMiddleware(object):
         # request.current_book _must_ be populated with a valid book, and 
         # request.books _must_ be a list of Books with length greater than 0.
         request.current_book = None
+        import ipdb; ipdb.set_trace()
         if hasattr(request, 'user'):
             if request.user.is_authenticated():
                 request.books = Book.objects.filter_for_user(request.user)

@@ -11,8 +11,11 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.views.generic import View
+from django.http import (
+    Http404,
+    HttpResponseRedirect,
+)
+from django.views.generic import View, TemplateView
 from oauth2client.client import (
     HttpAccessTokenRefreshError,
     GoogleCredentials,
@@ -64,3 +67,41 @@ class GoogleImportView(LoginRequiredMixin, View):
         })
         messages.success(request, "We're importing your Google contacts now! You'll receive an email when we're done.")
         return HttpResponseRedirect('/')
+
+
+class UploadImportView(LoginRequiredMixin, TemplateView):
+
+    template_name = "upload_contacts.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UploadImportView, self).get_context_data(*args, **kwargs)
+        context['book'] = self.request.current_book
+        return context
+
+
+def sign_s3_view(request):
+    if request.user.is_authenticated():
+        S3_BUCKET = os.environ.get('S3_BUCKET')
+
+        file_name = request.args.get('file_name')
+        file_type = request.args.get('file_type')
+
+        s3 = boto3.client('s3')
+
+        presigned_post = s3.generate_presigned_post(
+        Bucket = S3_BUCKET,
+        Key = file_name,
+        Fields = {"acl": "public-read", "Content-Type": file_type},
+        Conditions = [
+          {"acl": "public-read"},
+          {"Content-Type": file_type}
+        ],
+        ExpiresIn = 3600
+        )
+
+        return json.dumps({
+        'data': presigned_post,
+        'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
+        })
+    raise Http404()
+
