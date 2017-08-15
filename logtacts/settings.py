@@ -233,6 +233,10 @@ NOCAPTCHA = True
 STRIPE_PUBLIC_KEY = get_env_variable('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = get_env_variable('STRIPE_SECRET_KEY')
 
+NEXMO_KEY = get_env_variable('NEXMO_KEY')
+NEXMO_SECRET = get_env_variable('NEXMO_SECRET')
+NEXMO_NUMBER = get_env_variable('NEXMO_NUMBER')
+
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
 CHANNEL_LAYERS = {

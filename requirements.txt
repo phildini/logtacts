@@ -34,6 +34,7 @@ google-api-python-client==1.5.4
 gunicorn==19.7.0
 httplib2==0.10.3
 msgpack-python==0.4.8
+nexmo==1.5.0
 nexus-yplan==1.5.0
 oauth2client==4.0.0
 oauthlib==2.0.1
