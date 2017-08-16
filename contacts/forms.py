@@ -242,3 +242,8 @@ class BookSettingsForm(forms.ModelForm):
             'check_foursquare',
             'weekly_reminder_day',
         ]
+
+
+class UploadForm(forms.Form):
+
+    upload_url = forms.URLField(required=True)

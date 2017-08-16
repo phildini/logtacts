@@ -129,3 +129,24 @@ def process_incoming_email(message):
         for contact in contacts_updated:
             contact.tags.add(tag)
             contact.save()
+
+
+def process_vcard_upload(message):
+    try:
+        user = User.objects.get(id=message.get('user_id'))
+        book = Book.objects.get(bookowner__user=user, id=message.get('book_id'))
+    except Book.DoesNotExist:
+        sentry.error("Bad book passed to vCard import job", exc_info=True)
+        return
+    except User.DoesNotExist:
+        sentry.error("Bad user passed to vCard import job", exc_info=True)
+        return
+    url = message.get('url')
+    local_filename = url.split('/')[-1]
+    r = requests.get(url, stream=True)
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
+    with open(local_filename, 'r') as f:
+        

@@ -237,6 +237,9 @@ NEXMO_KEY = get_env_variable('NEXMO_KEY')
 NEXMO_SECRET = get_env_variable('NEXMO_SECRET')
 NEXMO_NUMBER = get_env_variable('NEXMO_NUMBER')
 
+AWS_ACCESS_KEY = get_env_variable('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = get_env_variable('AWS_SECRET_KEY')
+
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
 CHANNEL_LAYERS = {
