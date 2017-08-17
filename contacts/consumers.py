@@ -23,6 +23,7 @@ from contacts.models import (
 )
 
 sentry = logging.getLogger("raven")
+logger = logging.getLogger("loggly_logs")
 
 
 def process_incoming_email(message):
@@ -96,6 +97,7 @@ def process_incoming_email(message):
 
 
 def process_vcard_upload(message):
+    logger.info("Starting vcard processing", extra=message)
     try:
         user = User.objects.get(id=message.get('user_id'))
         book = Book.objects.get(bookowner__user=user, id=message.get('book_id'))
@@ -109,11 +111,14 @@ def process_vcard_upload(message):
         url = message.get('url')
         local_filename = url.split('/')[-1]
         r = requests.get(url, stream=True)
+        logger.info("vcard: Trying to write file")
         with open(local_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
+        logger.info("vcard: file written")
         with open(local_filename, 'r') as f:
+            logger.info("vcard: file opened")
             count = 0
             cards = []
             current_lines = []
