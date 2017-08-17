@@ -97,7 +97,7 @@ def process_incoming_email(message):
 
 
 def process_vcard_upload(message):
-    logger.info("Starting vcard processing", extra=message)
+    logger.info("Starting vcard processing")
     try:
         user = User.objects.get(id=message.get('user_id'))
         book = Book.objects.get(bookowner__user=user, id=message.get('book_id'))
