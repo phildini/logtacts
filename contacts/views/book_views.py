@@ -36,7 +36,6 @@ class BookSettingsView(LoginRequiredMixin, UpdateView):
         context['book_owners'] = self.request.current_book.owners()
         context['subscription_cost'] = "{:.2f}".format(len(self.request.current_book.owners()) * 5)
         context['stripe_subscription_cost'] = len(self.request.current_book.owners()) * 500
-        context['google_import_state'] = cache.get("{}::google-import".format(self.request.user))
         context['is_book_customer'] = self.request.current_book.customer and (
             self.request.current_book.customer.user == self.request.user
         )

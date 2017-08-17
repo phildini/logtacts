@@ -69,9 +69,6 @@ class ProfileView(LoginRequiredMixin, UpdateView):
                 )
             except payment_constants.models.StripeSubscription.DoesNotExist:
                 pass
-        context["google_import_state"] = cache.get("{}::google-import".format(self.request.user))
-
-
         return context
 
     def get_success_url(self):
