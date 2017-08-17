@@ -37,7 +37,7 @@ def process_incoming_email(message):
 
     try:
         book_id = recipient.split('@')[0].split('-')[-1]
-        book = Book.objects.filter_for_user(user).get(id=book_id)
+        book = Book.objects.filter_for_user(user, id=book_id)[0]
     except (Book.DoesNotExist, IndexError):
         pass
 
