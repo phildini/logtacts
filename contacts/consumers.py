@@ -134,6 +134,7 @@ def process_vcard_upload(message):
                     current_lines.append(line)
             for card in cards:
                 v = vobject.readOne(card)
+                logger.info(v)
                 try:
                     name = str(v.n.value).strip()
                     if name:
