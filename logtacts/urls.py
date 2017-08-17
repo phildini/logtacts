@@ -120,11 +120,6 @@ urlpatterns = [
     url(r'^api/', include(api_urls)),
     url(r'^benefits$', TemplateView.as_view(template_name='pages/benefits.html'), name='benefits'),
     url(
-        r'^(?P<book>\d+)/import/google/',
-        import_views.GoogleImportView.as_view(),
-        name='import-google-contacts',
-    ),
-    url(
         r'^(?P<book>\d+)/import/upload/',
         import_views.UploadImportView.as_view(),
         name='import-upload-view',

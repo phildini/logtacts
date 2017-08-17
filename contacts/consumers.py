@@ -1,6 +1,9 @@
 import datetime
 import logging
 from email.utils import parseaddr
+import os
+import requests
+import vobject
 
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -149,4 +152,93 @@ def process_vcard_upload(message):
             if chunk:
                 f.write(chunk)
     with open(local_filename, 'r') as f:
-        
+        count = 0
+        cards = []
+        current_lines = []
+        possible_keys = set()
+        for line in f:
+            if line.strip() == 'END:VCARD':
+                current_lines.append(line)
+                card = ''.join(current_lines)
+                cards.append(card)
+                count += 1
+                current_lines = []
+            else:
+                current_lines.append(line)
+        for card in cards:
+            v = vobject.readOne(card)
+            try:
+                name = str(v.n.value).strip()
+                if name:
+                    contact = Contact.objects.create(book=book, name=name)
+                    log = LogEntry.objects.create(contact=contact, kind='edit', logged_by=user)
+                    contact.update_last_contact_from_log(log)
+                else:
+                    continue
+            except:
+                continue
+            try:
+                for adr in v.adr_list:
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='Address',
+                        kind='address',
+                        value=str(adr.value),
+                    )
+            except:
+                pass
+            try:
+                for email in v.email_list:
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='Email',
+                        kind='email',
+                        value=str(email.value),
+                    )
+            except:
+                pass
+            try:
+                for url in v.url_list:
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='URL',
+                        kind='url',
+                        value=str(url.value),
+                    )
+            except:
+                pass
+            try:
+                for bday in v.bday_list:
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='Birthday',
+                        kind='date',
+                        value=str(bday.value),
+                    )
+            except:
+                pass
+            try:
+                for org in v.org_list:
+                    if isinstance(org.value, list):
+                        org = str(org.value[0])
+                    else:
+                        org = str(org.value)
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='Organization',
+                        kind='text',
+                        value=str(org),
+                    )
+            except:
+                pass
+            try:
+                for title in v.title_list:
+                    ContactField.objects.create(
+                        contact=contact,
+                        label='Title',
+                        kind='text',
+                        value=str(title.value),
+                    )
+            except:
+                pass        
+    os.remove(local_filename)

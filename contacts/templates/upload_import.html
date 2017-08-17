@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<input type="file" id="file_input"/>
-<p id="status">Please select a vCard file</p>
+<div class="panel panel-default">
+  <div class="panel-heading" id="status">Please select a vCard file</div>
+  <div class="panel-body"><input type="file" id="file_input"/></div>
+</div>
 
-<form method="POST" action="">
+<form method="POST" action="{{ action }}">
     {% csrf_token %}
     <input type="hidden" id="id_upload_url" name="upload_url" value="">
-    <input id="submit_button" type="button" class="btn btn-default" value="Upload" disabled="disabled">
+    <input id="submit_button" type="submit" class="btn btn-default" value="Upload" disabled="disabled">
 </form>
 {% endblock %}
 

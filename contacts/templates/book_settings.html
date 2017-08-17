@@ -47,14 +47,7 @@
     <h4 id="social">Social Settings</h4>
     <div>
         <a class="btn btn-default btn-sm" href="/accounts/social/connections/">Social accounts</a>
-        {% ifswitch import_from_google %}
-        <a class="btn btn-default btn-sm" {% if google_import_state == "processing" %}disabled="disabled"{% endif %} href="{% url "import-google-contacts" book=book.id %}">Import from Google</a>
-        {% endifswitch %}
-        {% if google_import_state == "error" %}
-        <small>There was an error processing your google contacts. Please try again or contact <a href="mailto:help@contactotter.com">help@contactotter.com</a></small>
-        {% elif google_import_state == "processing" %}
-        <small>We're currently processing your contacts. Check back soon!</small>
-        {% endif %}
+        <a class="btn btn-default btn-sm" href="{% url "import-upload-view" book=book.id %}">Import from vCard</a>
     </div>
     <div class="checkbox">
         {{ form.check_twitter_dms.help_text }}

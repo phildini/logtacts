@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.http import urlquote
 from django.utils import timezone
 from haystack.forms import ModelSearchForm
 from floppyforms import widgets
@@ -246,4 +247,5 @@ class BookSettingsForm(forms.ModelForm):
 
 class UploadForm(forms.Form):
 
-    upload_url = forms.URLField(required=True)
+    upload_url = forms.CharField(required=True)
+        

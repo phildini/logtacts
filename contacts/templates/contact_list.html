@@ -43,7 +43,7 @@
             {% include "contact_list_table_item.html" %}
         {% empty %}{% ifnotswitch read_only_mode %}
             <p class="lead">Oh dear! You don't have any contacts {% if reminder %}for this reminder{% elif tag %}for this tag{% elif query %}that match this search{% endif %}!</p>
-            <p>You can <a href="{% url "contacts-new" book=book.id %}">add a contact manually</a> or <a href="{% url "import-google-contacts" book=book.id %}">import your contacts from Google</a>.</p>
+            <p>You can <a href="{% url "contacts-new" book=book.id %}">add a contact manually</a> or <a href="{% url "import-upload-view" book=book.id %}">import your contacts from a vCard</a>.</p>
         {% endifnotswitch %}{% endfor %}
         </table>
         <div class="col-md-12 text-center">

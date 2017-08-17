@@ -78,11 +78,21 @@ class UploadImportView(LoginRequiredMixin, FormView):
     form_class = UploadForm
 
     def get_success_url(self):
-        return reverse('contacts-view', kwargs={'book': self.request.current_book})
+        return reverse('contacts-list', kwargs={'book': self.request.current_book.id})
+
+    def form_invalid(self, form):
+        response = super(UploadImportView, self).form_invalid(form)
+        return response
 
     def form_valid(self, form):
         response = super(UploadImportView, self).form_valid(form)
         messages.success(self.request, "We're processing your upload. Your contacts should appear soon!")
+        print(form.cleaned_data.get('upload_url'))
+        Channel('process-vcard-upload').send({
+            'user_id': self.request.user.id,
+            'book_id': self.request.current_book.id,
+            'url': form.cleaned_data.get('upload_url')
+        })
         return response
 
 
