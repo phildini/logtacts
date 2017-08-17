@@ -5,7 +5,6 @@ import json
 import logging
 
 from allauth.socialaccount.models import SocialToken, SocialApp
-from apiclient.discovery import build
 from braces.views import LoginRequiredMixin
 from channels import Channel
 from gargoyle import gargoyle
@@ -17,11 +16,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.generic import FormView, View
-from oauth2client.client import (
-    HttpAccessTokenRefreshError,
-    GoogleCredentials,
-)
-from oauth2client import GOOGLE_TOKEN_URI
 
 from contacts.forms import UploadForm
 from contacts.models import Book
