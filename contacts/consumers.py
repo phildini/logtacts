@@ -105,101 +105,104 @@ def process_vcard_upload(message):
     except User.DoesNotExist:
         sentry.error("Bad user passed to vCard import job", exc_info=True)
         return
-    url = message.get('url')
-    local_filename = url.split('/')[-1]
-    r = requests.get(url, stream=True)
-    with open(local_filename, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024):
-            if chunk:
-                f.write(chunk)
-    with open(local_filename, 'r') as f:
-        count = 0
-        cards = []
-        current_lines = []
-        possible_keys = set()
-        for line in f:
-            if line.strip() == 'END:VCARD':
-                current_lines.append(line)
-                card = ''.join(current_lines)
-                cards.append(card)
-                count += 1
-                current_lines = []
-            else:
-                current_lines.append(line)
-        for card in cards:
-            v = vobject.readOne(card)
-            try:
-                name = str(v.n.value).strip()
-                if name:
-                    contact = Contact.objects.create(book=book, name=name)
-                    log = LogEntry.objects.create(contact=contact, kind='edit', logged_by=user)
-                    contact.update_last_contact_from_log(log)
+    try:
+        url = message.get('url')
+        local_filename = url.split('/')[-1]
+        r = requests.get(url, stream=True)
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+        with open(local_filename, 'r') as f:
+            count = 0
+            cards = []
+            current_lines = []
+            possible_keys = set()
+            for line in f:
+                if line.strip() == 'END:VCARD':
+                    current_lines.append(line)
+                    card = ''.join(current_lines)
+                    cards.append(card)
+                    count += 1
+                    current_lines = []
                 else:
-                    continue
-            except:
-                continue
-            try:
-                for adr in v.adr_list:
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='Address',
-                        kind='address',
-                        value=str(adr.value),
-                    )
-            except:
-                pass
-            try:
-                for email in v.email_list:
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='Email',
-                        kind='email',
-                        value=str(email.value),
-                    )
-            except:
-                pass
-            try:
-                for url in v.url_list:
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='URL',
-                        kind='url',
-                        value=str(url.value),
-                    )
-            except:
-                pass
-            try:
-                for bday in v.bday_list:
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='Birthday',
-                        kind='date',
-                        value=str(bday.value),
-                    )
-            except:
-                pass
-            try:
-                for org in v.org_list:
-                    if isinstance(org.value, list):
-                        org = str(org.value[0])
+                    current_lines.append(line)
+            for card in cards:
+                v = vobject.readOne(card)
+                try:
+                    name = str(v.n.value).strip()
+                    if name:
+                        contact = Contact.objects.create(book=book, name=name)
+                        log = LogEntry.objects.create(contact=contact, kind='edit', logged_by=user)
+                        contact.update_last_contact_from_log(log)
                     else:
-                        org = str(org.value)
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='Organization',
-                        kind='text',
-                        value=str(org),
-                    )
-            except:
-                pass
-            try:
-                for title in v.title_list:
-                    ContactField.objects.create(
-                        contact=contact,
-                        label='Title',
-                        kind='text',
-                        value=str(title.value),
-                    )
-            except:
-                pass        
-    os.remove(local_filename)
+                        continue
+                except:
+                    continue
+                try:
+                    for adr in v.adr_list:
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='Address',
+                            kind='address',
+                            value=str(adr.value),
+                        )
+                except:
+                    pass
+                try:
+                    for email in v.email_list:
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='Email',
+                            kind='email',
+                            value=str(email.value),
+                        )
+                except:
+                    pass
+                try:
+                    for url in v.url_list:
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='URL',
+                            kind='url',
+                            value=str(url.value),
+                        )
+                except:
+                    pass
+                try:
+                    for bday in v.bday_list:
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='Birthday',
+                            kind='date',
+                            value=str(bday.value),
+                        )
+                except:
+                    pass
+                try:
+                    for org in v.org_list:
+                        if isinstance(org.value, list):
+                            org = str(org.value[0])
+                        else:
+                            org = str(org.value)
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='Organization',
+                            kind='text',
+                            value=str(org),
+                        )
+                except:
+                    pass
+                try:
+                    for title in v.title_list:
+                        ContactField.objects.create(
+                            contact=contact,
+                            label='Title',
+                            kind='text',
+                            value=str(title.value),
+                        )
+                except:
+                    pass        
+        os.remove(local_filename)
+    except Exception as e:
+        sentry.error("Error processing vCard upload", exc_info=True)
