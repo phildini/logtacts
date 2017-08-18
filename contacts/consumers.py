@@ -110,12 +110,10 @@ def process_vcard_upload(message):
     try:
         url = message.get('url')
         local_filename = url.split('/')[-1]
-        r = requests.get(url, stream=True)
+        r = requests.get(url)
         logger.info("vcard: Trying to write file")
         with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
+            f.write(r.content)
         logger.info("vcard: file written")
         with open(local_filename, 'r') as f:
             logger.info("vcard: file opened")
