@@ -327,7 +327,7 @@ class BookManager(models.Manager):
     def filter_for_user(self, user, id=None):
         query = self.filter(Q(owner=user) | Q(bookowner__user=user))
         if id:
-            query = query.filter(book=book)
+            query = query.filter(id=id)
         return query
 
     def create_for_user(self, user):
