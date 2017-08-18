@@ -135,10 +135,13 @@ def process_vcard_upload(message):
                 logger.info(v)
                 try:
                     name = str(v.n.value).strip()
+                    logger.info(name)
                     if name:
                         contact = Contact.objects.create(book=book, name=name)
                         log = LogEntry.objects.create(contact=contact, kind='edit', logged_by=user)
                         contact.update_last_contact_from_log(log)
+                        contact.save()
+                        logger.info(contact)
                     else:
                         continue
                 except:
