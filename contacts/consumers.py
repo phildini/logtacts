@@ -127,6 +127,7 @@ def process_vcard_upload(message):
                 else:
                     current_lines.append(line)
             for card in cards:
+                logger.info("vcard: " + card)
                 v = vobject.readOne(card)
                 try:
                     name = str(v.n.value).strip()
@@ -136,8 +137,10 @@ def process_vcard_upload(message):
                         contact.update_last_contact_from_log(log)
                         contact.save()
                     else:
+                        sentry.error("Name not found for vCard", exc_info=True)
                         continue
                 except:
+                    sentry.exception("Failed to create or update initial vCard", exc_info=True)
                     continue
                 try:
                     for adr in v.adr_list:
@@ -149,7 +152,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass
+                    sentry.exception("Failed to create address", exc_info=True)
                 try:
                     for email in v.email_list:
                         field = ContactField.objects.create(
@@ -160,7 +163,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass
+                    sentry.exception("Failed to create email", exc_info=True)
                 try:
                     for url in v.url_list:
                         field = ContactField.objects.create(
@@ -171,7 +174,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass
+                    sentry.exception("Failed to create url", exc_info=True)
                 try:
                     for bday in v.bday_list:
                         field = ContactField.objects.create(
@@ -182,7 +185,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass
+                    sentry.exception("Failed to create birthday", exc_info=True)
                 try:
                     for org in v.org_list:
                         if isinstance(org.value, list):
@@ -197,7 +200,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass
+                    sentry.exception("Failed to create org", exc_info=True)
                 try:
                     for title in v.title_list:
                         field = ContactField.objects.create(
@@ -208,7 +211,7 @@ def process_vcard_upload(message):
                         )
                         field.save()
                 except:
-                    pass        
+                    sentry.exception("Failed to create title", exc_info=True)        
         os.remove(local_filename)
     except Exception as e:
         sentry.error("Error processing vCard upload", exc_info=True)
