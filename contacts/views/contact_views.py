@@ -311,7 +311,7 @@ class ExportAddressView(BookOwnerMixin, TemplateView):
         return context
 
 
-def email_csv_view(request):
+def email_csv_view(request, book):
     if request.user.is_authenticated():
         contacts = common.get_selected_contacts_from_request(request)
         response = HttpResponse(content_type='text/csv')
@@ -325,7 +325,7 @@ def email_csv_view(request):
     raise Http404()
 
 
-def address_csv_view(request):
+def address_csv_view(request, book):
     if request.user.is_authenticated():
         contacts = common.get_selected_contacts_from_request(request)
         response = HttpResponse(content_type='text/csv')
