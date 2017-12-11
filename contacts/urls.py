@@ -109,6 +109,26 @@ tag_urls = [
         contact_views.DeleteTagView.as_view(),
         name='tags-delete',
     ),
+    url(
+        r'^(?P<tag>\d+)/emails/',
+        contact_views.ExportEmailView.as_view(),
+        name='tag_emails',
+    ),
+    url(
+        r'^(?P<tag>\d+)/emailexport/',
+        contact_views.email_csv_view,
+        name='tag_emails_export',
+    ),
+    url(
+        r'^(?P<tag>\d+)/addresses/',
+        contact_views.ExportAddressView.as_view(),
+        name='tag_addresses',
+    ),
+    url(
+        r'^(?P<tag>\d+)/addressexport/',
+        contact_views.address_csv_view,
+        name='tag_address_export',
+    ),
 ]
 
 log_urls = [

@@ -7,7 +7,11 @@
     <li class="active">Export Addresses</li>
 </ol>
 {% if contacts %}
+{% if tag %}
+<h3>Contact Addresses <a href="{% url "tag_address_export" book=book.id tag=tag.id %}" class="btn btn-primary">Download CSV for Tag</a></h3>
+{% else %}
 <h3>Contact Addresses <a href="{% url "contact_address_export" book=book.id %}" class="btn btn-primary">Download CSV</a></h3>
+{% endif %}
 <ul>
 {% for contact in contacts %}
     <li>{{ contact.name }} {{ contact.preferred_address }}</li>

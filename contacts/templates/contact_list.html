@@ -35,6 +35,10 @@
                 <li><input class="btn btn-default" name="addresses" id="addresses-submit" type="submit" value="Export addresses" /></li>
                 <li><input class="btn btn-default" name="addtag" id="addtag-submit" type="submit" value="Add tag" /></li>
                 <li><input class="btn btn-default" name="merge" id="merge-submit" type="submit" value="Merge" /></li>
+                {% if tag %}
+                <li><a href="{% url "tag_emails" book=book.id tag=tag.id %}">Export emails for tag</a></li>
+                <li><a href="{% url "tag_addresses" book=book.id tag=tag.id %}">Export addresses for tag</a></li>
+                {% endif %}
             </ul>
         </div>
         </h4>

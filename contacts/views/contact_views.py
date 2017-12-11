@@ -295,8 +295,14 @@ class ExportEmailView(BookOwnerMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ExportEmailView, self).get_context_data(*args, **kwargs)
-        contacts = common.get_selected_contacts_from_request(self.request)
+        if kwargs.get('tag'):
+            contacts = Contact.objects.for_user(
+                user=self.request.user, book=self.request.current_book,
+            ).filter(tags__id=self.kwargs.get('tag'))
+        else:
+            contacts = common.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
+        context['tag'] = Tag.objects.get(id=self.kwargs.get('tag'))
         return context
 
 
@@ -306,14 +312,25 @@ class ExportAddressView(BookOwnerMixin, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ExportAddressView, self).get_context_data(*args, **kwargs)
-        contacts = common.get_selected_contacts_from_request(self.request)
+        if kwargs.get('tag'):
+            contacts = Contact.objects.for_user(
+                user=self.request.user, book=self.request.current_book,
+            ).filter(tags__id=self.kwargs.get('tag'))
+        else:
+            contacts = common.get_selected_contacts_from_request(self.request)
         context['contacts'] = contacts
+        context['tag'] = Tag.objects.get(id=self.kwargs.get('tag'))
         return context
 
 
-def email_csv_view(request, book):
+def email_csv_view(request, book, tag=None):
     if request.user.is_authenticated():
-        contacts = common.get_selected_contacts_from_request(request)
+        if tag:
+            contacts = Contact.objects.for_user(
+                user=request.user, book=request.current_book,
+            ).filter(tags__id=tag)
+        else:
+            contacts = common.get_selected_contacts_from_request(self.request)
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="contact_emails.csv"'
         writer = csv.writer(response)
@@ -325,9 +342,14 @@ def email_csv_view(request, book):
     raise Http404()
 
 
-def address_csv_view(request, book):
+def address_csv_view(request, book, tag=None):
     if request.user.is_authenticated():
-        contacts = common.get_selected_contacts_from_request(request)
+        if tag:
+            contacts = Contact.objects.for_user(
+                user=request.user, book=request.current_book,
+            ).filter(tags__id=tag)
+        else:
+            contacts = common.get_selected_contacts_from_request(self.request)
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="contact_addresses.csv"'
         writer = csv.writer(response)
