@@ -33,7 +33,7 @@ gargoyle-yplan==1.2.7
 git+https://github.com/django-haystack/django-haystack.git#egg=django-haystack
 git+https://github.com/mLewisLogic/foursquare.git#egg=foursquare
 gunicorn==19.7.0
-httplib2==0.10.3
+httplib2==0.18.0
 msgpack-python==0.4.8
 nexmo==1.5.0
 nexus-yplan==1.5.0
