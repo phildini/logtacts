@@ -65,7 +65,7 @@ Twisted==17.1.0
 txaio==2.6.1
 Unipath==1.1
 uritemplate==3.0.0
-urllib3==1.20
+urllib3==1.26.5
 vobject==0.9.5
 whitenoise==3.3.0
 Whoosh==2.7.4
