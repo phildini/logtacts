@@ -22,7 +22,7 @@ django-redis==4.7.0
 django-sandstorm==0.0.2
 django-secure==1.0.1
 django-simple-history==1.8.2
-Django==1.11.4
+Django==2.2.24
 djangorestframework==3.6.2
 elasticsearch==2.4.0
 factory-boy==2.8.1
