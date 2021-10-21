@@ -1,7 +1,7 @@
 asgi-redis==1.1.0
 asgiref==1.0.0
 autobahn==0.17.2
-Babel==2.3.4
+Babel==2.9.1
 boto3==1.4.4
 channels==1.1.0
 click==6.7
