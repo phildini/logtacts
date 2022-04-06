@@ -61,7 +61,7 @@ six==1.10.0
 stripe==1.50.0
 tweepy==3.5.0
 twilio==5.7.0
-Twisted==17.1.0
+Twisted==21.2.0
 txaio==2.6.1
 Unipath==1.1
 uritemplate==3.0.0
